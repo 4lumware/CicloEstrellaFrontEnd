@@ -6,7 +6,6 @@ import {UserHomeComponent} from './pages/private/user-home/user-home.component';
 import {Login} from './pages/public/login/login';
 import {HeaderAuth} from './layout/header-auth/header-auth';
 
-
 export const routes: Routes = [
   {path: '', component: Layout, children:[
     {path: '', component: LandingComponent},
@@ -15,5 +14,4 @@ export const routes: Routes = [
       {path: 'home', component: UserHomeComponent}
     ]},
   {path: 'login', component: Login}
-];
-
+]

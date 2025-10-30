@@ -1,0 +1,63 @@
+<form class="form-group-container" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <section class="form-input-container">
+    <app-input
+    id="register-student-name"
+    label="Nombre"
+    type="text"
+    placeholder="Casilla para el nombre"
+    [control]="nameControl"
+    />
+
+    <app-input
+    id="register-student-email"
+    label="Correo Electronico"
+    type="text"
+    placeholder="Casilla para el Correo Electronico"
+    [control]="emailControl"
+    />
+
+    <app-input
+    id="register-student-password"
+    label="Contraseña"
+    type="password"
+    placeholder="Casilla para la Contraseña"
+    [control]="passwordControl"
+    />
+
+    <app-input
+    id="register-student-repeat-password"
+    label="Repetir Contraseña"
+    type="password"
+    placeholder="Casilla para Repetir Contraseña"
+    [control]="repeatPasswordControl"
+    />
+
+    <app-select
+      id="register-student-select-career"
+      label="Selecciona una carrera"
+      [options]="careerOptions"
+      [control]="careerControl"
+    />
+
+    <app-select
+      id="register-student-select-term"
+      label="Seleccione su ciclo"
+      [options]="termOptions"
+      [control]="termControl"
+    />
+  </section>
+
+  <section class="submit-form">
+    <mat-checkbox [formControl]="acceptConditionsControl">Aceptar terminos y condiciones</mat-checkbox>
+
+    <section class="button-content">
+      <button matButton="filled" type="submit" [disabled]="formGroup.invalid">
+        Crear Cuenta
+    </button>
+    <p class="p-button-cta">Ya tienes cuenta? <a class="span-button-cta">Inicia Sesion</a></p>
+    </section>
+
+  </section>
+
+
+</form>

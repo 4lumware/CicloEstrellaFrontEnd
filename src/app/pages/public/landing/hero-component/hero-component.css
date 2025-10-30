@@ -1,5 +1,9 @@
 
 /* Hero Section */
+section{
+  color: var(--light-color);
+}
+
 .hero {
   display: flex;
   justify-content: space-between;
