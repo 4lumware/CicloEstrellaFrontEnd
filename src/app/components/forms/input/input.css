@@ -1,0 +1,14 @@
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-wrapper mat-form-field + mat-form-field {
+  margin-left: 8px;
+}
+.input-container{
+  display: flex;
+}
+.input-content{
+  margin: 0;
+}
