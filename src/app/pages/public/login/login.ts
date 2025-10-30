@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {HeaderAuth} from '../../../layout/header-auth/header-auth';
 import {Router, RouterLink} from '@angular/router';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -10,6 +10,8 @@ import {MatButton, MatIconButton} from '@angular/material/button';
 import {NgIf} from '@angular/common';
 import {merge} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {ApiResponse} from '../../../services/careers/career-service';
+import {AuthUserService, JsonResponseDTO} from '../../../services/users/auth/auth-user-service';
 
 
 @Component({
@@ -33,17 +35,23 @@ export class Login {
   loginForm: FormGroup;
   hidePassword = true;
 
-  // Mensajes de error como signals
   emailError = signal('');
   passwordError = signal('');
+  loading = signal(false);
+  loginError = signal('');
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  private fb: FormBuilder = inject(FormBuilder);
+  private router: Router = inject(Router);
+  private authService = inject(AuthUserService)
+  constructor()
+  {
+
+
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
 
-    // Escucha cambios en los controles
     merge(
       this.loginForm.get('email')!.statusChanges,
       this.loginForm.get('email')!.valueChanges,
@@ -54,12 +62,10 @@ export class Login {
       .subscribe(() => this.updateErrorMessages());
   }
 
-  /** Actualiza los mensajes de error dinámicamente */
   updateErrorMessages() {
     const emailCtrl = this.loginForm.get('email');
     const passCtrl = this.loginForm.get('password');
 
-    // Correo
     if (emailCtrl?.hasError('required')) {
       this.emailError.set('El correo es obligatorio');
     } else if (emailCtrl?.hasError('email')) {
@@ -68,7 +74,6 @@ export class Login {
       this.emailError.set('');
     }
 
-    // Contraseña
     if (passCtrl?.hasError('required')) {
       this.passwordError.set('La contraseña es obligatoria');
     } else {
@@ -78,13 +83,33 @@ export class Login {
 
   /** Acción al enviar formulario */
   onSubmit() {
-    if (this.loginForm.valid) {
-      console.log('Login data:', this.loginForm.value);
-      // Aquí conectarías con el backend
-      //this.router.navigate(['/dashboard']);
-    } else {
+    if (!this.loginForm.valid) {
       this.updateErrorMessages();
       this.loginForm.markAllAsTouched();
+      return;
     }
+
+    this.loading.set(true);
+    this.loginError.set('');
+
+    const { email, password } = this.loginForm.value;
+
+    this.authService.login(email, password).subscribe({
+      next: (response: ApiResponse<JsonResponseDTO>) => {
+        console.log('✅ Login exitoso:', response);
+
+        // Guardar tokens localmente
+        const tokens = response.data.tokens;
+        localStorage.setItem('access_token', tokens.access_token);
+        localStorage.setItem('refresh_token', tokens.refresh_token);
+        this.router.navigate(['/private/home']);
+      },
+      error: (err) => {
+        console.error('❌ Error en login:', err);
+        this.loginError.set('Correo o contraseña incorrectos');
+        this.loading.set(false);
+      },
+      complete: () => this.loading.set(false)
+    });
   }
 }
