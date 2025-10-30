@@ -1,0 +1,22 @@
+<main class="centro">
+  <div class="frase">
+    <h1>Encuentra todo lo que necesitas para matricularte y más</h1>
+  </div>
+
+  <div class="imagenesIntro">
+    <div class="ImgProfes"><img src="/images/ConoceALosProfes2.png" alt="Profesores" /></div>
+    <div class="ImgIdea"><img src="/images/PlanificaTuCiclo2.png" alt="Planifica tu ciclo" /></div>
+    <div class="ImgTramite"><img src="/images/TramitesPasoAPaso2.png" alt="Trámites paso a paso" /></div>
+  </div>
+</main>
+<footer class="footerIntro">
+  <div class="fraseFooter">
+    <h2>Ahorra tiempo y esfuerzo</h2>
+  </div>
+  <div class="faqSection">
+    <h3 routerLink="/preguntas-frecuentes">¿Tienes preguntas? Haz Click Aquí</h3>
+  </div>
+  <img class="ChatBot" src="/images/Chatbot.png" alt="Botcito" (click)="toggleChatbot()" />
+</footer>
+
+<app-chatbot [visible]="chatbotVisible"></app-chatbot>

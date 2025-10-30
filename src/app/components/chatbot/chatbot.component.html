@@ -1,0 +1,26 @@
+<div id="chatbot-overlay" *ngIf="visible">
+  <div id="chatbot-header">ChatBot</div>
+  <div id="chatbot-messages">
+    <p>
+      Hola. Soy tu asistente. Te estaré ayudando en tus consultas acerca de la
+      plataforma.
+    </p>
+  </div>
+
+  <div id="chatbot-questions">
+    <h3>¿Qué deseas hacer?</h3>
+    <div class="suggestion" *ngFor="let s of suggestions" (click)="selectSuggestion(s)">
+      {{ s }}
+    </div>
+  </div>
+
+  <div id="chatbot-input-container">
+    <input
+      type="text"
+      placeholder="Empieza a escribir aquí..."
+      [(ngModel)]="userInput"
+    />
+    <button (click)="sendMessage()">➤</button>
+  </div>
+</div>
+

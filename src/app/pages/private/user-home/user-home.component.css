@@ -1,0 +1,109 @@
+/* Estilos globales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  list-style: none;
+}
+
+body {
+  background-color: #2F1747;
+  font-family: "Inria Sans", sans-serif;
+}
+
+/* Main */
+.centro {
+  background-color: #ffffff;
+  padding: 30px;
+}
+
+.frase {
+  padding: 40px;
+  font-family: "Inria Sans";
+  font-size: x-large;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #2F1747;
+  text-align: center;
+}
+
+.imagenesIntro {
+  justify-content: space-between;
+  margin:auto;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  flex-wrap: wrap; /* Permite que las imágenes se acomoden */
+  gap: 20px;
+}
+
+.imagenesIntro div img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: 0 auto;
+}
+
+/* Footer */
+.footerIntro {
+  padding: 10px;
+  background-color: #674C82;
+  text-align: center;
+}
+
+.footerIntro .fraseFooter {
+  color: #FFCB47;
+  font-family: "Inria Sans";
+  font-size: larger;
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+}
+
+.footerIntro .faqSection h3 {
+  color: #FFCB47;
+  font-size: medium;
+  margin-bottom: 10px;
+  border: 2px solid #FFCB47;
+  padding: 5px;
+  display: inline-block;
+  border-radius: 8px;
+}
+
+.footerIntro .ChatBot {
+  padding: 10px;
+  display: block;
+  margin: 10px auto 0;
+  width: 80px;
+}
+
+.ChatBot:hover{
+  transform: scale(1.1);
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+
+  .imagenesIntro {
+    flex-direction: column;
+  }
+
+  .imagenesIntro div img {
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-1 {
+    width: 80px;
+  }
+
+  .frase {
+    font-size: large;
+    padding: 20px;
+  }
+
+  .footerIntro .faqSection h3 {
+    font-size: small;
+  }
+}

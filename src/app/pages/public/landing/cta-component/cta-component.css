@@ -1,0 +1,30 @@
+
+/* Call to Action */
+.cta {
+  padding: 40px 20px;
+  text-align: center;
+  background-color: var(--secondary-color);
+  color: var(--dark-color);
+}
+
+.cta h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.cta button {
+  background-color: var(--light-color);
+  color: var(--primary-color);
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: inherit;
+}
+
+.cta button:hover {
+  background-color: var(--dark-color);
+  color: var(--light-color);
+}

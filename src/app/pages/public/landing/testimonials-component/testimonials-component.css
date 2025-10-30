@@ -1,0 +1,30 @@
+/* Testimonials Section */
+.testimonials {
+  padding: 40px 20px;
+  text-align: center;
+  background-color: var(--primary-color);
+  color: var(--light-color);
+}
+
+.testimonials h2 {
+  font-size: 2rem;
+  color: var(--secondary-color);
+  margin-bottom: 20px;
+}
+
+.testimonial-slider {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.testimonial-slider blockquote {
+  font-style: italic;
+  background-color: var(--gray-color);
+  padding: 20px;
+  border-left: 5px solid var(--secondary-color);
+  border-radius: 5px;
+  text-align: left;
+  max-width: 800px;
+  margin: 0 auto;
+}

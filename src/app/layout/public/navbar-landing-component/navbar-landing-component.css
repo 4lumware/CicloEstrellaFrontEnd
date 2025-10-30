@@ -1,0 +1,56 @@
+/* Header */
+header {
+  background-color: var(--primary-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.menuContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logo {
+  width: 120px;
+  height: auto;
+}
+
+.menu {
+  display: flex;
+  list-style: none;
+  gap: 15px;
+}
+
+.menu a {
+  color: var(--light-color);
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.menu a:hover {
+  background-color: var(--secondary-color);
+  color: var(--dark-color);
+}
+
+
+.cta-button {
+  background-color: var(--secondary-color);
+  color: var(--dark-color);
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.cta-button:hover {
+  background-color: var(--light-color);
+}
