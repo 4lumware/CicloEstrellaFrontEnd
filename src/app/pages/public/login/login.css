@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Poppins:wght@100;400;500;600;700;800&display=swap');
+
+body {
+  background-color: #ffffff;
+  font-family: "Inria Sans", sans-serif;
+}
+
+header {
+  padding-bottom: 50px;
+}
+
+.Contenido {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 90vh;
+  background-color: #ffffff;
+  font-family: "Inria Sans", sans-serif;
+}
+
+.Campos {
+  max-width: 400px;
+  padding: 20px;
+}
+
+.Welcome {
+  text-align: center;
+  color: #2f1747;
+  margin-bottom: 30px;
+}
+
+.input-full {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.btn-login {
+  background-color: #FFCB47 !important;
+  width: 100%;
+  color: #2F1747 !important;
+  padding: 30px;
+  font-family: inherit;
+  text-align: center;
+  letter-spacing: 0.4px;
+  font-weight: 600 !important;
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+.btn-login[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 15px;
+  color: #2f1747;
+}
+
+.register-link a {
+  color: #2f1747;
+  text-decoration: underline;
+  font-weight: bolder;
+}
+
+.imgPrincipal img {
+  width: 80%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 60px 60px rgba(0, 0, 0, 0.1);
+}
+

@@ -1,0 +1,16 @@
+.cabecera .logo {
+  padding: 15px;
+  width: 15%;
+  height: 15%;
+  float: left;
+}
+
+header {
+  padding-bottom: 50px;
+  background-color: white;
+}
+
+.cabecera{
+  padding-bottom: 50px;
+  background-color: white;
+}
