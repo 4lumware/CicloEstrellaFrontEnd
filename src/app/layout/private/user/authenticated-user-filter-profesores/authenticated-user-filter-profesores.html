@@ -1,0 +1,36 @@
+<div *ngIf="showFiltro" id="filtro-panel" class="filtro-panel">
+  <div class="filtro-header">
+    <h2>Filtros</h2>
+    <button id="cerrar-filtro" class="cerrar-boton" (click)="closeFiltro()">
+      <img src="images/botoncerrarfiltro.png" alt="Cerrar Filtro">
+    </button>
+  </div>
+  <div class="filtro-opciones">
+    <div class="filtro-opcion">
+      <label>Sede:</label>
+      <div class="sede" id="sede">
+        <button class="sede-boton" *ngFor="let sede of sedes" (click)="selectSede(sede)">{{ sede }}</button>
+      </div>
+    </div>
+    <div class="filtro-opcion">
+      <label>Modalidad:</label>
+      <div class="modalidad-opciones" id="modalidad">
+        <button class="modalidad-boton" *ngFor="let modalidad of modalidades" (click)="selectModalidad(modalidad)">
+          {{ modalidad }}
+        </button>
+      </div>
+    </div>
+    <div class="filtro-opcion">
+      <label>Facultad:</label>
+      <select id="facultad-select">
+        <option value="">Seleccionar Facultad</option>
+        <option *ngFor="let facultad of facultades" [value]="facultad">{{ facultad }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="filtro-botones">
+    <button id="aplicar-filtros" (click)="applyFilters()">Aplicar Filtros</button>
+    <button id="borrar-filtros" (click)="resetFilters()">Borrar Filtros</button>
+  </div>
+</div>
+
