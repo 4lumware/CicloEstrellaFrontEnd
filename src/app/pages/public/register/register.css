@@ -1,0 +1,30 @@
+:host {
+  display: grid;
+  height: 100vh;
+  place-content: center;
+}
+
+.register-content {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 2rem ;
+  width: 25rem;
+}
+
+.register-header {
+  font-size: 2.8rem;
+  font-weight: 500;
+  text-align: center;
+  color:  var(--primary-color);
+}
+
+.main-register-content {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 7.5rem;
+}
+
+.img-register {
+  border-radius: 1rem;
+}
+

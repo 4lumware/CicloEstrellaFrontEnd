@@ -19,8 +19,9 @@
 
 body {
   font-family: var(--font-main), sans-serif;
-  color: var(--light-color);
-  background-color: var(--primary-color);
   line-height: 1.6;
   overflow-x: hidden;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,0 +1,328 @@
+@import url('https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Poppins:wght@100;400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+}
+
+body {
+    background-color: #2F1747;
+    font-family: "Inria Sans", sans-serif;
+}
+
+.centro {
+    background-color: #ffffff;
+    padding: 30px
+}
+
+/* Estilo para la barra de búsqueda */
+.search-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px auto;
+    width: 85%;
+    max-width: 800px; 
+    background-color: #ffffff;
+    border-radius: 30px;
+    padding: 5px 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    font-family: "Inria Sans", sans-serif;
+}
+
+#searchBar {
+    width: 90%; 
+    padding: 12px 20px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    color: #333;
+    outline: none;
+    background-color: #f5f5f5; 
+    transition: background-color 0.3s ease;
+    font-family: inherit;
+}
+
+#searchBar:focus {
+    background-color: #ffffff; 
+    border: 2px solid #FFCB47; 
+}
+
+#searchButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    margin-left: 10px; 
+}
+
+#searchButton img {
+    width: 20px;
+    height: 20px;
+    filter: none;
+    fill: #333;
+    transition: transform 0.3s ease;
+}
+
+#searchButton:hover img {
+    transform: scale(1.2); 
+}
+
+#filtroboton{
+    background-color: transparent;
+    border: none;
+    color: #4b2c5e;
+    font-size: 1em;
+    cursor: pointer;
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    justify-content: left;
+    margin: 2px auto;
+    font-family: inherit;
+    position: absolute;
+    right: 10px;
+    top: 25%;
+    margin-top: 15px;
+    font-family: 'Inria Sans', sans-serif;
+}
+.profesores-seccion {
+    margin: 20px;
+    padding: 20px;
+    margin-bottom: 5px;
+    color:#333
+}
+
+.profesores-lista {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.profesor {
+    display: flex;
+    align-items: center;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    padding: 15px;
+    width: 250px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profesor img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.info h3 {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.add-button {
+    background-color: #4b2c5e;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.2em;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.add-button a{
+    color: white;
+}
+
+.boton-chatbot-icon {
+    padding: 15px;
+    display: block;
+    margin-left: auto;
+    width: 80px;
+}
+
+.filtro-panel{
+    width: 80%;
+    position: relative;
+    border-radius: 15px;
+    background-color: #ced6ee;
+    padding: 20px;
+    margin: 20px auto;
+    box-sizing: border-box;
+    
+}
+
+.filtro-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filtro-header h2 {
+    font-size: 1.5em;
+    color: #4b2c5e;
+    margin: 0;
+}
+
+#cerrar-filtro {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    color: #4b2c5e;
+    width: 35px;
+    height: 35px;
+}
+
+.filtro-opciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    
+}
+
+.filtro-opcion {
+    flex: 1;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sede, .modalidad-opciones {
+    display: flex;
+    gap: 10px;
+}
+
+.sede-boton, .modalidad-boton {
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9em;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sede-boton.activo, .modalidad-boton.activo {
+    background-color: #ffcb47; /* Color de botón activo */
+    color: #fff;
+    border: none;
+}
+
+.filtro-opcion label {
+    font-size: 1em;
+    color: #4b2c5e;
+    margin-bottom: 5px;
+    font-family: 'Inria Sans';
+}
+
+.filtro-opcion select {
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-family: inherit;
+}
+
+#cerrar-filtro img{
+    width: 35px;
+    height: 35px;
+    background-color: none;
+}
+
+.filtro-botones {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+#aplicar-filtros, #borrar-filtros {
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-family: inherit;
+    border: none;
+    cursor: pointer;
+}
+
+
+#aplicar-filtros {
+    background-color: #ffcb47;
+    color: #333;
+}
+
+#borrar-filtros {
+    background-color: #2f1747;
+    color: #ffffff;
+}
+
+.footerIntro {
+    margin-top: -20px;
+    padding: 30px;
+    background-color: #674C82;
+}
+
+.footerIntro .fraseFooter {
+    align-items: center;
+    text-align: center;
+    float: center;
+    padding: 5px;
+    color: #FFCB47;
+    font-family: "Inria Sans";
+    font-size: larger;
+    letter-spacing: 0.8px;
+}
+
+.footerIntro .ChatBot {
+    padding: 10px;
+    display: block;
+    margin-left: auto;
+    margin-top: -50px;
+    width: 80px;
+}
+
+.footerIntro .faqSection {
+    margin-top: 20px;
+    text-align: center;
+    color: white;
+    font-family: inherit;
+}
+
+.footerIntro .faqSection h3 {
+    color: #FFCB47;
+    font-size: medium;
+    margin-bottom: 10px;
+    border: 2px solid #FFCB47; 
+    padding: 5px; 
+    display: inline-block; 
+    border-radius: 8px; 
+}
+
+/* Responsividad: ajustes para pantallas pequeñas */
+/* Responsividad: ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .search-container {
+        width: 90%;
+        padding: 5px 10px;
+    }
+
+    #searchBar {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    #searchButton {
+        margin-left: 5px; /* Menos espacio entre input y botón */
+    }
+}

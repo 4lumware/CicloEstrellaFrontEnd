@@ -1,0 +1,41 @@
+<main class="centro">
+  <div class="search-container">
+    <input type="text" placeholder="Buscar profesor o curso..." [(ngModel)]="searchQuery" id="searchBar">
+    <button id="searchButton" (click)="search()">
+      <img src="images/lupa.png" alt="Buscar">
+    </button>
+  </div>
+
+  <div class="filtro">
+    <button id="filtroboton" (click)="toggleFiltro()"> <img src="images/filtro.png" alt="Filtro">Filtros</button>
+  </div>
+
+  <app-filtro *ngIf="showFiltro"></app-filtro>
+
+  <section class="profesores-seccion" *ngFor="let profesor of profesores">
+    <h2>{{profesor.facultad}}</h2>
+    <div class="profesores-lista">
+      <div class="profesor" *ngFor="let item of profesor.items">
+        <img [src]="item.imagen" alt="{{item.nombre}}">
+        <div class="info">
+          <h3>{{item.nombre}}</h3>
+          <p>Facultad Que Dicta: {{item.facultad}}</p>
+          <p>Calificación: ⭐ {{item.calificacion}}/10</p>
+        </div>
+        <button class="add-button" (click)="addToProfile(item)">+</button>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footerIntro">
+  <div class="fraseFooter">
+    <h2>Ahorra tiempo y esfuerzo</h2>
+  </div>
+  <div class="faqSection">
+    <h3 routerLink="/preguntas-frecuentes">¿Tienes preguntas? Haz Click Aquí</h3>
+  </div>
+  <img class="ChatBot" src="/images/Chatbot.png" alt="Botcito" (click)="toggleChatbot()" />
+</footer>
+
+<app-chatbot [visible]="chatbotVisible"></app-chatbot>
+

@@ -8,7 +8,7 @@
         <li><a (click)="scrollTo('about')" >Acerca de</a></li>
         <li><a (click)="scrollTo('features')">Características</a></li>
         <li><a (click)="scrollTo('testimonials')" >Testimonios</a></li>
-        <li><a (click)="scrollTo('cta')" class="cta-button">¡Comienza ahora!</a></li>
+        <li><a [routerLink]="'/login'" class="cta-button">¡Comienza ahora!</a></li>
       </ul>
     </nav>
   </div>
