@@ -1,0 +1,43 @@
+<main class = "centro">
+  <section class="infoUsuario">
+    <h2>Información Básica</h2>
+    <label>Nombre</label>
+    <input type="text" placeholder="Nuevo Nombre" enabled>
+
+    <label>Correo Electrónico</label>
+    <input type="text" placeholder="Nuevo Correo" enabled>
+
+    <label>Contraseña</label>
+    <input type="text" placeholder="Nueva Contraseña " enabled>
+
+    <h2 class = infoadi>Información Adicional</h2>
+    <div class="carrera-opcion">
+      <label>Carrera:</label>
+      <select id="carrera-select">
+        <option value="">Seleccionar Carrera</option>
+      </select>
+      <label>Ciclo</label>
+      <div class="ciclo-buttons" id="ciclo-buttons">
+        <button class="ciclo-boton" data-ciclo="1">1</button>
+        <button class="ciclo-boton" data-ciclo="2">2</button>
+        <button class="ciclo-boton" data-ciclo="3">3</button>
+        <button class="ciclo-boton" data-ciclo="4">4</button>
+        <button class="ciclo-boton" data-ciclo="5">5</button>
+        <button class="ciclo-boton" data-ciclo="6">6</button>
+        <button class="ciclo-boton" data-ciclo="7">7</button>
+        <button class="ciclo-boton" data-ciclo="8">8</button>
+        <button class="ciclo-boton" data-ciclo="9">9</button>
+        <button class="ciclo-boton" data-ciclo="10">10</button>
+      </div>
+      <div class="button-container">
+        <button class="guardarBtn"><a [routerLink]="">Guardar Información</a></button>
+        <button class="volverBtn"><a [routerLink]="">Salir</a></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="imgEdiPer">
+    <h2>Aquí puedes editar tus datos personales</h2>
+    <img src="images/EditarPerfil.png" alt="img-editar-perfil">
+  </section>
+</main>
