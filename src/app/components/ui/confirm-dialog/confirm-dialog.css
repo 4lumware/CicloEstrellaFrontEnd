@@ -1,0 +1,7 @@
+.cd-container{padding:1.25rem;max-width:32rem}
+.cd-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+.cd-icon{font-size:1.5rem;width:1.5rem;height:1.5rem}
+.cd-title{font-size:1.25rem;font-weight:600;margin:0}
+.cd-content{font-size:1rem;color:#374151;margin:.5rem 0 1.5rem}
+.cd-actions{display:flex;justify-content:flex-end;gap:.75rem}
+button[mat-stroked-button]{border-color:#e5e7eb}

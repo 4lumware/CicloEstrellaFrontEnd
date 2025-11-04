@@ -1,4 +1,14 @@
-import { Component, DestroyRef, effect, inject, input, InputSignal, signal } from '@angular/core';
+import { TitleCasePipe } from '@angular/common';
+import {
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  input,
+  InputSignal,
+  signal,
+  Type,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,9 +20,13 @@ export interface Option {
   value: any;
 }
 
+type InputType = {
+  value: 'outline' | 'fill';
+};
+
 @Component({
   selector: 'app-select',
-  imports: [MatFormFieldModule, MatSelectModule, ReactiveFormsModule],
+  imports: [MatFormFieldModule, MatSelectModule, ReactiveFormsModule, TitleCasePipe],
   templateUrl: './select.html',
   styleUrl: './select.css',
 })
@@ -21,6 +35,8 @@ export class Select {
   control: InputSignal<FormControl> = input.required<FormControl>();
   label: InputSignal<string> = input.required<string>();
   options: InputSignal<Option[]> = input.required<Option[]>();
+  variant: InputSignal<InputType['value']> = input<InputType['value']>('outline');
+  multiple = input<boolean>(false);
 
   errorMessage = signal('');
   private destroyRef = inject(DestroyRef);

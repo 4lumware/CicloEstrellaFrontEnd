@@ -1,10 +1,14 @@
-<mat-form-field class="select-field">
- <mat-label>{{ label() }}</mat-label>
+<mat-form-field class="select-field" [appearance]="variant()">
+  <mat-label>{{ label() }}</mat-label>
 
-  <mat-select panelClass="select-down" [disableOptionCentering]="true"
-  [formControl]="control()">
+  <mat-select
+    panelClass="select-down"
+    [disableOptionCentering]="true"
+    [formControl]="control()"
+    [multiple]="multiple()"
+  >
     @for (opt of options(); track opt.value) {
-      <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+    <mat-option [value]="opt.value">{{ opt.label | titlecase }}</mat-option>
     }
   </mat-select>
 </mat-form-field>

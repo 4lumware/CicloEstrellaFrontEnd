@@ -1,1 +1,151 @@
-<p>admin-dashboard-home works!</p>
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1>Dashboard Administrativo</h1>
+    <p class="subtitle">Bienvenido al panel de control de Ciclo Estrella</p>
+  </div>
+
+  <!-- Estadísticas Cards -->
+  <div class="estadisticas-grid">
+    @for (stat of estadisticas(); track stat.titulo) {
+    <mat-card class="stat-card" [style.border-left-color]="stat.color">
+      <div class="stat-icon" [style.background-color]="stat.color">
+        <mat-icon>{{ stat.icono }}</mat-icon>
+      </div>
+      <div class="stat-content">
+        <p class="stat-titulo">{{ stat.titulo }}</p>
+        <h2 class="stat-valor">{{ stat.valor }}</h2>
+        <div
+          class="stat-cambio"
+          [class.positivo]="stat.cambio > 0"
+          [class.negativo]="stat.cambio < 0"
+        >
+          <mat-icon>{{ stat.cambio > 0 ? 'trending_up' : 'trending_down' }}</mat-icon>
+          <span>{{ stat.cambio > 0 ? '+' : '' }}{{ stat.cambio }}%</span>
+        </div>
+      </div>
+    </mat-card>
+    }
+  </div>
+
+  <!-- Gráficas -->
+  <div class="graficas-grid">
+    <!-- Gráfica de Usuarios -->
+    <mat-card class="grafica-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>trending_up</mat-icon>
+          Usuarios Registrados
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          <div class="chart-bars">
+            @for (dato of datosGrafica(); track dato.mes) {
+            <div class="bar-group">
+              <div class="bar-wrapper">
+                <div
+                  class="bar usuarios"
+                  [style.height]="
+                    calcularAltura(dato.usuarios, getMaxValor(datosGrafica(), 'usuarios'))
+                  "
+                >
+                  <span class="bar-value">{{ dato.usuarios }}</span>
+                </div>
+              </div>
+              <span class="bar-label">{{ dato.mes }}</span>
+            </div>
+            }
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Gráfica de Solicitudes -->
+    <mat-card class="grafica-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>assignment</mat-icon>
+          Solicitudes por Mes
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          <div class="chart-bars">
+            @for (dato of datosGrafica(); track dato.mes) {
+            <div class="bar-group">
+              <div class="bar-wrapper">
+                <div
+                  class="bar solicitudes"
+                  [style.height]="
+                    calcularAltura(dato.solicitudes, getMaxValor(datosGrafica(), 'solicitudes'))
+                  "
+                >
+                  <span class="bar-value">{{ dato.solicitudes }}</span>
+                </div>
+              </div>
+              <span class="bar-label">{{ dato.mes }}</span>
+            </div>
+            }
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Gráfica de Comentarios (ancho completo) -->
+  <mat-card class="grafica-card full-width">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>comment</mat-icon>
+        Actividad de Comentarios
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="chart-container">
+        <div class="chart-bars">
+          @for (dato of datosGrafica(); track dato.mes) {
+          <div class="bar-group">
+            <div class="bar-wrapper">
+              <div
+                class="bar comentarios"
+                [style.height]="
+                  calcularAltura(dato.comentarios, getMaxValor(datosGrafica(), 'comentarios'))
+                "
+              >
+                <span class="bar-value">{{ dato.comentarios }}</span>
+              </div>
+            </div>
+            <span class="bar-label">{{ dato.mes }}</span>
+          </div>
+          }
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Actividad Reciente -->
+  <mat-card class="actividad-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>history</mat-icon>
+        Actividad Reciente
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="actividad-lista">
+        @for (actividad of actividadReciente(); track actividad.mensaje) {
+        <div class="actividad-item">
+          <div class="actividad-icon">
+            <mat-icon>{{ actividad.icono }}</mat-icon>
+          </div>
+          <div class="actividad-content">
+            <p class="actividad-mensaje">{{ actividad.mensaje }}</p>
+            <span class="actividad-tiempo">{{ actividad.tiempo }}</span>
+          </div>
+        </div>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

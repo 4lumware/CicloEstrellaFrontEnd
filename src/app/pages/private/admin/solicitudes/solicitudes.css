@@ -1,0 +1,76 @@
+.solicitudes-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header-card {
+  margin-bottom: 24px;
+  background: #dc2626;
+  color: white;
+}
+
+.header-card mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.header-card mat-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+.header-card mat-card-content p {
+  margin-top: 8px;
+  opacity: 0.9;
+}
+
+.table-card {
+  overflow-x: auto;
+}
+
+.solicitudes-table {
+  width: 100%;
+}
+
+.solicitudes-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.solicitudes-table td,
+.solicitudes-table th {
+  padding: 16px 12px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+mat-chip {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .solicitudes-container {
+    padding: 16px;
+  }
+
+  .header-card mat-card-title {
+    font-size: 20px;
+  }
+
+  .solicitudes-table td,
+  .solicitudes-table th {
+    padding: 12px 8px;
+    font-size: 14px;
+  }
+}

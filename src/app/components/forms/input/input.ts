@@ -15,6 +15,10 @@ import { MatError, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { merge } from 'rxjs';
 
+type InputType = {
+  value: 'outline' | 'fill';
+};
+
 @Component({
   selector: 'app-input',
   imports: [MatInputModule, MatFormFieldModule, ReactiveFormsModule, MatError],
@@ -26,6 +30,7 @@ export class Input {
   control: InputSignal<FormControl> = input.required<FormControl>();
   label: InputSignal<string> = input.required<string>();
   type = input('text');
+  variant: InputSignal<InputType['value']> = input<InputType['value']>('outline');
   placeholder = input('');
   errorMessage = signal('');
   private destroyRef = inject(DestroyRef);
