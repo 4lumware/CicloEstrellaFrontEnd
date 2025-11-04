@@ -8,7 +8,10 @@ import { Register } from './pages/public/register/register';
 import { AuthenticatedAdminDashboard } from './layout/private/admin/authenticated-admin-dashboard/authenticated-admin-dashboard';
 import { UserManagement } from './pages/private/admin/user-management/user-management';
 import { AdminDashboardHome } from './pages/private/admin/admin-dashboard-home/admin-dashboard-home';
-import {Formality} from './pages/private/user/formality/formality';
+import {StudentProfile} from './pages/private/user-profiles/student-profile/student-profile';
+import {
+  StudentProfileEdit
+} from './pages/private/user-profiles/student-profile/student-profile-edit/student-profile-edit';
 import {UserHomeComponent} from './pages/private/user/user-home.component';
 import {UserProfesoresComponent} from './pages/private/user/user-profesores/user-profesores.component';
 
@@ -20,7 +23,9 @@ export const routes: Routes = [
     children: [
       { path: 'home', component: UserHomeComponent },
       { path: 'profesores', component: UserProfesoresComponent },
-      { path: 'tramites', component: Formality }
+      { path: 'tramites', component: Formality },
+      { path: 'student', component: StudentProfile},
+      { path: 'student/edit', component: StudentProfileEdit }
     ],
   },
   {
