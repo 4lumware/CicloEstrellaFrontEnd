@@ -1,0 +1,219 @@
+/* Variables para consistencia (Asegúrate de que coincidan con tus estilos generales) */
+:root {
+  --color-morado-oscuro: #5c3577;
+  --color-fondo-claro: #f0f0f0; /* Un gris muy claro para el fondo */
+  --color-gris-borde: #ccc;
+}
+
+/* --- Contenedor Principal y Estructura --- */
+.contenedor-principal-tramites {
+  /* ... otros estilos de max-width y margin ... */
+  background-color: white; /* <--- ¡CLAVE! Asegura que el fondo sea blanco */
+  min-height: 100vh; /* Asegura que el fondo cubra toda la altura de la vista */
+  padding: 20px; /* Añade padding para que no se pegue a los bordes */
+  box-sizing: border-box;
+  /* El color de los títulos debe ser oscuro si el fondo es blanco */
+  color: #333;
+
+}
+
+.seccion-tramites {
+  margin-bottom: 50px;
+}
+
+.titulo-seccion-tramites {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: #333;
+}
+
+/* --- Barra de Búsqueda de Trámites (Copia del estilo de Profesores) --- */
+.barra-busqueda-contenedor-tramites {
+  display: flex;
+  align-items: center;
+  background-color: white; /* Fondo blanco para el contenedor */
+  border-radius: 25px; /* Bordes más redondeados */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Sombra sutil para darle profundidad */
+  padding: 10px 20px; /* Padding interno para separar el texto y el ícono */
+
+  max-width: 800px; /* Ajusta según el ancho deseado */
+  margin: 0 auto 40px auto; /* Centrar y margen inferior */
+}
+
+.barra-busqueda-tramites {
+  flex-grow: 1;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 1em;
+  color: #333;
+  outline: none; /* Eliminar el contorno al hacer clic */
+}
+
+.barra-busqueda-tramites::placeholder {
+  color: #888; /* Un gris más claro para el placeholder */
+  opacity: 1; /* Asegura que no tenga transparencia */
+  font-size: 0.95em; /* Ligeramente más pequeño */}
+
+.icono-busqueda {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 0;
+}
+.icono-busqueda svg {
+  color: #555;
+  width: 20px;
+  height: 20px;
+}
+
+/* --- Carrusel de Tarjetas --- */
+.tramites-carrusel {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto; /* Permite el desplazamiento horizontal */
+  padding-bottom: 20px;
+  box-sizing: border-box;
+}
+
+/* --- Tarjeta de Trámite (Estilo similar a profesores) --- */
+.tarjeta-tramite {
+  position: relative;
+  flex: 0 0 280px; /* Ancho fijo para cada tarjeta */
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  padding: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+}
+
+.nombre-tramite {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.descripcion-tramite {
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 10px;
+  min-height: auto; /* Dar un mínimo para uniformidad */
+}
+
+/* --- Fechas de Inicio/Fin --- */
+.fechas-info {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px dashed var(--color-gris-borde); /* Línea punteada sutil */
+}
+
+.fecha-item {
+  text-align: center;
+}
+
+.etiqueta-fecha {
+  font-size: 0.75em;
+  font-weight: 600;
+  color: var(--color-morado-oscuro);
+  margin: 0;
+}
+
+.valor-fecha {
+  font-size: 0.9em;
+  font-weight: 400;
+  color: #333;
+  margin: 2px 0 0 0;
+}
+
+.title-container {
+  display: flex; /* Habilita Flexbox para alinear el título y el botón */
+  justify-content: space-between; /* Empuja el título a la izquierda y el botón a la derecha */
+  align-items: center; /* Centra verticalmente el botón y el título */
+  margin-bottom: 5px; /* Ajusta el espacio debajo de este bloque */
+}
+.boton-agregar-tramite {
+  /* Estilos del Círculo (Anula los estilos predeterminados de Material) */
+  width: 25px !important;
+  height: 25px !important;
+  line-height: 25px !important; /* Asegura el centrado vertical del ícono */
+  padding: 0 !important;
+  background-color: #5c3577;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+
+  /* Elimina las propiedades de posición obsoletas */
+  /* position: static; */
+}
+.boton-agregar-tramite:hover {
+  background-color: #9b9b9b;
+  scale: 1.1;
+}
+.boton-agregar-tramite mat-icon {
+  /* El ícono ya tiene un tamaño predeterminado, pero lo aseguramos */
+  width: 18px !important;
+  height: 18px !important;
+  font-size: 18px !important;
+  color: white !important; /* Color blanco para el signo '+' */
+
+  /* Si el ícono sigue sin centrarse, añade: */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.nombre-tramite {
+  /* ... otros estilos ... */
+  margin: 0; /* Elimina márgenes extra para centrado limpio */
+}
+
+
+/* --- Barra de Progreso (Copia del estilo de Profesores) --- */
+.carrusel-progreso {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.carrusel-progreso div {
+  height: 5px;
+  background-color: #eee;
+  border-radius: 2.5px;
+  width: 200px; /* Ajusta el ancho total de la barra guía */
+  position: relative;
+}
+
+.progreso-activo {
+  background-color: #777;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 33%; /* Ejemplo: Muestra el primer tercio activo */
+}
+.icono-bot {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 45px;
+  height: 45px;
+  background-color: var(--color-morado-oscuro); /* <-- EL FONDO MORADO */
+  border-radius: 50%; /* <-- ESTO HACE EL CÍRCULO CONTENEDOR MORADO */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 1001;
+}
+.icono-bot img {
+  /* ¡CAMBIOS APLICADOS AQUÍ! */
+  width: 130%;  /* Reduce el tamaño para que se vea el fondo morado alrededor */
+  height: 130%; /* Mismo tamaño para mantener la proporción */
+  /* Elimina border-radius: 100%; de la imagen, ya que no lo necesitas */
+  object-fit: contain; /* Asegura que la imagen se ajuste sin distorsión */
+}
