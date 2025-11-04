@@ -26,13 +26,11 @@
   margin-right: 0;
   display: flex;
   flex-direction: column;
-  align-items: left;
 }
 
 .configuracionSistema .ajustes {
   display: flex;
   flex-direction: column ;
-  align-items: justify;
   width: 100%;
   font-size: 80%;
   margin-top: 20px;

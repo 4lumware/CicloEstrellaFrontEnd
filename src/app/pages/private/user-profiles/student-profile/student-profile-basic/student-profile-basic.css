@@ -26,13 +26,11 @@
   margin-right: 0; /* Ajusta si es necesario */
   display: flex;
   flex-direction: column;
-  align-items: left; /* Centra los botones en el eje horizontal */
 }
 
 .configuracionSistema .ajustes {
   display: flex;
   flex-direction: column ;
-  align-items: justify;
   width: 100%;
   font-size: 80%;
   margin-top: 20px;
