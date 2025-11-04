@@ -1,0 +1,14 @@
+
+.sidenav-content {
+  height: 100vh;
+}
+
+.sidenav-app {
+  width: 18rem;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+
+.sidenav-app-opened {
+  width: 5rem ;
+}
