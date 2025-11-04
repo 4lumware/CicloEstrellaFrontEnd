@@ -23,6 +23,7 @@ export const routes: Routes = [
     children: [
       { path: 'home', component: UserHomeComponent },
       { path: 'profesores', component: UserProfesoresComponent },
+      { path: 'tramites', component: Formality },
       { path: 'student', component: StudentProfile},
       { path: 'student/edit', component: StudentProfileEdit }
     ],
