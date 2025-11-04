@@ -1,25 +1,18 @@
 import { Component } from '@angular/core';
-import {ChatbotComponent} from '../../../components/chatbot/chatbot.component';
-import {RouterLink} from '@angular/router';
+import { ChatbotComponent } from '../../../components/chatbot/chatbot.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-user-home',
-  imports: [
-    ChatbotComponent,
-    RouterLink
-  ],
+  imports: [ChatbotComponent, RouterLink],
   templateUrl: './user-home.component.html',
-  styleUrl: './user-home.component.css'
+  styleUrl: './user-home.component.css',
 })
 export class UserHomeComponent {
   title = 'CicloEstrellaFrontend';
   chatbotVisible = false;
   userInput = '';
-  suggestions = [
-    'Consultar profesores',
-    'Ver biblioteca',
-    'Trámites académicos'
-  ];
+  suggestions = ['Consultar profesores', 'Ver biblioteca', 'Trámites académicos'];
 
   // Muestra u oculta el chatbot
   toggleChatbot() {
