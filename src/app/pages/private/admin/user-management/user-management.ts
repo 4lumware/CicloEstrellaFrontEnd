@@ -71,11 +71,14 @@ export class UserManagement {
         if (result.careerIds && Array.isArray(result.careerIds) && result.careerIds.length > 0) {
           payload.careerIds = result.careerIds;
         }
+        // Incluir roleId para estudiantes también
+        if (result.roleId) {
+          payload.roleId = Number(result.roleId);
+        }
       }
 
-      console.log('Payload a enviar:', payload);
-
       if (isStudent) {
+        console.log('Payload a enviar (student):', payload, 'roleId:', payload.roleId);
         // Validar que los campos requeridos de estudiante estén presentes
         if (!payload.careerIds || payload.careerIds.length === 0) {
           this.snackBar.open('Debe seleccionar al menos una carrera para estudiantes', 'Cerrar', {
@@ -108,6 +111,19 @@ export class UserManagement {
           },
         });
       } else if (isStaff) {
+        // Validar roleId requerido por backend para staff
+        if (!result.roleId) {
+          this.snackBar.open('Debe seleccionar un rol válido para el staff', 'Cerrar', {
+            duration: 3000,
+            horizontalPosition: 'end',
+            verticalPosition: 'top',
+          });
+          return;
+        }
+
+        payload.roleId = Number(result.roleId);
+
+        console.log('Payload a enviar (staff):', payload, 'roleId:', payload.roleId);
         this.authService.registerStaff(payload).subscribe({
           next: (response) => {
             console.log('Staff creado:', response);
@@ -166,6 +182,7 @@ export class UserManagement {
       const roleName = result.roleName;
       const isStudent = roleName === 'STUDENT';
       const isStaff = ['ADMIN', 'MODERATOR', 'WRITER'].includes(roleName);
+      const wasStudent = result.wasStudent; // Flag que indica si era estudiante antes
 
       // Construir el payload según el tipo de usuario
       const payload: any = {
@@ -173,7 +190,7 @@ export class UserManagement {
         email: result.email,
       };
 
-      // Solo incluir password si se proporciona uno nuevo
+      // Incluir password si se proporciona
       if (result.password) {
         payload.password = result.password;
       }
@@ -191,10 +208,85 @@ export class UserManagement {
         if (result.careerIds && Array.isArray(result.careerIds) && result.careerIds.length > 0) {
           payload.careerIds = result.careerIds;
         }
+        payload.roleId = Number(result.roleId);
       }
 
-      console.log('Payload a enviar para actualizar:', payload);
+      console.log('Payload a enviar para actualizar (pre-branch):', payload);
 
+      // Si era estudiante y ahora es staff/admin, primero eliminar la cuenta de estudiante
+      if (wasStudent && isStaff) {
+        console.log('Conversión de estudiante a staff/admin detectada');
+
+        // Eliminar la cuenta de estudiante
+        this.studentService.delete(user.id).subscribe({
+          next: () => {
+            console.log('Cuenta de estudiante eliminada');
+
+            // Crear nueva cuenta de staff con los datos actualizados
+            // Validar roleId requerido por backend para staff
+            if (!result.roleId) {
+              this.snackBar.open('Debe seleccionar un rol válido para el staff', 'Cerrar', {
+                duration: 3000,
+                horizontalPosition: 'end',
+                verticalPosition: 'top',
+              });
+              return;
+            }
+
+            // Validar contraseña para creación de staff
+            if (!payload.password || payload.password.trim() === '') {
+              this.snackBar.open('La contraseña es requerida para crear staff', 'Cerrar', {
+                duration: 3000,
+                horizontalPosition: 'end',
+                verticalPosition: 'top',
+              });
+              return;
+            }
+
+            payload.roleId = Number(result.roleId);
+            (payload as any).role_id = payload.roleId;
+            console.log(
+              'Payload a enviar (convert student->staff):',
+              payload,
+              'roleId:',
+              payload.roleId
+            );
+            this.authService.registerStaff(payload).subscribe({
+              next: (response) => {
+                console.log('Nuevo staff creado:', response);
+                this.snackBar.open('Usuario convertido a staff correctamente', 'Cerrar', {
+                  duration: 3000,
+                  horizontalPosition: 'end',
+                  verticalPosition: 'top',
+                });
+                this.tableComponent.loadUsers();
+              },
+              error: (err) => {
+                console.error('Error al crear staff', err);
+                const errorMsg =
+                  err.error?.message || 'Error al crear staff después de eliminar estudiante';
+                this.snackBar.open(errorMsg, 'Cerrar', {
+                  duration: 3000,
+                  horizontalPosition: 'end',
+                  verticalPosition: 'top',
+                });
+              },
+            });
+          },
+          error: (err) => {
+            console.error('Error al eliminar cuenta de estudiante', err);
+            const errorMsg = err.error?.message || 'Error al eliminar cuenta de estudiante';
+            this.snackBar.open(errorMsg, 'Cerrar', {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+            });
+          },
+        });
+        return; // Salir temprano ya que el flujo es diferente
+      }
+
+      // Flujo normal de actualización
       if (isStudent) {
         // Validar que los campos requeridos de estudiante estén presentes
         if (!payload.careerIds || payload.careerIds.length === 0) {
@@ -228,7 +320,11 @@ export class UserManagement {
           },
         });
       } else if (isStaff) {
-        // Actualizar staff
+        // Incluir roleId si viene en el resultado
+        if (result.roleId) {
+          payload.roleId = result.roleId;
+        }
+
         this.userService.update(user.id, payload).subscribe({
           next: (response) => {
             console.log('Staff actualizado:', response);
@@ -293,7 +389,7 @@ export class UserManagement {
       if (confirmed) {
         // Usuario confirmó la eliminación
         this.userService.delete(user.id).subscribe({
-          next: (response) => {
+          next: (response: any) => {
             console.log('Usuario eliminado:', response);
             this.snackBar.open('Usuario eliminado correctamente', 'Cerrar', {
               duration: 3000,
@@ -302,7 +398,7 @@ export class UserManagement {
             });
             this.tableComponent.loadUsers(); // Recargar la tabla
           },
-          error: (err) => {
+          error: (err: any) => {
             console.error('Error al eliminar usuario', err);
             const errorMsg = err.error?.message || 'Error al eliminar usuario';
             this.snackBar.open(errorMsg, 'Cerrar', {

@@ -22,6 +22,7 @@ import { ConfirmDialog } from '../../../../../../components/ui/confirm-dialog/co
 import { UserFormDialog } from '../dialogs/user-form-dialog/user-form-dialog';
 import { UserManagementSearchForm } from '../user-management-search-form/user-management-search-form';
 import { ApplicationUserService } from '../../../../../../services/users/application/application-user-service';
+import { ImageService } from '../../../../../../services/images/image-service';
 import { User } from '../../../../../../models/users/user';
 
 export interface SearchFilters {
@@ -52,6 +53,7 @@ export interface SearchFilters {
 })
 export class UserManagementTable implements OnInit {
   private userService = inject(ApplicationUserService);
+  private imageService = inject(ImageService);
   protected displayedColumns: string[] = [
     'id',
     'username',
@@ -185,6 +187,18 @@ export class UserManagementTable implements OnInit {
 
   isSelected(user: User): boolean {
     return this.selectedUsers().some((u) => u.id === user.id);
+  }
+
+  /**
+   * Obtiene la URL completa de la imagen de perfil usando el ImageService
+   * @param url - URL relativa o completa de la imagen
+   * @returns URL completa o URL por defecto
+   */
+  getProfileImageUrl(url: string | undefined): string {
+    if (!url) return 'assets/default-avatar.png'; // URL de imagen por defecto
+
+    const imageUrl = this.imageService.buildImageUrl(url);
+    return imageUrl || 'assets/default-avatar.png';
   }
 
   onUpdate(user: User): void {
