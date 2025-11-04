@@ -1,0 +1,10 @@
+<mat-sidenav-container class="sidenav-content">
+  <mat-sidenav class="sidenav-app" [opened]="collapsed()" mode="side">
+    <app-authenticated-admin-custom-sidenav />
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-authenticated-admin-header (onToggle)="collapsed.set(!collapsed())" />
+    <router-outlet />
+    Contenido
+  </mat-sidenav-content>
+</mat-sidenav-container>

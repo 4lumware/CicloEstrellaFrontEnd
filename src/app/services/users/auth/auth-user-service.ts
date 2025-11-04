@@ -1,6 +1,7 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { API_URL } from '../../../consts/api';
 
 export interface ApiResponse<T> {
   status: number;
@@ -36,14 +37,17 @@ export interface StaffResponseDTO extends UserDTO {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthUserService {
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = API_URL + '/auth';
   constructor() {}
   private http = inject(HttpClient);
   login(email: string, password: string): Observable<ApiResponse<JsonResponseDTO>> {
-    return this.http.post<ApiResponse<JsonResponseDTO>>(`${this.apiUrl}/login`, { email, password });
+    return this.http.post<ApiResponse<JsonResponseDTO>>(`${this.apiUrl}/login`, {
+      email,
+      password,
+    });
   }
 
   refreshToken(token: string): Observable<ApiResponse<JWTTokensDTO>> {
