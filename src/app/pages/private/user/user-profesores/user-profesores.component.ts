@@ -15,24 +15,59 @@ export class UserProfesoresComponent implements OnInit {
   userInput = '';
   chatbotVisible = false;
   showFiltro: boolean = false;
-  
+
   profesores = [
-    { facultad: 'Profesores Destacados de Ingeniería de Software', items: [
-      { nombre: 'Jose Ventura', facultad: 'Ingeniería', calificacion: '7.6', imagen: 'images/ventura.png' },
-      { nombre: 'Alejandro Alonso', facultad: 'Ingeniería', calificacion: '7.4', imagen: 'images/alejandroalonso.png' },
-      { nombre: 'Juan Alonso', facultad: 'Ingeniería', calificacion: '6.6', imagen: 'images/juanalonso.png' }
-    ]},
-    { facultad: 'Profesores Destacados de Pregrado', items: [
-      { nombre: 'Maria Chi', facultad: 'Comunicación', calificacion: '7.6', imagen: 'images/mariachi.png' },
-      { nombre: 'Juan Roman', facultad: 'Ingeniería', calificacion: '7.6', imagen: 'images/juanroman.png' },
-      { nombre: 'Nedin Sanchez', facultad: 'Ingeniería', calificacion: '7.6', imagen: 'images/nedinsanchez.png' }
-    ]}
+    {
+      facultad: 'Profesores Destacados de Ingeniería de Software',
+      items: [
+        {
+          nombre: 'Jose Ventura',
+          facultad: 'Ingeniería',
+          calificacion: '7.6',
+          imagen: 'images/ventura.png',
+        },
+        {
+          nombre: 'Alejandro Alonso',
+          facultad: 'Ingeniería',
+          calificacion: '7.4',
+          imagen: 'images/alejandroalonso.png',
+        },
+        {
+          nombre: 'Juan Alonso',
+          facultad: 'Ingeniería',
+          calificacion: '6.6',
+          imagen: 'images/juanalonso.png',
+        },
+      ],
+    },
+    {
+      facultad: 'Profesores Destacados de Pregrado',
+      items: [
+        {
+          nombre: 'Maria Chi',
+          facultad: 'Comunicación',
+          calificacion: '7.6',
+          imagen: 'images/mariachi.png',
+        },
+        {
+          nombre: 'Juan Roman',
+          facultad: 'Ingeniería',
+          calificacion: '7.6',
+          imagen: 'images/juanroman.png',
+        },
+        {
+          nombre: 'Nedin Sanchez',
+          facultad: 'Ingeniería',
+          calificacion: '7.6',
+          imagen: 'images/nedinsanchez.png',
+        },
+      ],
+    },
   ];
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   search() {
     console.log('Buscando: ', this.searchQuery);
@@ -46,7 +81,7 @@ export class UserProfesoresComponent implements OnInit {
     console.log('Añadir al perfil: ', profesor);
   }
 
-   // Muestra u oculta el chatbot
+  // Muestra u oculta el chatbot
   toggleChatbot() {
     this.chatbotVisible = !this.chatbotVisible;
   }
@@ -64,4 +99,3 @@ export class UserProfesoresComponent implements OnInit {
     }
   }
 }
-

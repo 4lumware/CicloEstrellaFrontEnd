@@ -1,0 +1,15 @@
+<div class="custom-sidenav-container">
+  <h2 class="sidenav-title">Alumware</h2>
+  <mat-nav-list class="sidenav-list-content">
+    @for (item of items(); track item.label) {
+    <mat-list-item
+      class="nav-list-item"
+      [routerLink]="item.path"
+      routerLinkActive="item-list-active"
+    >
+      <mat-icon matListItemIcon class="nav-icon">{{ item.icon }}</mat-icon>
+      <span matListItemTitle class="nav-span-list">{{ item.label }}</span>
+    </mat-list-item>
+    }
+  </mat-nav-list>
+</div>
