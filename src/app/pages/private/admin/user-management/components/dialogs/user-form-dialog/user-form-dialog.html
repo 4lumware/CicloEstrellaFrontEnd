@@ -101,7 +101,8 @@
         [multiple]="true"
       />
     </div>
-    } @if (!isEditMode()) {
+    }
+
     <div class="full">
       <app-input
         [id]="'password'"
@@ -111,7 +112,6 @@
         [control]="form.controls.password"
       />
     </div>
-    }
 
     <div class="ufd-actions full">
       <button type="button" mat-stroked-button (click)="onCancel()">Cancelar</button>

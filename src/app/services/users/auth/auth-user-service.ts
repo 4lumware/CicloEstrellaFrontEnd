@@ -63,6 +63,8 @@ export class AuthUserService {
   }
 
   registerStaff(data: any): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/staffs/register`, data);
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/staffs/register`, data, {
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }

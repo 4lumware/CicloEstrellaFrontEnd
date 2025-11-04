@@ -17,8 +17,11 @@ import { Input } from '../../../../../../../components/forms/input/input';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RolesService } from '../../../../../../../services/roles/roles';
 import { CareerService } from '../../../../../../../services/careers/career-service';
+import { Students } from '../../../../../../../services/students/students';
+import { ImageService } from '../../../../../../../services/images/image-service';
 import { map } from 'rxjs';
 import { Role } from '../../../../../../../models/users/user';
+
 type UserDTO = {
   id?: number;
   username: string;
@@ -73,7 +76,7 @@ export class UserFormDialog implements OnInit {
     createdAt: new FormControl<Date | null>(null),
     password: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(6)],
+      validators: [Validators.minLength(6)], // No required por defecto, se valida en onSubmit
     }),
     profilePictureUrl: new FormControl<string>(''),
 
@@ -108,6 +111,12 @@ export class UserFormDialog implements OnInit {
   private data = inject<Readonly<UserFormDialogData>>(MAT_DIALOG_DATA);
   private rolesService = inject(RolesService);
   private careerService = inject(CareerService);
+  private studentService = inject(Students);
+  private imageService = inject(ImageService);
+
+  private buildImageUrl(url: string | undefined): string | null {
+    return this.imageService.buildImageUrl(url);
+  }
 
   constructor() {
     // Cargar roles
@@ -163,15 +172,12 @@ export class UserFormDialog implements OnInit {
 
       // Establecer el rol primero para que se actualicen los validadores
       const roleId = u.roles && u.roles.length ? u.roles[0].id : null;
+      const roleName = u.roles && u.roles.length ? u.roles[0].roleName : '';
+
       if (roleId) {
         this.form.controls.role.setValue(roleId);
-
-        // Encontrar el nombre del rol para actualizar selectedRoleName
-        const selectedRole = this.roleOptions().find((r) => r.value === roleId);
-        if (selectedRole) {
-          this.selectedRoleName.set(selectedRole.label);
-          this.updateValidators();
-        }
+        this.selectedRoleName.set(roleName);
+        this.updateValidators();
       }
 
       // Cargar datos básicos del usuario
@@ -182,23 +188,54 @@ export class UserFormDialog implements OnInit {
         profilePictureUrl: u.profilePictureUrl || '',
       });
 
-      // Si hay una imagen de perfil, mostrarla
+      // Si hay una imagen de perfil, construir la URL completa y mostrarla
       if (u.profilePictureUrl) {
-        this.profileImagePreview.set(u.profilePictureUrl);
+        const fullImageUrl = this.buildImageUrl(u.profilePictureUrl);
+        if (fullImageUrl) {
+          this.profileImagePreview.set(fullImageUrl);
+        }
       }
 
-      // Cargar datos específicos de estudiante si aplica
-      if (u.currentSemester) {
-        this.form.controls.currentSemester.setValue(u.currentSemester);
-      }
+      // Si es estudiante, cargar todos sus datos desde el backend
+      if (roleName === 'STUDENT' && u.id) {
+        this.studentService.getById(u.id).subscribe({
+          next: (response) => {
+            console.log('Datos completos del estudiante:', response);
+            const studentData = response.data || response;
 
-      if (u.careerIds && u.careerIds.length > 0) {
-        this.form.controls.careerIds.setValue(u.careerIds);
-      }
+            // Cargar datos específicos de estudiante
+            if (studentData.currentSemester) {
+              this.form.controls.currentSemester.setValue(studentData.currentSemester);
+            }
 
-      // En modo edición, remover completamente las validaciones de password
-      this.form.controls.password.clearValidators();
-      this.form.controls.password.updateValueAndValidity();
+            if (studentData.careerIds && studentData.careerIds.length > 0) {
+              this.form.controls.careerIds.setValue(studentData.careerIds);
+            } else if (studentData.careers && Array.isArray(studentData.careers)) {
+              // Si viene un array de objetos carrera, extraer los IDs
+              const careerIds = studentData.careers.map((c: any) => c.id);
+              this.form.controls.careerIds.setValue(careerIds);
+            }
+          },
+          error: (err) => {
+            console.error('Error al cargar datos del estudiante:', err);
+            // Si falla, intentar usar los datos que vienen en el usuario
+            if (u.currentSemester) {
+              this.form.controls.currentSemester.setValue(u.currentSemester);
+            }
+            if (u.careerIds && u.careerIds.length > 0) {
+              this.form.controls.careerIds.setValue(u.careerIds);
+            }
+          },
+        });
+      } else {
+        // Para no estudiantes, usar los datos que vienen en el usuario (si los hay)
+        if (u.currentSemester) {
+          this.form.controls.currentSemester.setValue(u.currentSemester);
+        }
+        if (u.careerIds && u.careerIds.length > 0) {
+          this.form.controls.careerIds.setValue(u.careerIds);
+        }
+      }
     }
   }
   onCancel(): void {
@@ -274,16 +311,30 @@ export class UserFormDialog implements OnInit {
       username: v.username,
       email: v.email,
       roleName: roleName,
-      profilePictureUrl: this.selectedFile() ? this.profileImagePreview() : v.profilePictureUrl,
     };
 
-    // Solo incluir password en modo creación
-    if (!this.isEditMode()) {
-      if (!v.password || v.password.trim() === '') {
-        alert('La contraseña es requerida para crear un nuevo usuario');
-        return;
-      }
+    // Incluir roleId para todos los roles (staff y student)
+    if (v.role) {
+      payload.roleId = v.role as number;
+    }
+
+    // Manejar profilePictureUrl
+    if (this.selectedFile()) {
+      // Si hay un nuevo archivo seleccionado, usar el base64
+      payload.profilePictureUrl = this.profileImagePreview();
+    } else if (v.profilePictureUrl) {
+      // Si no hay nuevo archivo pero había una URL previa, mantener la original (no la construida)
+      // Esto es importante para no enviar la URL completa al servidor
+      payload.profilePictureUrl = v.profilePictureUrl;
+    }
+
+    // Incluir password si se proporciona
+    if (v.password && v.password.trim() !== '') {
       payload.password = v.password;
+    } else if (!this.isEditMode()) {
+      // En modo creación, el password es obligatorio
+      alert('La contraseña es requerida para crear un nuevo usuario');
+      return;
     }
 
     // Para estudiantes, agregar campos específicos
@@ -308,6 +359,14 @@ export class UserFormDialog implements OnInit {
         careerIds: v.careerIds,
         careerIdsLength: v.careerIds.length,
       });
+    }
+
+    // Indicar si el usuario original era estudiante (para conversión a staff/admin)
+    if (this.isEditMode() && this.data.user) {
+      const originalRole =
+        this.data.user.roles && this.data.user.roles.length ? this.data.user.roles[0].roleName : '';
+      payload.wasStudent = originalRole === 'STUDENT';
+      payload.originalUserId = this.data.user.id;
     }
 
     console.log('Payload final del dialog:', payload);
