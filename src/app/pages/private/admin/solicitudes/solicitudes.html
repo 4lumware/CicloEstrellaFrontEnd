@@ -1,0 +1,103 @@
+<div class="solicitudes-container">
+  <mat-card class="header-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>assignment</mat-icon>
+        Gestión de Solicitudes de Profesores
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Administra las solicitudes de creación de profesores enviadas por los usuarios.</p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="table-card">
+    <table mat-table [dataSource]="solicitudes()" class="solicitudes-table">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let solicitud">{{ solicitud.id }}</td>
+      </ng-container>
+
+      <!-- Nombre Completo Column -->
+      <ng-container matColumnDef="nombreCompleto">
+        <th mat-header-cell *matHeaderCellDef>Nombre Completo</th>
+        <td mat-cell *matCellDef="let solicitud">{{ solicitud.nombreCompleto }}</td>
+      </ng-container>
+
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let solicitud">{{ solicitud.email }}</td>
+      </ng-container>
+
+      <!-- Especialidad Column -->
+      <ng-container matColumnDef="especialidad">
+        <th mat-header-cell *matHeaderCellDef>Especialidad</th>
+        <td mat-cell *matCellDef="let solicitud">{{ solicitud.especialidad }}</td>
+      </ng-container>
+
+      <!-- Fecha Solicitud Column -->
+      <ng-container matColumnDef="fechaSolicitud">
+        <th mat-header-cell *matHeaderCellDef>Fecha Solicitud</th>
+        <td mat-cell *matCellDef="let solicitud">
+          {{ solicitud.fechaSolicitud | date : 'dd/MM/yyyy' }}
+        </td>
+      </ng-container>
+
+      <!-- Solicitado Por Column -->
+      <ng-container matColumnDef="solicitadoPor">
+        <th mat-header-cell *matHeaderCellDef>Solicitado Por</th>
+        <td mat-cell *matCellDef="let solicitud">{{ solicitud.solicitadoPor }}</td>
+      </ng-container>
+
+      <!-- Estado Column -->
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let solicitud">
+          <mat-chip [color]="getEstadoColor(solicitud.estado)" highlighted>
+            {{ solicitud.estado | uppercase }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Acciones Column -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let solicitud">
+          <div class="action-buttons">
+            <button
+              mat-icon-button
+              color="primary"
+              matTooltip="Ver detalles"
+              (click)="verDetalles(solicitud)"
+            >
+              <mat-icon>visibility</mat-icon>
+            </button>
+            @if (solicitud.estado === 'pendiente') {
+            <button
+              mat-icon-button
+              color="primary"
+              matTooltip="Aprobar solicitud"
+              (click)="aprobarSolicitud(solicitud)"
+            >
+              <mat-icon>check_circle</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              matTooltip="Rechazar solicitud"
+              (click)="rechazarSolicitud(solicitud)"
+            >
+              <mat-icon>cancel</mat-icon>
+            </button>
+            }
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </mat-card>
+</div>

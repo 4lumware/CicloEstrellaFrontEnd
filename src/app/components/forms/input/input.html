@@ -1,18 +1,17 @@
 <div class="input-wrapper">
- <mat-form-field class="input-container">
-    <mat-label >{{label()}}</mat-label>
+  <mat-form-field class="input-container" [appearance]="variant()">
+    <mat-label>{{ label() }}</mat-label>
     <input
-    matInput
-    class="input-content"
-    [id]="id()"
-    [placeholder]="placeholder()"
-    [type]="type()"
-    [formControl]="control()"
-    (blur)="updateErrorMessage()"
-    >
-  @if (control().invalid ) {
-      <mat-error>{{ errorMessage() }}</mat-error>
-  }
+      matInput
+      class="input-content"
+      [id]="id()"
+      [placeholder]="placeholder()"
+      [type]="type()"
+      [formControl]="control()"
+      (blur)="updateErrorMessage()"
+    />
+    @if (control().invalid ) {
+    <mat-error>{{ errorMessage() }}</mat-error>
+    }
   </mat-form-field>
-
 </div>

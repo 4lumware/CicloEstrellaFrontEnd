@@ -1,0 +1,17 @@
+<div class="cd-container">
+  <div class="cd-header">
+    <mat-icon class="cd-icon" [ngClass]="data.color || 'primary'">{{
+      data.icon || 'help'
+    }}</mat-icon>
+    <h2 class="cd-title">{{ data.title || 'Confirmación' }}</h2>
+  </div>
+  <div class="cd-content">{{ data.message || '¿Deseas continuar?' }}</div>
+  <div class="cd-actions">
+    <button matButton="filled" mat-stroked-button (click)="onCancel()">
+      {{ data.cancelLabel || 'Cancelar' }}
+    </button>
+    <button mat-raised-button [color]="data.color || 'primary'" (click)="onConfirm()">
+      {{ data.confirmLabel || 'Confirmar' }}
+    </button>
+  </div>
+</div>

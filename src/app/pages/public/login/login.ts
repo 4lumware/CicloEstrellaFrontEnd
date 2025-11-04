@@ -1,18 +1,17 @@
-import {Component, inject, signal} from '@angular/core';
-import {HeaderAuth} from '../../../layout/header-auth/header-auth';
-import {Router, RouterLink} from '@angular/router';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatIcon} from '@angular/material/icon';
-import {MatLabel} from '@angular/material/form-field';
-import {MatError, MatFormField} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
-import {MatButton, MatIconButton} from '@angular/material/button';
-import {NgIf} from '@angular/common';
-import {merge} from 'rxjs';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {ApiResponse} from '../../../services/careers/career-service';
-import {AuthUserService, JsonResponseDTO} from '../../../services/users/auth/auth-user-service';
-
+import { Component, inject, signal } from '@angular/core';
+import { HeaderAuth } from '../../../layout/header-auth/header-auth';
+import { Router, RouterLink } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { merge } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ApiResponse } from '../../../services/careers/career-service';
+import { AuthUserService, JsonResponseDTO } from '../../../services/users/auth/auth-user-service';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +25,7 @@ import {AuthUserService, JsonResponseDTO} from '../../../services/users/auth/aut
     MatInput,
     MatIconButton,
     MatIcon,
-    MatButton
+    MatButton,
   ],
   templateUrl: './login.html',
   styleUrl: './login.css',
@@ -42,11 +41,8 @@ export class Login {
 
   private fb: FormBuilder = inject(FormBuilder);
   private router: Router = inject(Router);
-  private authService = inject(AuthUserService)
-  constructor()
-  {
-
-
+  private authService = inject(AuthUserService);
+  constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -97,19 +93,29 @@ export class Login {
     this.authService.login(email, password).subscribe({
       next: (response: ApiResponse<JsonResponseDTO>) => {
         console.log('✅ Login exitoso:', response);
-
-        // Guardar tokens localmente
         const tokens = response.data.tokens;
         localStorage.setItem('access_token', tokens.access_token);
         localStorage.setItem('refresh_token', tokens.refresh_token);
-        this.router.navigate(['/private/home']);
+
+        if (response.data.user.roles === undefined) {
+          this.router.navigate(['/private/home']);
+          return;
+        }
+
+        if (
+          response.data.user.roles.some(
+            (role) => role.roleName === 'ADMIN' || role.roleName === 'STAFF'
+          )
+        ) {
+          this.router.navigate(['/dashboard/home']);
+        }
       },
       error: (err) => {
         console.error('❌ Error en login:', err);
         this.loginError.set('Correo o contraseña incorrectos');
         this.loading.set(false);
       },
-      complete: () => this.loading.set(false)
+      complete: () => this.loading.set(false),
     });
   }
 }

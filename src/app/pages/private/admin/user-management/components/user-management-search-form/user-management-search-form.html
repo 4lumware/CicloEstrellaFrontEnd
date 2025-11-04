@@ -1,0 +1,86 @@
+<mat-expansion-panel class="search-panel">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <mat-icon>search</mat-icon>
+      <span>Buscador Avanzado</span>
+    </mat-panel-title>
+    <mat-panel-description> Filtra usuarios por nombre, rol, estado y fecha </mat-panel-description>
+  </mat-expansion-panel-header>
+
+  <form [formGroup]="searchForm()" class="search-form">
+    <div class="form-row">
+      <div class="form-field">
+        <app-input
+          [id]="'username'"
+          [control]="usernameControl"
+          [label]="'Nombre de Usuario'"
+          [placeholder]="'Buscar por nombre...'"
+          variant="outline"
+        />
+      </div>
+
+      <div class="form-field">
+        <app-select
+          [id]="'roleName'"
+          [control]="roleNameControl"
+          [label]="'Rol'"
+          [options]="roleOptions()"
+          variant="outline"
+        />
+      </div>
+
+      <div class="form-field">
+        <app-select
+          [id]="'state'"
+          [control]="stateControl"
+          [label]="'Estado'"
+          [options]="stateOptions"
+          variant="outline"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Fecha Inicio</mat-label>
+          <input
+            matInput
+            [matDatepicker]="startPicker"
+            [formControl]="startDateControl"
+            placeholder="DD/MM/AAAA"
+          />
+          <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="form-field">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Fecha Fin</mat-label>
+          <input
+            matInput
+            [matDatepicker]="endPicker"
+            [formControl]="endDateControl"
+            placeholder="DD/MM/AAAA"
+          />
+          <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="form-field form-actions">
+        <button
+          mat-raised-button
+          color="accent"
+          type="button"
+          (click)="onClearFilters()"
+          class="clear-button"
+        >
+          <mat-icon>clear_all</mat-icon>
+          Limpiar Filtros
+        </button>
+      </div>
+    </div>
+  </form>
+</mat-expansion-panel>
