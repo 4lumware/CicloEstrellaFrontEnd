@@ -9,8 +9,8 @@ import { AuthenticatedAdminDashboard } from './layout/private/admin/authenticate
 import { UserManagement } from './pages/private/admin/user-management/user-management';
 import { AdminDashboardHome } from './pages/private/admin/admin-dashboard-home/admin-dashboard-home';
 import {Formality} from './pages/private/user/formality/formality';
-import {UserProfesoresComponent} from './pages/private/user/user-profesores/user-profesores.component';
 import {UserHomeComponent} from './pages/private/user/user-home.component';
+import {UserProfesoresComponent} from './pages/private/user/user-profesores/user-profesores.component';
 
 export const routes: Routes = [
   { path: '', component: Layout, children: [{ path: '', component: LandingComponent }] },

@@ -239,7 +239,6 @@ body {
 #cerrar-filtro img{
     width: 35px;
     height: 35px;
-    background-color: none;
 }
 
 .filtro-botones {
@@ -276,7 +275,6 @@ body {
 .footerIntro .fraseFooter {
     align-items: center;
     text-align: center;
-    float: center;
     padding: 5px;
     color: #FFCB47;
     font-family: "Inria Sans";

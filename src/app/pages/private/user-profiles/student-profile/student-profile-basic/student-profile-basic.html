@@ -1,0 +1,42 @@
+<main class = "centro">
+  <section class="infoUsuario">
+    <h2>Información Básica</h2>
+    <label>Nombre</label>
+    <input type="text" placeholder="Nombre Del Usuario" enabled>
+
+    <label>Correo Electrónico</label>
+    <input type="text" placeholder="Correo Del Usuario" enabled>
+
+    <h2 class = infoadi>Información Adicional</h2>
+    <label>Carrera</label>
+    <input type="text" placeholder="Carrera Del Usuario" enabled>
+
+    <label>Ciclo</label>
+    <input type="text" placeholder="Ciclo Del Usuario" enabled>
+
+    <button class="editarBtn" [routerLink]="'/private/student/edit'">
+      Editar información
+    </button>
+  </section>
+
+  <section class="configuracionSistema">
+    <h2>Configuración Del Sistema</h2>
+    <label>Idioma</label>
+    <select id="idiomadesplegable">
+      <option value="">Seleccionar Idioma</option>
+      <option value="idioma1">Español</option>
+      <option value="idioma1">Inglés</option>
+    </select>
+    <div class="ajustes">
+      <h3>Ajustes</h3>
+      <button>Cambiar Contraseña</button>
+      <button>Visibilidad Del Perfil</button>
+      <button>Notificaciones</button>
+      <button>Apariencia</button>
+    </div>
+  </section>
+
+  <button class="volverBtn" [routerLink]="'/private/home'">
+    Volver a página de inicio
+  </button>
+</main>
