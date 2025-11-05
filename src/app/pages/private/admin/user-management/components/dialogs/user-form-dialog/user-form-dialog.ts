@@ -76,7 +76,7 @@ export class UserFormDialog implements OnInit {
     createdAt: new FormControl<Date | null>(null),
     password: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.minLength(6)], // No required por defecto, se valida en onSubmit
+      validators: [Validators.minLength(6), Validators.required],
     }),
     profilePictureUrl: new FormControl<string>(''),
 
@@ -87,8 +87,10 @@ export class UserFormDialog implements OnInit {
 
   protected roleOptions = signal<SelectOption[]>([]);
   protected careerOptions = signal<SelectOption[]>([]);
+
   protected profileImagePreview = signal<string | null>(null);
   protected selectedFile = signal<File | null>(null);
+
   protected semesterOptions: SelectOption[] = [
     { label: '1er Semestre', value: 1 },
     { label: '2do Semestre', value: 2 },
@@ -119,17 +121,14 @@ export class UserFormDialog implements OnInit {
   }
 
   constructor() {
-    // Cargar roles
+    // Cargar roles (siempre todos). El filtrado depende del modo y se aplica en ngOnInit.
     this.rolesService.index().subscribe({
       next: (response) => {
-        const options = response.data;
-
-        const selectedOptions = options.map((role: Role) => ({
+        const options = (response.data as Role[]).map((role) => ({
           label: role.roleName,
           value: role.id,
         }));
-
-        this.roleOptions.set(selectedOptions);
+        this.roleOptions.set(options);
       },
     });
 
@@ -237,9 +236,41 @@ export class UserFormDialog implements OnInit {
         }
       }
     }
+    // Aplicar filtrado de roles segun modo y rol original
+    this.applyRoleFiltering(this.data.mode, this.data.user?.roles?.[0]?.roleName || '');
   }
   onCancel(): void {
     this.dialogRef.close(null);
+  }
+
+  private applyRoleFiltering(mode: 'create' | 'edit' | 'update', originalRoleName: string): void {
+    const currentOptions = this.roleOptions();
+    if (mode === 'create') {
+      // Crear: mostrar todos los roles y habilitar control
+      this.roleOptions.set(currentOptions);
+      this.form.controls.role.enable({ emitEvent: false });
+      return;
+    }
+
+    // Editar / Actualizar
+    if (originalRoleName === 'STUDENT') {
+      // Estudiante: no puede modificar su rol
+      const onlyStudent = currentOptions.filter((o) => o.label === 'STUDENT');
+      this.roleOptions.set(onlyStudent);
+      this.form.controls.role.disable({ emitEvent: false });
+    } else {
+      // Staff: ver solo roles de staff
+      const staffRoleNames = ['ADMIN', 'MODERATOR', 'WRITER'];
+      const staffOnly = currentOptions.filter((o) => staffRoleNames.includes(o.label));
+      this.roleOptions.set(staffOnly);
+      this.form.controls.role.enable({ emitEvent: false });
+      // Si el valor actual no está en la lista filtrada, limpiar para evitar inconsistencia
+      const currentValue = this.form.controls.role.value;
+      const exists = staffOnly.some((o) => o.value === currentValue);
+      if (!exists) {
+        this.form.controls.role.setValue(null, { emitEvent: false });
+      }
+    }
   }
 
   private updateValidators(): void {
@@ -362,6 +393,7 @@ export class UserFormDialog implements OnInit {
     }
 
     // Indicar si el usuario original era estudiante (para conversión a staff/admin)
+
     if (this.isEditMode() && this.data.user) {
       const originalRole =
         this.data.user.roles && this.data.user.roles.length ? this.data.user.roles[0].roleName : '';
@@ -370,6 +402,7 @@ export class UserFormDialog implements OnInit {
     }
 
     console.log('Payload final del dialog:', payload);
+
     this.dialogRef.close(payload);
   }
 }

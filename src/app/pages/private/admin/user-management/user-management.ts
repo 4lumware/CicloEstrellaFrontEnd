@@ -5,7 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { UserFormDialog } from './components/dialogs/user-form-dialog/user-form-dialog';
+import { UserCreateDialog } from './components/dialogs/user-create-dialog/user-create-dialog';
+import { UserUpdateDialog } from './components/dialogs/user-update-dialog/user-update-dialog';
 import { UserManagementTable } from './components/user-management-table/user-management-table';
 import { User } from '../../../../models/users/user';
 import { ApplicationUserService } from '../../../../services/users/application/application-user-service';
@@ -38,8 +39,8 @@ export class UserManagement {
   private authService = inject(AuthUserService);
 
   onAddUser(): void {
-    const ref = this.dialog.open(UserFormDialog, {
-      data: { mode: 'create' },
+    const ref = this.dialog.open(UserCreateDialog, {
+      data: {},
       width: '640px',
       maxHeight: '90vh',
     });
@@ -63,6 +64,8 @@ export class UserManagement {
         payload.profilePictureUrl = result.profilePictureUrl;
       }
 
+      // No incluir roleId para estudiantes. Se agregará solo en la rama de staff.
+
       // Agregar campos específicos de estudiante
       if (isStudent) {
         if (result.currentSemester) {
@@ -70,10 +73,6 @@ export class UserManagement {
         }
         if (result.careerIds && Array.isArray(result.careerIds) && result.careerIds.length > 0) {
           payload.careerIds = result.careerIds;
-        }
-        // Incluir roleId para estudiantes también
-        if (result.roleId) {
-          payload.roleId = Number(result.roleId);
         }
       }
 
@@ -123,7 +122,6 @@ export class UserManagement {
 
         payload.roleId = Number(result.roleId);
 
-        console.log('Payload a enviar (staff):', payload, 'roleId:', payload.roleId);
         this.authService.registerStaff(payload).subscribe({
           next: (response) => {
             console.log('Staff creado:', response);
@@ -135,8 +133,9 @@ export class UserManagement {
             this.tableComponent.loadUsers(); // Recargar la tabla
           },
           error: (err) => {
-            console.error('Error al crear staff', err);
-            this.snackBar.open('Error al crear staff', 'Cerrar', {
+            const errorMsg = err.error?.message || 'Error al crear estudiante';
+
+            this.snackBar.open(errorMsg, 'Cerrar', {
               duration: 3000,
               horizontalPosition: 'end',
               verticalPosition: 'top',
@@ -147,7 +146,6 @@ export class UserManagement {
         // Usar el endpoint original para otros roles
         this.userService.store(payload).subscribe({
           next: (user) => {
-            console.log('Usuario creado:', user);
             this.snackBar.open('Usuario creado correctamente', 'Cerrar', {
               duration: 3000,
               horizontalPosition: 'end',
@@ -169,8 +167,8 @@ export class UserManagement {
   }
 
   onUserUpdate(user: User): void {
-    const ref = this.dialog.open(UserFormDialog, {
-      data: { mode: 'update', user: user },
+    const ref = this.dialog.open(UserUpdateDialog, {
+      data: { user: user },
       width: '640px',
       maxHeight: '90vh',
     });
@@ -208,7 +206,6 @@ export class UserManagement {
         if (result.careerIds && Array.isArray(result.careerIds) && result.careerIds.length > 0) {
           payload.careerIds = result.careerIds;
         }
-        payload.roleId = Number(result.roleId);
       }
 
       console.log('Payload a enviar para actualizar (pre-branch):', payload);
@@ -244,7 +241,7 @@ export class UserManagement {
             }
 
             payload.roleId = Number(result.roleId);
-            (payload as any).role_id = payload.roleId;
+
             console.log(
               'Payload a enviar (convert student->staff):',
               payload,
