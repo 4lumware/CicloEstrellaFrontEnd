@@ -1,0 +1,122 @@
+<div class="ufd-container">
+  <div class="ufd-header">
+    <mat-icon>edit</mat-icon>
+    <h2>{{ title() }}</h2>
+  </div>
+
+  <form [formGroup]="form" class="ufd-form" (ngSubmit)="onSubmit()">
+    <div class="full">
+      <app-input
+        [id]="'username-dialog'"
+        [label]="'Usuario'"
+        [placeholder]="'Ingrese el usuario'"
+        [control]="form.controls.username"
+      />
+    </div>
+
+    <div class="full">
+      <app-input
+        [id]="'email'"
+        [label]="'Correo'"
+        [type]="'email'"
+        [placeholder]="'nombre@dominio.com'"
+        [control]="form.controls.email"
+      />
+    </div>
+
+    <div class="full">
+      <app-select
+        [id]="'role'"
+        [label]="'Rol'"
+        [options]="roleOptions()"
+        [control]="form.controls.role"
+      />
+    </div>
+
+    <!-- Foto de perfil -->
+    <div class="full profile-picture-section">
+      <label class="profile-picture-label">Foto de Perfil</label>
+      <div class="profile-picture-upload">
+        @if (profileImagePreview()) {
+        <div class="image-preview-container">
+          <img [src]="profileImagePreview()" alt="Preview" class="image-preview" />
+          <button
+            type="button"
+            mat-icon-button
+            color="warn"
+            class="remove-image-btn"
+            (click)="removeImage()"
+            matTooltip="Eliminar imagen"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        } @else {
+        <div class="upload-placeholder">
+          <mat-icon class="upload-icon">add_photo_alternate</mat-icon>
+          <p>Selecciona una imagen</p>
+          <span class="upload-hint">JPG, PNG (Máx. 5MB)</span>
+        </div>
+        }
+
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          #fileInput
+          style="display: none"
+        />
+
+        <button
+          type="button"
+          mat-stroked-button
+          color="primary"
+          class="upload-btn"
+          (click)="fileInput.click()"
+        >
+          <mat-icon>upload</mat-icon>
+          {{ profileImagePreview() ? 'Cambiar imagen' : 'Seleccionar imagen' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Campos específicos para STUDENT -->
+    @if (isStudent()) {
+    <div class="full">
+      <app-select
+        [id]="'currentSemester'"
+        [label]="'Semestre Actual'"
+        [options]="semesterOptions"
+        [control]="form.controls.currentSemester"
+      />
+    </div>
+
+    <div class="full">
+      <app-select
+        [id]="'careerIds'"
+        [label]="'Carreras'"
+        [options]="careerOptions()"
+        [control]="form.controls.careerIds"
+        [multiple]="true"
+      />
+    </div>
+    }
+
+    <div class="full">
+      <app-input
+        [id]="'password'"
+        [label]="'Contraseña'"
+        [type]="'password'"
+        [placeholder]="'Dejar en blanco para no cambiar'"
+        [control]="form.controls.password"
+      />
+    </div>
+
+    <div class="ufd-actions full">
+      <button type="button" mat-stroked-button (click)="onCancel()">Cancelar</button>
+      <button type="submit" mat-raised-button color="primary" [disabled]="form.invalid">
+        {{ title() }}
+      </button>
+    </div>
+  </form>
+</div>
