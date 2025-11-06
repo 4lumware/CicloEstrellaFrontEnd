@@ -21,7 +21,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialog } from '../../../../../../components/ui/confirm-dialog/confirm-dialog';
 import { UserFormDialog } from '../dialogs/user-form-dialog/user-form-dialog';
 import { UserManagementSearchForm } from '../user-management-search-form/user-management-search-form';
-import { ApplicationUserService } from '../../../../../../services/users/application/application-user-service';
+import { ApplicationUserService } from '../../../../../../services/users/rest/application-user-service';
 import { ImageService } from '../../../../../../services/images/image-service';
 import { User } from '../../../../../../models/users/user';
 
