@@ -5,6 +5,7 @@ import { ApiResponse } from '../../careers/career-service';
 import { Observable } from 'rxjs';
 import { createStaff, User } from '../../../models/users/user';
 import { createStudent } from '../../../models/students/student';
+import { StaffModelRest } from '../../../adapters/staffs/StaffAdapterRest';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +30,7 @@ export class ApplicationUserService {
     return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/${userId}`);
   }
 
-  update(userId: number, user: createStaff | FormData): Observable<ApiResponse<any>> {
-    return this.http.put<ApiResponse<any>>(`${this.apiUrl}/${userId}`, user);
+  update(userId: number, user: createStaff | FormData): Observable<ApiResponse<StaffModelRest>> {
+    return this.http.put<ApiResponse<StaffModelRest>>(`${this.apiUrl}/${userId}`, user);
   }
 }

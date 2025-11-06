@@ -17,7 +17,7 @@ import { Input } from '../../../../../../../components/forms/input/input';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RolesService } from '../../../../../../../services/roles/roles';
 import { CareerService } from '../../../../../../../services/careers/career-service';
-import { Students } from '../../../../../../../services/students/students';
+import { Students } from '../../../../../../../services/students/rest/students';
 import { ImageService } from '../../../../../../../services/images/image-service';
 import { map } from 'rxjs';
 import { Role } from '../../../../../../../models/users/user';
@@ -205,14 +205,6 @@ export class UserFormDialog implements OnInit {
             // Cargar datos específicos de estudiante
             if (studentData.currentSemester) {
               this.form.controls.currentSemester.setValue(studentData.currentSemester);
-            }
-
-            if (studentData.careerIds && studentData.careerIds.length > 0) {
-              this.form.controls.careerIds.setValue(studentData.careerIds);
-            } else if (studentData.careers && Array.isArray(studentData.careers)) {
-              // Si viene un array de objetos carrera, extraer los IDs
-              const careerIds = studentData.careers.map((c: any) => c.id);
-              this.form.controls.careerIds.setValue(careerIds);
             }
           },
           error: (err) => {

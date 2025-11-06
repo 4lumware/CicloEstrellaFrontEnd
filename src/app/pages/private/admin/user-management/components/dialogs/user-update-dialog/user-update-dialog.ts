@@ -16,7 +16,7 @@ import {
 import { Input } from '../../../../../../../components/forms/input/input';
 import { RolesService } from '../../../../../../../services/roles/roles';
 import { CareerService } from '../../../../../../../services/careers/career-service';
-import { Students } from '../../../../../../../services/students/students';
+import { Students } from '../../../../../../../services/students/rest/students';
 import { ImageService } from '../../../../../../../services/images/image-service';
 import { Role } from '../../../../../../../models/users/user';
 
@@ -144,12 +144,6 @@ export class UserUpdateDialog implements OnInit {
           const studentData = response.data || response;
           if (studentData.currentSemester)
             this.form.controls.currentSemester.setValue(studentData.currentSemester);
-          if (studentData.careerIds && studentData.careerIds.length > 0) {
-            this.form.controls.careerIds.setValue(studentData.careerIds);
-          } else if (studentData.careers && Array.isArray(studentData.careers)) {
-            const ids = studentData.careers.map((c: any) => c.id);
-            this.form.controls.careerIds.setValue(ids);
-          }
         },
       });
     }
