@@ -1,0 +1,204 @@
+/* Variables */
+:root {
+  --color-morado-principal: #5c3577;
+  --color-morado-claro: #ece8f1; /* Fondo de la tarjeta y botón inactivo */
+  --color-texto-oscuro: #333;
+  --color-texto-rojo: #e91e63; /* Color de Eliminar */
+  --color-fondo-notepad: #dcd3e9; /* Fondo lila del Notepad */
+}
+
+/* --- Estructura Principal y Columnas --- */
+.contenedor-principal-guardados {
+  position: relative;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.titulo-principal-bienvenida {
+  font-size: 2.2em;
+  font-weight: 600;
+  margin-bottom: 30px;
+  color: var(--color-texto-oscuro);
+}
+
+.columnas-guardadas {
+  display: flex;
+  gap: 40px; /* Espacio entre las dos columnas */
+}
+
+.columna-profesores, .columna-tramites {
+  flex: 1; /* Ambas columnas ocupan el mismo espacio */
+  min-width: 350px;
+}
+
+.titulo-columna {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc; /* Línea divisoria sutil */
+  padding-bottom: 5px;
+}
+
+/* --- Estilo de Tarjeta Guardada --- */
+.tarjeta-guardada {
+  background-color: white;
+  border: 1px solid var(--color-morado-claro);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  padding: 15px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+/* --- Header de la Tarjeta (Foto, Nombre, Eliminar) --- */
+.tarjeta-header {
+  display: grid;
+  /* Define 4 columnas: Foto (auto), Nombre (1fr), Eliminar (auto), Icono Basura (auto) */
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.perfil-img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--color-morado-claro);
+  grid-column: 1; /* Posición de la foto */
+}
+
+.nombre-guardado {
+  font-size: 1em;
+  font-weight: 600;
+  margin: 0;
+  grid-column: 2; /* Posición del nombre */
+}
+
+.boton-eliminar button{
+  /* ¡CLAVE! Sobrescribir el color del texto (de rojo a morado) */
+  color: #2f1747 !important;
+
+  /* Asegurar que no tenga un fondo de color de Material */
+  background: none !important;
+
+  /* Asegurar que no tenga un borde sólido de Material */
+  border: none !important;
+
+  /* Mantener tus otros estilos de texto/tamaño */
+  font-size: 0.8em;
+  padding: 0;
+
+  /* Para anular los estilos de mayúsculas de Material, si existen */
+  text-transform: none !important;
+}
+.icono-eliminar {
+  width: 16px;
+  height: 16px;
+  color: #888; /* Icono de papelera gris */
+  cursor: pointer;
+  grid-column: 4; /* Posición del icono */
+}
+
+/* --- Sección de Sedes --- */
+.secciones-sede {
+  margin: 10px 0;
+  padding: 5px 0;
+  /* Si necesitas una línea divisoria: border-top: 1px dashed #eee; */
+}
+
+.etiqueta-sede {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: var(--color-texto-oscuro);
+  margin: 0 0 5px 0;
+}
+
+.botones-sede {
+  display: flex;
+  gap: 5px;
+}
+
+.btn-sede {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid var(--color-morado-claro);
+  background-color: transparent;
+  color: var(--color-morado-principal);
+  font-weight: 600;
+  font-size: 0.8em;
+  cursor: pointer;
+}
+
+.btn-sede.activo {
+  background-color: #2f1747;
+  color: white;
+  border-color: var(--color-morado-principal);
+}
+
+/* --- Sección de Notas --- */
+.notas-seccion {
+  margin-top: 10px;
+}
+
+.etiqueta-notas {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: var(--color-texto-oscuro);
+  margin: 0 0 5px 0;
+}
+
+.texto-notas {
+  font-size: 0.9em;
+  color: #555;
+  margin: 0;
+}
+
+/* --- Icono de Trámite (Reemplaza a la foto de perfil) --- */
+.icono-tramite {
+  /* Mismo tamaño que la foto del profesor */
+  width: 45px;
+  height: 45px;
+  border-radius: 5px; /* Se ve cuadrado, no circular como la foto */
+  object-fit: contain;
+  /* Aplicar un borde sutil para que se asemeje al diseño */
+  border: 1px solid var(--color-morado-claro);
+  padding: 5px; /* Relleno dentro del borde */
+}
+
+/* Opcional: Si quieres diferenciar un poco el nombre de la tarjeta de trámite */
+.tramite-guardado .nombre-guardado {
+  font-weight: 500;
+}
+
+/* --- Notepad Flotante (Esquina superior derecha) --- */
+.notepad {
+  position: absolute;
+  top: -3px; /* Reducir de 150px a 50px */
+  right: 20px;
+  width: 100px;
+  height: 100px;
+  background-color: var(--color-fondo-notepad);
+  border-radius: 10px;
+  padding: 1px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+}
+
+.notepad p {
+  font-weight: 600;
+  color: var(--color-morado-principal);
+  margin: 0 0 5px 0;
+}
+
+.notepad img {
+  /* Ajustar tamaño del icono */
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+
+}
