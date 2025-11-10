@@ -1,12 +1,8 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-
-export interface ApiResponse<T> {
-  status: number;
-  message: string;
-  data: T;
-}
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { API_URL } from '../../../consts/api';
+import { ApiResponse } from '../../../models/responses/response';
 
 export interface JWTTokensDTO {
   access_token: string;
@@ -18,10 +14,15 @@ export interface JsonResponseDTO {
   tokens: JWTTokensDTO;
 }
 
+interface Role {
+  id: number;
+  roleName: string;
+}
+
 export interface UserDTO {
   id: number;
   email: string;
-  roles: string[];
+  roles: Role[];
 }
 
 export interface StudentResponseDTO extends UserDTO {
@@ -36,14 +37,17 @@ export interface StaffResponseDTO extends UserDTO {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthUserService {
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = API_URL + '/auth';
   constructor() {}
   private http = inject(HttpClient);
   login(email: string, password: string): Observable<ApiResponse<JsonResponseDTO>> {
-    return this.http.post<ApiResponse<JsonResponseDTO>>(`${this.apiUrl}/login`, { email, password });
+    return this.http.post<ApiResponse<JsonResponseDTO>>(`${this.apiUrl}/login`, {
+      email,
+      password,
+    });
   }
 
   refreshToken(token: string): Observable<ApiResponse<JWTTokensDTO>> {
@@ -52,5 +56,15 @@ export class AuthUserService {
       {},
       { headers: { Authorization: `Bearer ${token}` } }
     );
+  }
+
+  registerStudent(data: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/students/register`, data);
+  }
+
+  registerStaff(data: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/staffs/register`, data, {
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }

@@ -1,0 +1,189 @@
+<div class="gestion-container">
+  <mat-card class="header-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>settings</mat-icon>
+        Gestión de Comentarios
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Administra y modera los comentarios de la plataforma.</p>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Estadísticas -->
+  <div class="estadisticas-grid">
+    <mat-card class="stat-card">
+      <div class="stat-icon">
+        <mat-icon>comment</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ estadisticas().total }}</h3>
+        <p>Total Comentarios</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card active">
+      <div class="stat-icon">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ estadisticas().activos }}</h3>
+        <p>Activos</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card warning">
+      <div class="stat-icon">
+        <mat-icon>visibility_off</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ estadisticas().ocultos }}</h3>
+        <p>Ocultos</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card danger">
+      <div class="stat-icon">
+        <mat-icon>delete</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ estadisticas().eliminados }}</h3>
+        <p>Eliminados</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card alert">
+      <div class="stat-icon">
+        <mat-icon>flag</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ estadisticas().reportados }}</h3>
+        <p>Reportados</p>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Tabla de Comentarios -->
+  <mat-card class="table-card">
+    <table mat-table [dataSource]="comentarios()" class="comentarios-table">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let comentario">{{ comentario.id }}</td>
+      </ng-container>
+
+      <!-- Autor Column -->
+      <ng-container matColumnDef="autor">
+        <th mat-header-cell *matHeaderCellDef>Autor</th>
+        <td mat-cell *matCellDef="let comentario">{{ comentario.autor }}</td>
+      </ng-container>
+
+      <!-- Contenido Column -->
+      <ng-container matColumnDef="contenido">
+        <th mat-header-cell *matHeaderCellDef>Contenido</th>
+        <td mat-cell *matCellDef="let comentario" class="contenido-cell">
+          {{ comentario.contenido }}
+        </td>
+      </ng-container>
+
+      <!-- Sección Column -->
+      <ng-container matColumnDef="seccion">
+        <th mat-header-cell *matHeaderCellDef>Sección</th>
+        <td mat-cell *matCellDef="let comentario">{{ comentario.seccion }}</td>
+      </ng-container>
+
+      <!-- Fecha Column -->
+      <ng-container matColumnDef="fechaCreacion">
+        <th mat-header-cell *matHeaderCellDef>Fecha</th>
+        <td mat-cell *matCellDef="let comentario">
+          {{ comentario.fechaCreacion | date : 'dd/MM/yyyy' }}
+        </td>
+      </ng-container>
+
+      <!-- Reportes Column -->
+      <ng-container matColumnDef="reportes">
+        <th mat-header-cell *matHeaderCellDef>Reportes</th>
+        <td mat-cell *matCellDef="let comentario">
+          @if (comentario.reportes > 0) {
+          <span
+            class="reportes-badge"
+            [matBadge]="comentario.reportes"
+            matBadgeColor="warn"
+            matBadgeSize="small"
+          >
+            <mat-icon color="warn">flag</mat-icon>
+          </span>
+          } @else {
+          <span class="no-reportes">0</span>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Estado Column -->
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let comentario">
+          <mat-chip [color]="getEstadoColor(comentario.estado)" highlighted>
+            {{ comentario.estado | uppercase }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Acciones Column -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let comentario">
+          <div class="action-buttons">
+            <button
+              mat-icon-button
+              color="primary"
+              matTooltip="Ver detalles"
+              (click)="verDetalles(comentario)"
+            >
+              <mat-icon>visibility</mat-icon>
+            </button>
+            @if (comentario.estado === 'activo') {
+            <button
+              mat-icon-button
+              color="warn"
+              matTooltip="Ocultar comentario"
+              (click)="ocultarComentario(comentario)"
+            >
+              <mat-icon>visibility_off</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              matTooltip="Eliminar comentario"
+              (click)="eliminarComentario(comentario)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+            } @if (comentario.estado === 'oculto') {
+            <button
+              mat-icon-button
+              color="primary"
+              matTooltip="Restaurar comentario"
+              (click)="restaurarComentario(comentario)"
+            >
+              <mat-icon>restore</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              matTooltip="Eliminar comentario"
+              (click)="eliminarComentario(comentario)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+            }
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </mat-card>
+</div>

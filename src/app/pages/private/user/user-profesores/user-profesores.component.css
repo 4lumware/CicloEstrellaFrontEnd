@@ -25,30 +25,30 @@ body {
     align-items: center;
     margin: 30px auto;
     width: 85%;
-    max-width: 800px; 
+    max-width: 800px;
     background-color: #ffffff;
     border-radius: 30px;
     padding: 5px 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-family: "Inria Sans", sans-serif;
 }
 
 #searchBar {
-    width: 90%; 
+    width: 90%;
     padding: 12px 20px;
     border: none;
     border-radius: 30px;
     font-size: 1rem;
     color: #333;
     outline: none;
-    background-color: #f5f5f5; 
+    background-color: #f5f5f5;
     transition: background-color 0.3s ease;
     font-family: inherit;
 }
 
 #searchBar:focus {
-    background-color: #ffffff; 
-    border: 2px solid #FFCB47; 
+    background-color: #ffffff;
+    border: 2px solid #FFCB47;
 }
 
 #searchButton {
@@ -56,7 +56,7 @@ body {
     border: none;
     cursor: pointer;
     padding: 8px;
-    margin-left: 10px; 
+    margin-left: 10px;
 }
 
 #searchButton img {
@@ -68,7 +68,7 @@ body {
 }
 
 #searchButton:hover img {
-    transform: scale(1.2); 
+    transform: scale(1.2);
 }
 
 #filtroboton{
@@ -158,7 +158,7 @@ body {
     padding: 20px;
     margin: 20px auto;
     box-sizing: border-box;
-    
+
 }
 
 .filtro-header{
@@ -188,7 +188,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    
+
 }
 
 .filtro-opcion {
@@ -239,7 +239,6 @@ body {
 #cerrar-filtro img{
     width: 35px;
     height: 35px;
-    background-color: none;
 }
 
 .filtro-botones {
@@ -276,7 +275,6 @@ body {
 .footerIntro .fraseFooter {
     align-items: center;
     text-align: center;
-    float: center;
     padding: 5px;
     color: #FFCB47;
     font-family: "Inria Sans";
@@ -303,10 +301,10 @@ body {
     color: #FFCB47;
     font-size: medium;
     margin-bottom: 10px;
-    border: 2px solid #FFCB47; 
-    padding: 5px; 
-    display: inline-block; 
-    border-radius: 8px; 
+    border: 2px solid #FFCB47;
+    padding: 5px;
+    display: inline-block;
+    border-radius: 8px;
 }
 
 /* Responsividad: ajustes para pantallas pequeñas */

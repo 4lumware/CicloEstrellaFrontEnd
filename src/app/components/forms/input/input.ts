@@ -8,27 +8,52 @@ import {
   OnInit,
   runInInjectionContext,
   signal,
+  WritableSignal,
+  computed,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatError, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { merge } from 'rxjs';
+
+type InputType = {
+  value: 'outline' | 'fill';
+};
 
 @Component({
   selector: 'app-input',
-  imports: [MatInputModule, MatFormFieldModule, ReactiveFormsModule, MatError],
+  imports: [
+    MatInputModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatError,
+    MatIconModule,
+    MatButtonModule,
+  ],
   templateUrl: './input.html',
   styleUrl: './input.css',
 })
 export class Input {
-  id: InputSignal<string> = input.required<string>();
-  control: InputSignal<FormControl> = input.required<FormControl>();
-  label: InputSignal<string> = input.required<string>();
-  type = input('text');
-  placeholder = input('');
-  errorMessage = signal('');
   private destroyRef = inject(DestroyRef);
+
+  public id: InputSignal<string> = input.required<string>();
+  public control: InputSignal<FormControl> = input.required<FormControl>();
+  public label: InputSignal<string> = input.required<string>();
+  public type: InputSignal<string> = input<string>('text');
+  public variant: InputSignal<InputType['value']> = input<InputType['value']>('outline');
+  public placeholder: InputSignal<string> = input('');
+
+  protected errorMessage: WritableSignal<string> = signal<string>('');
+  protected showPassword = signal(false);
+
+  protected inputType = computed(() => {
+    const t = this.type();
+    if (t === 'password') return this.showPassword() ? 'text' : 'password';
+    return t || 'text';
+  });
 
   constructor() {
     effect(() => {

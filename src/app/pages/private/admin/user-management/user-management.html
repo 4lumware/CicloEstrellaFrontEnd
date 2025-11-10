@@ -1,0 +1,28 @@
+<div class="user-management-container">
+  <!-- Header Section -->
+  <mat-toolbar color="primary" class="dashboard-header">
+    <span class="header-title">
+      <mat-icon class="header-icon">people</mat-icon>
+      Gestion de Usuarios
+    </span>
+    <span class="spacer"></span>
+    <button
+      mat-raised-button
+      matButton="filled"
+      filled
+      color="accent"
+      (click)="onAddUser()"
+      class="add-button"
+    >
+      <mat-icon>add</mat-icon>
+      Agregar Usuario
+    </button>
+  </mat-toolbar>
+
+  <!-- User Management Table Component -->
+  <app-user-management-table
+    (userUpdate)="onUserUpdate($event)"
+    (userDelete)="onUserDelete($event)"
+  >
+  </app-user-management-table>
+</div>
