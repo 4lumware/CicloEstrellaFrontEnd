@@ -16,9 +16,23 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { RolesService } from '../../../../../../services/roles/roles';
 
+export interface UserManagementSearchFormValue {
+  username: FormControl<string>;
+  email: FormControl<string>;
+  roleName: FormControl<string>;
+  state: FormControl<string | boolean>;
+  startDate: FormControl<Date | null>;
+  endDate: FormControl<Date | null>;
+}
 @Component({
   selector: 'app-user-management-search-form',
   imports: [
@@ -37,14 +51,13 @@ import { RolesService } from '../../../../../../services/roles/roles';
   styleUrl: './user-management-search-form.css',
 })
 export class UserManagementSearchForm {
-  // Input: Recibe el FormGroup desde el padre
-  searchForm: InputSignal<FormGroup> = input.required<FormGroup>();
+  public formGroup!: FormGroup<UserManagementSearchFormValue>;
 
-  // Output: Emite evento para limpiar filtros
   clearFilters = output<void>();
 
   protected roleOptions: WritableSignal<SelectOption[]> = signal<SelectOption[]>([]);
   private roleService = inject(RolesService);
+  private fb = inject(NonNullableFormBuilder);
 
   stateOptions: SelectOption[] = [
     { label: 'Todos', value: 'all' },
@@ -63,30 +76,24 @@ export class UserManagementSearchForm {
         this.roleOptions.set([{ label: 'Todos', value: 'all' }, ...selectedOptions]);
       },
     });
-  }
 
-  // Método para acceder a los controles del FormGroup
-  get usernameControl(): FormControl {
-    return this.searchForm().get('username') as FormControl;
-  }
-
-  get roleNameControl(): FormControl {
-    return this.searchForm().get('roleName') as FormControl;
-  }
-
-  get stateControl(): FormControl {
-    return this.searchForm().get('state') as FormControl;
-  }
-
-  get startDateControl(): FormControl {
-    return this.searchForm().get('startDate') as FormControl;
-  }
-
-  get endDateControl(): FormControl {
-    return this.searchForm().get('endDate') as FormControl;
+    this.formGroup = this.fb.group<UserManagementSearchFormValue>({
+      username: this.fb.control(''),
+      email: this.fb.control(''),
+      roleName: this.fb.control('all'),
+      state: this.fb.control('all'),
+      startDate: this.fb.control<Date | null>(null),
+      endDate: this.fb.control<Date | null>(null),
+    });
   }
 
   onClearFilters(): void {
-    this.clearFilters.emit();
+    this.formGroup.reset({
+      username: '',
+      roleName: 'all',
+      state: 'all',
+      startDate: null,
+      endDate: null,
+    });
   }
 }
