@@ -2,3 +2,12 @@
   width: 100%;
 }
 
+.select-up.mat-select-panel {
+  transform-origin: center bottom !important;
+  margin-top: -6px !important;
+}
+
+.select-down.mat-select-panel {
+  transform-origin: center top !important;
+}
+

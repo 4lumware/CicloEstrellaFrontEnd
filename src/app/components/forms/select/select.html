@@ -2,8 +2,8 @@
   <mat-label>{{ label() }}</mat-label>
 
   <mat-select
-    panelClass="select-down"
-    [disableOptionCentering]="true"
+    [panelClass]="panel() === 'up' ? 'select-up' : 'select-down'"
+    disableOptionCentering
     [formControl]="control()"
     [multiple]="multiple()"
   >
