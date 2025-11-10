@@ -8,11 +8,13 @@ import {
   InputSignal,
   signal,
   Type,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelectModule, MatSelect } from '@angular/material/select';
 import { merge } from 'rxjs';
 
 export interface Option {
@@ -37,6 +39,10 @@ export class Select {
   options: InputSignal<Option[]> = input.required<Option[]>();
   variant: InputSignal<InputType['value']> = input<InputType['value']>('outline');
   multiple = input<boolean>(false);
+  panel: InputSignal<'up' | 'down'> = input<'up' | 'down'>('down');
+
+  @ViewChild(MatSelect, { static: true }) matSelect?: MatSelect;
+  private host = inject(ElementRef<HTMLElement>);
 
   errorMessage = signal('');
   private destroyRef = inject(DestroyRef);
@@ -81,5 +87,66 @@ export class Select {
     }
 
     this.errorMessage.set('Campo inválido');
+  }
+
+  private repositionOverlayAbove() {
+    try {
+      const panels = Array.from(
+        document.querySelectorAll('.mat-select-panel.select-up')
+      ) as HTMLElement[];
+      if (!panels || panels.length === 0) return;
+      const panel = panels[panels.length - 1];
+      const overlayPane = panel.closest('.cdk-overlay-pane') as HTMLElement | null;
+      if (!overlayPane) return;
+
+      const hostEl = this.host?.nativeElement as HTMLElement | null;
+      if (!hostEl) return;
+      const trigger = hostEl.querySelector('.mat-select-trigger') as HTMLElement | null;
+      if (!trigger) return;
+
+      const triggerRect = trigger.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+
+      const top = Math.max(0, triggerRect.top - panelRect.height - 8);
+      const left = triggerRect.left;
+
+      overlayPane.style.position = 'fixed';
+      overlayPane.style.top = `${top}px`;
+      overlayPane.style.left = `${left}px`;
+      overlayPane.style.transform = 'none';
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  private repositionOverlayBelow() {
+    try {
+      const panels = Array.from(
+        document.querySelectorAll('.mat-select-panel.select-down')
+      ) as HTMLElement[];
+      if (!panels || panels.length === 0) return;
+      const panel = panels[panels.length - 1];
+      const overlayPane = panel.closest('.cdk-overlay-pane') as HTMLElement | null;
+      if (!overlayPane) return;
+
+      const hostEl = this.host?.nativeElement as HTMLElement | null;
+      if (!hostEl) return;
+      const trigger = hostEl.querySelector('.mat-select-trigger') as HTMLElement | null;
+      if (!trigger) return;
+
+      const triggerRect = trigger.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+
+      // compute top so the panel sits below the trigger
+      const top = Math.min(window.innerHeight - panelRect.height, triggerRect.bottom + 8);
+      const left = triggerRect.left;
+
+      overlayPane.style.position = 'fixed';
+      overlayPane.style.top = `${top}px`;
+      overlayPane.style.left = `${left}px`;
+      overlayPane.style.transform = 'none';
+    } catch (e) {
+      // ignore
+    }
   }
 }

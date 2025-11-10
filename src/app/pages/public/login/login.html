@@ -1,74 +1,51 @@
 <app-header-auth></app-header-auth>
 
 <main class="Contenido">
-  <div class="Campos">
-    <div class="Welcome">
-      <h1>Bienvenido de vuelta!</h1>
+  <section class="login-container">
+    <div class="Campos">
+      <div class="Welcome">
+        <h1>Bienvenido de vuelta!</h1>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <!-- Campo email -->
+        <app-input
+          [id]="'login-email'"
+          [label]="'Correo electrónico'"
+          [type]="'email'"
+          [placeholder]="'tu@correo.com'"
+          [control]="loginForm.controls.email"
+        />
+
+        <!-- Campo contraseña -->
+        <app-input
+          [id]="'login-password'"
+          [label]="'Contraseña'"
+          [type]="'password'"
+          [placeholder]="'Ingresa tu contraseña'"
+          [control]="loginForm.controls.password"
+        />
+
+        <!-- Botón -->
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="btn-login"
+          [disabled]="loginForm.invalid || loading()"
+        >
+          {{ loading() ? 'Ingresando...' : 'Iniciar sesión' }}
+        </button>
+      </form>
+
+      <p class="register-link">
+        ¿Aún no tienes una cuenta?
+        <a routerLink="/register">Regístrate</a>
+      </p>
     </div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-      <!-- Campo email -->
-      <mat-form-field appearance="outline" class="input-full">
-        <mat-label>Correo electrónico</mat-label>
-        <input
-          matInput
-          formControlName="email"
-          placeholder="tu@correo.com"
-          (blur)="updateErrorMessages()"
-          required
-        />
-        @if (emailError()) {
-          <mat-error>{{ emailError() }}</mat-error>
-        }
-      </mat-form-field>
-
-      <!-- Campo contraseña -->
-      <mat-form-field appearance="outline" class="input-full">
-        <mat-label>Contraseña</mat-label>
-        <input
-          matInput
-          [type]="hidePassword ? 'password' : 'text'"
-          formControlName="password"
-          placeholder="••••••"
-          (blur)="updateErrorMessages()"
-          required
-        />
-        <button
-          type="button"
-          mat-icon-button
-          matSuffix
-          (click)="hidePassword = !hidePassword"
-          [attr.aria-label]="'Mostrar contraseña'"
-        >
-          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-        @if (passwordError()) {
-          <mat-error>{{ passwordError() }}</mat-error>
-        }
-      </mat-form-field>
-
-      <!-- Botón -->
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        class="btn-login"
-        [disabled]="loginForm.invalid || loading()"
-      >
-        {{ loading() ? 'Ingresando...' : 'Iniciar sesión' }}
-      </button>
-
-    </form>
-
-    <p class="register-link">
-      ¿Aún no tienes una cuenta?
-      <a routerLink="/register">Regístrate</a>
-    </p>
-  </div>
-
-  <div class="imgPrincipal">
-    <img src="images/ImagenIngreso.png" alt="Estudiantes" />
-  </div>
+    <div class="imgPrincipal">
+      <img src="images/ImagenIngreso.png" alt="Estudiantes" />
+    </div>
+  </section>
 </main>
-
-

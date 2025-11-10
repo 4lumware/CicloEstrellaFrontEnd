@@ -6,11 +6,22 @@
       class="input-content"
       [id]="id()"
       [placeholder]="placeholder()"
-      [type]="type()"
+      [type]="inputType()"
       [formControl]="control()"
       (blur)="updateErrorMessage()"
     />
-    @if (control().invalid ) {
+
+    @if (type() === 'password') {
+    <button
+      type="button"
+      mat-icon-button
+      matSuffix
+      aria-label="Mostrar contraseña"
+      (click)="showPassword.set(!showPassword())"
+    >
+      <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+    } @if (control().invalid ) {
     <mat-error>{{ errorMessage() }}</mat-error>
     }
   </mat-form-field>

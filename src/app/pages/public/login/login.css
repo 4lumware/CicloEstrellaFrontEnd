@@ -10,12 +10,12 @@ header {
 }
 
 .Contenido {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  height: 90vh;
+  display: grid;
+  min-height: 70vh;
+  place-content: center ;
   background-color: #ffffff;
   font-family: "Inria Sans", sans-serif;
+
 }
 
 .Campos {
@@ -32,6 +32,20 @@ header {
 .input-full {
   width: 100%;
   margin-bottom: 20px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 20rem;
+}
+
+.login-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10rem;
 }
 
 .btn-login {
