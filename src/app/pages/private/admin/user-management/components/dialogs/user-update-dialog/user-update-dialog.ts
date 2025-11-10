@@ -1,6 +1,12 @@
 import { Component, Inject, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -34,6 +40,15 @@ type UserDTO = {
 
 type UpdateDialogData = { user: UserDTO };
 
+export interface UserUpdateFormValue {
+  username: FormControl<string>;
+  email: FormControl<string>;
+  role: FormControl<number | null>;
+  password: FormControl<string>;
+  profilePictureUrl: FormControl<string>;
+  currentSemester: FormControl<number | null>;
+  careerIds: FormControl<number[]>;
+}
 @Component({
   selector: 'app-user-update-dialog',
   imports: [
@@ -54,30 +69,14 @@ type UpdateDialogData = { user: UserDTO };
   styleUrl: './user-update-dialog.css',
 })
 export class UserUpdateDialog implements OnInit {
-  title = computed(() => 'Editar Usuario');
+  private fb = inject(NonNullableFormBuilder);
 
-  form = new FormGroup({
-    username: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(2)],
-    }),
-    email: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.email],
-    }),
-    role: new FormControl<number | null>(null, { validators: [Validators.required] }),
-    createdAt: new FormControl<Date | null>(null),
-    password: new FormControl('', { nonNullable: true, validators: [Validators.minLength(6)] }),
-    profilePictureUrl: new FormControl<string>(''),
-    currentSemester: new FormControl<number | null>(null),
-    careerIds: new FormControl<number[]>([]),
-  });
-
+  protected title = computed(() => 'Editar Usuario');
+  protected form!: FormGroup<UserUpdateFormValue>;
   protected roleOptions = signal<SelectOption[]>([]);
   protected careerOptions = signal<SelectOption[]>([]);
   protected profileImagePreview = signal<string | null>(null);
   protected selectedFile = signal<File | null>(null);
-
   protected selectedRoleName = signal<string>('');
   protected isStudent = computed(() => this.selectedRoleName() === 'STUDENT');
   protected isStaff = computed(() =>
@@ -104,6 +103,25 @@ export class UserUpdateDialog implements OnInit {
   private studentService = inject(Students);
   private imageService = inject(ImageService);
 
+  constructor() {
+    this.form = this.fb.group<UserUpdateFormValue>({
+      username: this.fb.control('', {
+        validators: [Validators.required, Validators.minLength(2)],
+      }),
+      email: this.fb.control('', {
+        validators: [Validators.required, Validators.email],
+      }),
+      role: this.fb.control<number | null>(null, {
+        validators: [Validators.required],
+      }),
+      password: this.fb.control('', {
+        validators: [Validators.minLength(6), Validators.required],
+      }),
+      profilePictureUrl: this.fb.control(''),
+      currentSemester: this.fb.control<number | null>(null),
+      careerIds: this.fb.control<number[]>([]),
+    });
+  }
   ngOnInit(): void {
     const u = this.data.user;
 
@@ -128,7 +146,6 @@ export class UserUpdateDialog implements OnInit {
     this.form.patchValue({
       username: u.username,
       email: u.email,
-      createdAt: u.creationDate ? new Date(u.creationDate) : null,
       profilePictureUrl: u.profilePictureUrl || '',
     });
 

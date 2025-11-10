@@ -7,6 +7,8 @@
   signal,
   effect,
   computed,
+  viewChild,
+  AfterViewInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +21,6 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialog } from '../../../../../../components/ui/confirm-dialog/confirm-dialog';
-import { UserFormDialog } from '../dialogs/user-form-dialog/user-form-dialog';
 import { UserManagementSearchForm } from '../user-management-search-form/user-management-search-form';
 import { ApplicationUserService } from '../../../../../../services/users/rest/application-user-service';
 import { ImageService } from '../../../../../../services/images/image-service';
@@ -51,7 +52,7 @@ export interface SearchFilters {
   templateUrl: './user-management-table.html',
   styleUrl: './user-management-table.css',
 })
-export class UserManagementTable implements OnInit {
+export class UserManagementTable implements OnInit, AfterViewInit {
   private userService = inject(ApplicationUserService);
   private imageService = inject(ImageService);
   protected displayedColumns: string[] = [
@@ -73,27 +74,26 @@ export class UserManagementTable implements OnInit {
   protected snackBar: MatSnackBar = inject(MatSnackBar);
   protected dialog: MatDialog = inject(MatDialog);
 
-  // Paginación del servidor
   protected pageSize = 10;
   protected pageIndex = 0;
   protected totalItems = signal<number>(0);
   protected totalPages = signal<number>(0);
   protected pageSizeOptions = [5, 10, 25, 50];
-
-  searchForm = new FormGroup({
-    username: new FormControl(''),
-    roleName: new FormControl(''),
-    state: new FormControl<boolean | 'all'>('all'),
-    startDate: new FormControl<Date | null>(null),
-    endDate: new FormControl<Date | null>(null),
-  });
+  searchFormComponent = viewChild(UserManagementSearchForm);
 
   ngOnInit(): void {
     this.loadUsers();
-    this.searchForm.valueChanges.subscribe(() => {
-      this.pageIndex = 0; // Resetear a la primera página al filtrar
-      this.applyFilters();
-    });
+  }
+
+  ngAfterViewInit(): void {
+    const formGroup = this.searchFormComponent()?.formGroup;
+    if (formGroup) {
+      formGroup.valueChanges.subscribe(() => {
+        console.log('Filtros cambiados:', formGroup.value);
+        this.pageIndex = 0;
+        this.applyFilters();
+      });
+    }
   }
 
   loadUsers(): void {
@@ -122,7 +122,9 @@ export class UserManagementTable implements OnInit {
   }
 
   applyFilters(): void {
-    const filters = this.searchForm.value as Partial<SearchFilters & { state: boolean | 'all' }>;
+    const filters = this.searchFormComponent()?.formGroup.value as Partial<
+      SearchFilters & { state: boolean | 'all' }
+    >;
 
     // Filtrado del lado del cliente sobre los datos actuales
     this.filteredData.set(
@@ -162,16 +164,6 @@ export class UserManagementTable implements OnInit {
 
     // Cargar nueva página desde el servidor
     this.loadUsers();
-  }
-
-  clearFilters(): void {
-    this.searchForm.reset({
-      username: '',
-      roleName: '',
-      state: 'all',
-      startDate: null,
-      endDate: null,
-    });
   }
 
   onRowClick(user: User): void {
@@ -238,12 +230,6 @@ export class UserManagementTable implements OnInit {
         horizontalPosition: 'end',
         verticalPosition: 'top',
       });
-    });
-  }
-
-  constructor() {
-    effect(() => {
-      console.log('Usuarios seleccionados cambiaron:', this.selectedUsers());
     });
   }
 }

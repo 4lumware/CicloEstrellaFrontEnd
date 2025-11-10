@@ -7,12 +7,12 @@
     <mat-panel-description> Filtra usuarios por nombre, rol, estado y fecha </mat-panel-description>
   </mat-expansion-panel-header>
 
-  <form [formGroup]="searchForm()" class="search-form">
+  <form [formGroup]="formGroup" class="search-form">
     <div class="form-row">
       <div class="form-field">
         <app-input
           [id]="'username'"
-          [control]="usernameControl"
+          [control]="formGroup.controls.username"
           [label]="'Nombre de Usuario'"
           [placeholder]="'Buscar por nombre...'"
           variant="outline"
@@ -22,7 +22,7 @@
       <div class="form-field">
         <app-select
           [id]="'roleName'"
-          [control]="roleNameControl"
+          [control]="formGroup.controls.roleName"
           [label]="'Rol'"
           [options]="roleOptions()"
           variant="outline"
@@ -32,7 +32,7 @@
       <div class="form-field">
         <app-select
           [id]="'state'"
-          [control]="stateControl"
+          [control]="formGroup.controls.state"
           [label]="'Estado'"
           [options]="stateOptions"
           variant="outline"
@@ -41,33 +41,21 @@
     </div>
 
     <div class="form-row">
-      <div class="form-field">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Fecha Inicio</mat-label>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Ingresar rango de fechas</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
           <input
-            matInput
-            [matDatepicker]="startPicker"
-            [formControl]="startDateControl"
-            placeholder="DD/MM/AAAA"
+            [formControl]="formGroup.controls.startDate"
+            matStartDate
+            placeholder="Start date"
           />
-          <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
-          <mat-datepicker #startPicker></mat-datepicker>
-        </mat-form-field>
-      </div>
+          <input [formControl]="formGroup.controls.endDate" matEndDate placeholder="End date" />
+        </mat-date-range-input>
 
-      <div class="form-field">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Fecha Fin</mat-label>
-          <input
-            matInput
-            [matDatepicker]="endPicker"
-            [formControl]="endDateControl"
-            placeholder="DD/MM/AAAA"
-          />
-          <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
-          <mat-datepicker #endPicker></mat-datepicker>
-        </mat-form-field>
-      </div>
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
 
       <div class="form-field form-actions">
         <button

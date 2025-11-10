@@ -11,4 +11,10 @@
 }
 .input-content{
   margin: 0;
+  padding-right: 40px;
+}
+
+
+.password-toggle-btn{
+  margin-right: 0.75rem;
 }
