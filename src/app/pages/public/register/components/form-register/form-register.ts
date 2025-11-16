@@ -1,6 +1,5 @@
 import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import {
-  FormBuilder,
   FormControl,
   FormGroup,
   NonNullableFormBuilder,
@@ -9,10 +8,9 @@ import {
 } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatAnchor, MatButtonModule } from '@angular/material/button';
-import { Option, Select } from '../../../../../components/forms/select/select';
-import { Input } from '../../../../../components/forms/input/input';
-import { HttpClient } from '@angular/common/http';
-import { ApiResponse, CareerService } from '../../../../../services/careers/career-service';
+import { Option, Select } from '../../../../../shared/components/forms/select/select';
+import { Input } from '../../../../../shared/components/forms/input/input';
+import { CareerService } from '../../../../../core/services/careers/career-service';
 
 export const TERM_OPTIONS: Option[] = [
   { label: '1er Ciclo', value: 1 },
@@ -39,6 +37,7 @@ export interface RegisterStudentFormValue {
 
 @Component({
   selector: 'app-form-register',
+  standalone: true,
   imports: [Input, ReactiveFormsModule, Select, MatCheckboxModule, MatAnchor, MatButtonModule],
   templateUrl: './form-register.html',
   styleUrl: './form-register.css',

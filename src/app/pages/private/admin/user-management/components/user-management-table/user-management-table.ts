@@ -20,11 +20,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ConfirmDialog } from '../../../../../../components/ui/confirm-dialog/confirm-dialog';
+import { ConfirmDialog } from '../../../../../../shared/components/ui/confirm-dialog/confirm-dialog';
 import { UserManagementSearchForm } from '../user-management-search-form/user-management-search-form';
-import { ApplicationUserService } from '../../../../../../services/users/rest/application-user-service';
-import { ImageService } from '../../../../../../services/images/image-service';
-import { User } from '../../../../../../models/users/user';
+import { ApplicationUserService } from '../../../../../../core/services/users/rest/application-user-service';
+import { ImageService } from '../../../../../../core/services/images/image-service';
+import { UserModel as User } from '../../../../../../core/models/users/user';
 
 export interface SearchFilters {
   username: string;

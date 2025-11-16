@@ -10,8 +10,11 @@ import {
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { Select, Option as SelectOption } from '../../../../../../components/forms/select/select';
-import { Input } from '../../../../../../components/forms/input/input';
+import {
+  Select,
+  Option as SelectOption,
+} from '../../../../../../shared/components/forms/select/select';
+import { Input } from '../../../../../../shared/components/forms/input/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,7 +26,7 @@ import {
   NonNullableFormBuilder,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { RolesService } from '../../../../../../services/roles/roles';
+import { RolesService } from '../../../../../../core/services/roles/role-service';
 
 export interface UserManagementSearchFormValue {
   username: FormControl<string>;

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChatbotComponent } from '../../../../components/chatbot/chatbot.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMiniFabButton } from '@angular/material/button';
+import { ChatbotComponent } from '../../../../shared/components/chatbot/chatbot.component';
 
 @Component({
   selector: 'app-formality',

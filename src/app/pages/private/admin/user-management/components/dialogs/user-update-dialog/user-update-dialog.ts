@@ -16,15 +16,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
+  Option,
   Select,
   Option as SelectOption,
-} from '../../../../../../../components/forms/select/select';
-import { Input } from '../../../../../../../components/forms/input/input';
-import { RolesService } from '../../../../../../../services/roles/roles';
-import { CareerService } from '../../../../../../../services/careers/career-service';
-import { Students } from '../../../../../../../services/students/rest/students';
-import { ImageService } from '../../../../../../../services/images/image-service';
-import { Role } from '../../../../../../../models/users/user';
+} from '../../../../../../../shared/components/forms/select/select';
+import { Input } from '../../../../../../../shared/components/forms/input/input';
+import { RolesService } from '../../../../../../../core/services/roles/role-service';
+import { CareerService } from '../../../../../../../core/services/careers/career-service';
+import { StudentService } from '../../../../../../../core/services/students/rest/student-service';
+import { ImageService } from '../../../../../../../core/services/images/image-service';
+import { Role } from '../../../../../../../core/models/users/user';
+import { ApiResponse } from '../../../../../../../core/models/responses/response';
+import { CareerModelRest } from '../../../../../../../core/models/careers/careers';
 
 type UserDTO = {
   id?: number;
@@ -100,7 +103,7 @@ export class UserUpdateDialog implements OnInit {
   private data = inject<Readonly<UpdateDialogData>>(MAT_DIALOG_DATA);
   private rolesService = inject(RolesService);
   private careerService = inject(CareerService);
-  private studentService = inject(Students);
+  private studentService = inject(StudentService);
   private imageService = inject(ImageService);
 
   constructor() {
@@ -125,7 +128,6 @@ export class UserUpdateDialog implements OnInit {
   ngOnInit(): void {
     const u = this.data.user;
 
-    // Load all roles first
     this.rolesService.index().subscribe({
       next: (response) => {
         const options = (response.data as Role[]).map((r) => ({ label: r.roleName, value: r.id }));
@@ -134,15 +136,26 @@ export class UserUpdateDialog implements OnInit {
       },
     });
 
-    this.careerService.index().subscribe({ next: (careers) => this.careerOptions.set(careers) });
+    this.careerService.index().subscribe({
+      next: (response: Option[]) => {
+        const careers = response.map((c) => ({
+          label: c.label,
+          value: c.value,
+        }));
+        this.careerOptions.set(careers);
+      },
+      error: (err) => {
+        console.error('Error loading careers', err);
+      },
+    });
 
-    // Initialize form values
     const roleId = u.roles && u.roles.length ? u.roles[0].id : null;
     const roleName = u.roles && u.roles.length ? u.roles[0].roleName : '';
     if (roleId) {
       this.form.controls.role.setValue(roleId);
       this.selectedRoleName.set(roleName);
     }
+
     this.form.patchValue({
       username: u.username,
       email: u.email,
@@ -161,6 +174,11 @@ export class UserUpdateDialog implements OnInit {
           const studentData = response.data || response;
           if (studentData.currentSemester)
             this.form.controls.currentSemester.setValue(studentData.currentSemester);
+
+          if (studentData.careers && studentData.careers.length > 0) {
+            const careerIds = studentData.careers.map((c) => c.id);
+            this.form.controls.careerIds.setValue(careerIds);
+          }
         },
       });
     }
@@ -219,12 +237,12 @@ export class UserUpdateDialog implements OnInit {
     const v = this.form.getRawValue();
 
     const selectedRole = this.roleOptions().find((r) => r.value === v.role);
-    const roleName = selectedRole?.label || '';
+    const type = selectedRole?.label || '';
 
     const payload: any = {
       username: v.username,
       email: v.email,
-      roleName,
+      type: type,
     };
 
     if (v.role) payload.roleId = v.role as number;
@@ -233,19 +251,12 @@ export class UserUpdateDialog implements OnInit {
 
     if (v.password && v.password.trim() !== '') payload.password = v.password;
 
-    // Student-specific
     if (this.isStudent()) {
       if (!v.currentSemester || v.currentSemester < 1 || v.currentSemester > 10) return;
       if (!v.careerIds || !Array.isArray(v.careerIds) || v.careerIds.length === 0) return;
       payload.currentSemester = v.currentSemester;
       payload.careerIds = v.careerIds;
     }
-
-    // Flags for conversion logic in parent
-    const originalRole =
-      this.data.user.roles && this.data.user.roles.length ? this.data.user.roles[0].roleName : '';
-    payload.wasStudent = originalRole === 'STUDENT';
-    payload.originalUserId = this.data.user.id;
 
     this.dialogRef.close(payload);
   }

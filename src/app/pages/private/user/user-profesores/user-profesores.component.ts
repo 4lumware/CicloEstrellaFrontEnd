@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FiltroComponent } from '../../../../layout/private/user/authenticated-user-filter-profesores/authenticated-user-filter-profesores';
-import { ChatbotComponent } from '../../../../components/chatbot/chatbot.component';
+import { ChatbotComponent } from '../../../../shared/components/chatbot/chatbot.component';
 
 @Component({
   selector: 'app-user-profesores',
