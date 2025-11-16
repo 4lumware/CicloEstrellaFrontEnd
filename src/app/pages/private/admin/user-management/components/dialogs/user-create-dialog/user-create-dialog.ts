@@ -18,14 +18,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   Select,
   Option as SelectOption,
-} from '../../../../../../../components/forms/select/select';
-import { Input } from '../../../../../../../components/forms/input/input';
-import { RolesService } from '../../../../../../../services/roles/roles';
-import { CareerService } from '../../../../../../../services/careers/career-service';
-import { ImageService } from '../../../../../../../services/images/image-service';
-import { Role } from '../../../../../../../models/users/user';
-
-type CreateDialogData = {};
+} from '../../../../../../../shared/components/forms/select/select';
+import { Input } from '../../../../../../../shared/components/forms/input/input';
+import { RolesService } from '../../../../../../../core/services/roles/role-service';
+import { CareerService } from '../../../../../../../core/services/careers/career-service';
+import { ImageService } from '../../../../../../../core/services/images/image-service';
+import { Role } from '../../../../../../../core/models/users/user';
 
 export interface UserCreateFormValue {
   username: FormControl<string>;
@@ -39,6 +37,7 @@ export interface UserCreateFormValue {
 
 @Component({
   selector: 'app-user-create-dialog',
+  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -159,12 +158,12 @@ export class UserCreateDialog implements OnInit {
     const v = this.form.getRawValue();
 
     const selectedRole = this.roleOptions().find((r) => r.value === v.role);
-    const roleName = selectedRole?.label || '';
+    const type = selectedRole?.label || '';
 
     const payload: any = {
       username: v.username,
       email: v.email,
-      roleName,
+      type: type,
     };
 
     if (v.role) payload.roleId = v.role as number;
