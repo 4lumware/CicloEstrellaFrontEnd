@@ -15,6 +15,7 @@ import { UserModel } from '../../../../core/models/users/user';
 import { ConfirmDialog } from '../../../../shared/components/ui/confirm-dialog/confirm-dialog';
 import { StudentModelCreate } from '../../../../core/models/students/student';
 import { StaffModelCreate } from '../../../../core/models/staffs/staff';
+import { AuthUserService } from '../../../../core/services/users/auth/auth-user-service';
 
 @Component({
   selector: 'app-user-management',
@@ -36,6 +37,8 @@ export class UserManagement {
   private updateUserHandler = inject(UpdateUserHandlerService);
   private createUserHandler = inject(CreateUserHandlerService);
   private deleteUserHandler = inject(DeleteUserHandlerService);
+  private authService = inject(AuthUserService);
+  protected currentUser$ = this.authService.currentUser$;
 
   onAddUser(): void {
     const ref = this.dialog.open(UserCreateDialog, {
