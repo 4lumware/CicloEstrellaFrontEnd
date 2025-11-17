@@ -29,6 +29,7 @@ export interface StudentModelUpdate {
 }
 
 export interface StudentModel {
+  id: number;
   username: string;
   email: string;
   password: string;

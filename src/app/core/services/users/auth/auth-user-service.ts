@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { API_URL } from '../../../constants/api';
 import { StaffModel } from '../../../models/staffs/staff';
 import { StudentModel } from '../../../models/students/student';
@@ -20,22 +20,44 @@ export interface JsonResponseDTO<T> {
   providedIn: 'root',
 })
 export class AuthUserService {
+  private _currentUser = new BehaviorSubject<StaffModel | StudentModel | null>(null);
+
+  public readonly currentUser$ = this._currentUser.asObservable();
+
   private apiUrl = API_URL + '/auth';
-  constructor() {}
   private http = inject(HttpClient);
 
-  login<T>(email: string, password: string): Observable<ApiResponse<JsonResponseDTO<T>>> {
-    return this.http.post<ApiResponse<JsonResponseDTO<T>>>(`${this.apiUrl}/login`, {
-      email,
-      password,
-    });
+  login<T extends StaffModel | StudentModel>(
+    email: string,
+    password: string
+  ): Observable<ApiResponse<JsonResponseDTO<T>>> {
+    return this.http
+      .post<ApiResponse<JsonResponseDTO<T>>>(`${this.apiUrl}/login`, { email, password })
+      .pipe(
+        tap((response) => {
+          const user = response.data.user;
+          this._currentUser.next(user);
+          const tokens = response.data.tokens;
+
+          localStorage.setItem('access_token', tokens.access_token);
+          localStorage.setItem('refresh_token', tokens.refresh_token);
+        })
+      );
   }
 
   refreshToken(token: string): Observable<ApiResponse<JWTTokensDTO>> {
     return this.http.post<ApiResponse<JWTTokensDTO>>(
       `${this.apiUrl}/refresh-token`,
       {},
-      { headers: { Authorization: `Bearer ${token}` } }
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
+  }
+
+  logout(): void {
+    this._currentUser.next(null);
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
   }
 }

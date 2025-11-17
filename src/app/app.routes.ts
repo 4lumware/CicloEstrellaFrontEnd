@@ -14,13 +14,15 @@ import { StudentProfile } from './pages/private/user-profiles/student-profile/st
 import { StudentProfileEdit } from './pages/private/user-profiles/student-profile/student-profile-edit/student-profile-edit';
 import { Solicitudes } from './pages/private/admin/solicitudes/solicitudes';
 import { Gestion } from './pages/private/admin/gestion/gestion';
-import {Library} from './pages/private/user/library/library';
+import { Library } from './pages/private/user/library/library';
+import { hasRoleGuard } from './core/guards/has-role-guard';
 
 export const routes: Routes = [
   { path: '', component: Layout, children: [{ path: '', component: LandingComponent }] },
   {
     path: 'private',
     component: AuthenticatedUserLayout,
+    canActivate: [hasRoleGuard(['STUDENT'])],
     children: [
       { path: 'home', component: UserHomeComponent },
       { path: 'profesores', component: UserProfesoresComponent },
@@ -41,6 +43,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: AuthenticatedAdminDashboard,
+    canActivate: [hasRoleGuard(['ADMIN', 'MODERATOR', 'WRITER'])],
     children: [
       {
         path: 'home',

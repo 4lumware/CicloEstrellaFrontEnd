@@ -12,3 +12,5 @@ export interface UserModel {
   state: boolean;
   roles: Role[];
 }
+
+export type UserRole = 'ADMIN' | 'MODERATOR' | 'STUDENT' | 'WRITER';

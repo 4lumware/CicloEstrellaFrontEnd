@@ -67,21 +67,14 @@ export class Login {
 
     this.authService.login<StaffModel | StudentModel>(email, password).subscribe({
       next: (response: ApiResponse<JsonResponseDTO<StaffModel | StudentModel>>) => {
-        console.log('✅ Login exitoso:', response);
-        const tokens = response.data.tokens;
-        localStorage.setItem('access_token', tokens.access_token);
-        localStorage.setItem('refresh_token', tokens.refresh_token);
+        const user = response.data.user;
 
-        if (!('roles' in response.data.user) || !response.data.user.roles) {
+        if (!('roles' in user)) {
           this.router.navigate(['/private/home']);
           return;
         }
 
-        if (
-          response.data.user.roles.some(
-            (role) => role.roleName === 'ADMIN' || role.roleName === 'STAFF'
-          )
-        ) {
+        if (user.roles.some((role) => role.roleName === 'ADMIN' || role.roleName === 'STAFF')) {
           this.router.navigate(['/dashboard/home']);
         }
       },
