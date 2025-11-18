@@ -1,0 +1,105 @@
+<section class="section-table-container">
+  <!-- Search Panel -->
+  <app-comment-management-search-form />
+
+  <!-- Search Results Info -->
+  <div class="search-results-info">
+    <mat-icon>info</mat-icon>
+    <span>Mostrando {{ size() }} de {{ totalItems() }} resultados</span>
+  </div>
+
+  <!-- Actions Header -->
+  <div class="header-actions">
+    <p class="p-selected-comment">
+      Comentarios Seleccionados:
+      <span class="section-count-comment">{{ selectedRows().length }}</span>
+    </p>
+    @if (selectedRows().length) {
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="deleteSelected()"
+      class="delete-selected-button"
+    >
+      <mat-icon>delete_sweep</mat-icon>
+      Eliminar Seleccionados ({{ selectedRows().length }})
+    </button>
+    }
+  </div>
+
+  <!-- Data Table Card -->
+  <mat-card class="dashboard-card">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource()" class="comment-table">
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let comment">{{ comment.id }}</td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="author">
+            <th mat-header-cell *matHeaderCellDef>Autor</th>
+            <td class="author-comment-container" mat-cell *matCellDef="let comment">
+              <span> {{ comment.author.username }} </span>
+            </td>
+          </ng-container>
+
+          <!-- Created Date Column -->
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef>Fecha Creación</th>
+            <td mat-cell *matCellDef="let comment">{{ comment.createdAt | date : 'short' }}</td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let user" class="actions-cell">
+              <button
+                mat-icon-button
+                color="primary"
+                matTooltip="Ver Detalle del Comentario"
+                class="action-button"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                matTooltip="Eliminar Comentario"
+                class="action-button"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            class="table-row"
+            (click)="onRowClick(row)"
+            [class.selected]="isSelected(row)"
+            [attr.aria-selected]="isSelected(row)"
+            tabindex="0"
+            (keydown.enter)="onRowClick(row)"
+          ></tr>
+        </table>
+      </div>
+
+      <!-- Paginator -->
+      <mat-paginator
+        [length]="totalItems()"
+        [pageSize]="pagination().pageSize"
+        [pageIndex]="pagination().pageIndex"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="onPageChange($event)"
+        showFirstLastButtons
+        class="table-paginator"
+      >
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</section>

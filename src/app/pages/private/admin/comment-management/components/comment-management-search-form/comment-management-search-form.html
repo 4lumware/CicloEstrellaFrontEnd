@@ -1,0 +1,68 @@
+<mat-expansion-panel class="search-panel">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <mat-icon>search</mat-icon>
+      <span>Buscador Avanzado</span>
+    </mat-panel-title>
+    <mat-panel-description> Filtra usuarios por nombre, rol, estado y fecha </mat-panel-description>
+  </mat-expansion-panel-header>
+
+  <form [formGroup]="formGroup" class="search-form">
+    <div class="form-row">
+      <div class="form-field">
+        <app-input
+          id="keyword"
+          [control]="formGroup.controls.keyword"
+          [label]="'Palabras Clave'"
+          [placeholder]="'Buscar por Palabras Clave...'"
+          variant="outline"
+        />
+      </div>
+      <div class="form-field">
+        <app-input
+          id="studentName"
+          [control]="formGroup.controls.studentName"
+          [label]="'Nombre de Estudiante'"
+          [placeholder]="'Buscar por Nombre de Estudiante...'"
+          variant="outline"
+        />
+      </div>
+      <div class="form-field">
+        <app-input
+          id="formalityTitle"
+          [control]="formGroup.controls.formalityTitle"
+          [label]="'Título del Tramite'"
+          [placeholder]="'Buscar por Título del Tramite...'"
+          variant="outline"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Ingresar rango de fechas</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input [formControl]="formGroup.controls.from" matStartDate placeholder="Start date" />
+          <input [formControl]="formGroup.controls.to" matEndDate placeholder="End date" />
+        </mat-date-range-input>
+
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+
+      <div class="form-field form-actions">
+        <button
+          mat-raised-button
+          color="accent"
+          type="button"
+          (click)="onClearFilters()"
+          class="clear-button"
+        >
+          <mat-icon>clear_all</mat-icon>
+          Limpiar Filtros
+        </button>
+      </div>
+    </div>
+  </form>
+</mat-expansion-panel>

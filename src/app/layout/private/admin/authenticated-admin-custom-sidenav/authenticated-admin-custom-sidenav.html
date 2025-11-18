@@ -1,7 +1,30 @@
 <div class="custom-sidenav-container">
   <h2 class="sidenav-title">Alumware</h2>
   <mat-nav-list class="sidenav-list-content">
-    @for (item of items(); track item.label) {
+    @for (item of items(); track item.label) { @if(item?.children) {
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+        </mat-panel-title>
+        <mat-panel-description>
+          <span class="nav-span-list">{{ item.label }}</span>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-nav-list class="sidenav-sublist-content">
+        @for (subItem of item.children; track subItem.label) {
+        <mat-list-item
+          class="nav-list-item sublist-item"
+          [routerLink]="subItem.path"
+          routerLinkActive="item-list-active"
+        >
+          <mat-icon matListItemIcon class="nav-icon">{{ subItem.icon }}</mat-icon>
+          <span matListItemTitle class="nav-span-list">{{ subItem.label }}</span>
+        </mat-list-item>
+        }
+      </mat-nav-list>
+    </mat-expansion-panel>
+    } @else {
     <mat-list-item
       class="nav-list-item"
       [routerLink]="item.path"
@@ -10,6 +33,6 @@
       <mat-icon matListItemIcon class="nav-icon">{{ item.icon }}</mat-icon>
       <span matListItemTitle class="nav-span-list">{{ item.label }}</span>
     </mat-list-item>
-    }
+    } }
   </mat-nav-list>
 </div>

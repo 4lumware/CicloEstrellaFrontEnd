@@ -1,4 +1,4 @@
-﻿.section-table-container {
+.section-table-container {
   padding: 2rem;
   max-width: 100%;
   background-color: #ffffff;
@@ -48,14 +48,14 @@
   border-radius: 0.5rem;
 }
 
-.p-selected-user {
+.p-selected-comment {
   margin: 0;
   font-size: 1rem;
   font-weight: 500;
   color: #424242;
 }
 
-.section-count-user {
+.section-count-comment {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -96,23 +96,25 @@
   width: 100%;
 }
 
-.user-table {
+.comment-table {
   width: 100%;
   background: white;
 }
 
-.user-table th {
+.comment-table th {
   text-align: left;
   background-color: #f5f5f5;
   font-weight: 500;
   font-size: 0.875rem;
   color: #424242;
   padding: 1rem;
+  vertical-align: middle;
 }
 
-.user-table td {
+.comment-table td {
   padding: 1rem;
   background-color: #ffffff;
+  vertical-align: middle;
 }
 
 /* Row interactions */
@@ -121,19 +123,19 @@
   cursor: pointer;
 }
 
-.user-table .table-row:hover > td {
+.comment-table .table-row:hover > td {
   background-color: rgba(25, 118, 210, 0.06);
 }
 
-.user-table .table-row:active > td {
+.comment-table .table-row:active > td {
   background-color: rgba(25, 118, 210, 0.12);
 }
 
-.user-table .table-row.selected > td {
+.comment-table .table-row.selected > td {
   background-color: rgba(25, 118, 210, 0.12);
 }
 
-.user-table .table-row.selected:hover > td {
+.comment-table .table-row.selected:hover > td {
   background-color: rgba(25, 118, 210, 0.16);
 }
 
@@ -199,6 +201,37 @@
   padding: 1rem;
 }
 
+.author-comment-image {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+  /* ensure the image doesn't get transformed or resized on hover */
+  transition: none;
+
+}
+
+
+
+/* Ensure image stays centered inside the flex container */
+.author-comment-image {
+    align-self: center;
+    max-width: 2rem;
+    max-height: 2rem;
+}
+
+/* Override potential Material transform/elevation on row hover that may shift layout */
+::ng-deep .mat-mdc-row,
+::ng-deep .mat-mdc-row:hover,
+::ng-deep .mat-mdc-row:active {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+
+
 /* Responsive Design */
 @media (max-width: 48rem) {
   .section-table-container {
@@ -207,8 +240,8 @@
 
 
 
-  .user-table th,
-  .user-table td {
+  .comment-table th,
+  .comment-table td {
     padding: 0.5rem;
     font-size: 0.75rem;
   }

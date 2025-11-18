@@ -16,10 +16,11 @@ export class CreateUserHandlerService {
   private snackBar = inject(SnackbarNotificationService);
   private studentService = inject(StudentService);
   private staffService = inject(StaffService);
+  private staffRoles: string[] = ['WRITER', 'ADMIN', 'MODERATOR'];
 
   createUser(result: StudentModelCreate | StaffModelCreate, reloadCallback: () => void): void {
     const type = result.type;
-
+    console.log('Tipo de usuario a crear:', type);
     if (type === 'STUDENT') {
       const student = result as StudentModelCreate;
 
@@ -42,24 +43,26 @@ export class CreateUserHandlerService {
       });
     }
 
-    if (!('roleId' in result)) {
-      this.snackBar.error('Debe seleccionar un rol para el usuario staff');
+    if (this.staffRoles.includes(type)) {
+      if (!('roleId' in result)) {
+        this.snackBar.error('Debe seleccionar un rol para el usuario staff');
+        return;
+      }
+
+      const payload: StaffModelCreateRest = StaffAdapterRest(result);
+
+      this.staffService.store(payload).subscribe({
+        next: () => {
+          this.snackBar.success('Usuario staff creado correctamente');
+          reloadCallback();
+        },
+        error: (err) => {
+          const errorMsg = err?.error?.message || 'Error al crear staff';
+          this.snackBar.error(errorMsg);
+        },
+      });
+
       return;
     }
-
-    const payload: StaffModelCreateRest = StaffAdapterRest(result);
-
-    this.staffService.store(payload).subscribe({
-      next: () => {
-        this.snackBar.success('Usuario staff creado correctamente');
-        reloadCallback();
-      },
-      error: (err) => {
-        const errorMsg = err?.error?.message || 'Error al crear staff';
-        this.snackBar.error(errorMsg);
-      },
-    });
-
-    return;
   }
 }
