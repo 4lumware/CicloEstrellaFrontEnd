@@ -46,6 +46,53 @@
       placeholder="Casilla para Repetir Contraseña"
       [control]="formGroup.controls.repeatPassword"
     />
+
+    <div class="profile-image-group">
+      <label for="profileImageInput" class="profile-image-label">Foto de perfil (opcional)</label>
+      <div
+        class="profile-image-preview"
+        (click)="profileImageInput.click()"
+        role="button"
+        tabindex="0"
+      >
+        <ng-container *ngIf="profileImagePreview(); else uploadPlaceholder">
+          <div class="image-preview-container">
+            <img
+              [src]="profileImagePreview()"
+              alt="Preview"
+              class="preview-img"
+              (error)="onPreviewError()"
+            />
+            <button
+              mat-icon-button
+              type="button"
+              (click)="removeImage(); $event.stopPropagation()"
+              aria-label="Quitar imagen"
+              class="remove-image-btn"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+
+        <ng-template #uploadPlaceholder>
+          <div class="upload-placeholder">
+            <mat-icon class="upload-icon">add_photo_alternate</mat-icon>
+            <p>Selecciona una imagen</p>
+            <span class="upload-hint">JPG, PNG (Máx. 5MB)</span>
+          </div>
+        </ng-template>
+
+        <input
+          #profileImageInput
+          id="profileImageInput"
+          type="file"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          style="display: none"
+        />
+      </div>
+    </div>
   </section>
 
   <section class="submit-form">

@@ -60,4 +60,8 @@ export class AuthUserService {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
   }
+
+  setCurrentUser(user: StaffModel | StudentModel | null) {
+    this._currentUser.next(user);
+  }
 }
