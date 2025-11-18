@@ -95,6 +95,11 @@ export class Input {
       return;
     }
 
+    if (control.errors['passwordMismatch']) {
+      this.errorMessage.set(`Las contraseñas no coinciden`);
+      return;
+    }
+
     this.errorMessage.set('Campo inválido');
   }
 }

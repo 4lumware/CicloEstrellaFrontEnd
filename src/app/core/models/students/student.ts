@@ -14,7 +14,7 @@ export interface StudentModelCreateRest {
   username: string;
   email: string;
   password: string;
-  profilePictureUrl: string;
+  profilePictureUrl?: string;
   currentSemester: number;
   careerIds: number[];
 }

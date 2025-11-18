@@ -20,7 +20,7 @@ export class UpdateUserHandlerService {
     reloadCallback: () => void
   ): void {
     const type = result.type;
-
+    console.log('Tipo de usuario a actualizar:', type);
     const handlers: Record<string, () => void> = {
       STUDENT: () => {
         const student = result as StudentModelCreate;

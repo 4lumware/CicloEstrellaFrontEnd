@@ -1,0 +1,54 @@
+.user-management-container {
+  padding: 1.25rem;
+  max-width: 87.5rem;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.header-icon {
+  font-size: 1.6rem;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.add-button {
+  display: flex;
+  align-items: center;
+  gap: 0.313rem;
+}
+
+/* Responsive Design */
+@media (max-width: 48rem) {
+  .user-management-container {
+    padding: 0.625rem;
+  }
+
+  .header-title {
+    font-size: 1.125rem;
+  }
+
+  .add-button span {
+    display: none;
+  }
+}
+
