@@ -38,6 +38,7 @@ import { SnackbarNotificationService } from '../../../../../core/services/notifi
 import { ProfileImageUploader } from '../../../../../shared/components/forms/profile-image-uploader/profile-image-uploader';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
+import { buildFormRegister } from '../../logic/form-register-builder';
 
 export const TERM_OPTIONS: Option[] = [
   { label: '1er Ciclo', value: 1 },
@@ -111,36 +112,7 @@ export class FormRegister implements OnInit {
     profilePictureUrl: '',
   });
   constructor() {
-    this.formGroup = this.formBuilder.group({
-      account: this.formBuilder.group({
-        name: this.formBuilder.control('', {
-          validators: [Validators.required, Validators.minLength(2)],
-        }),
-        email: this.formBuilder.control('', {
-          validators: [Validators.required, Validators.email],
-        }),
-      }),
-      academic: this.formBuilder.group({
-        career: this.formBuilder.control<number | null>(null, {
-          validators: [Validators.required],
-        }),
-        term: this.formBuilder.control<number | null>(null, {
-          validators: [Validators.required],
-        }),
-        password: this.formBuilder.control('', {
-          validators: [Validators.required, Validators.minLength(6)],
-        }),
-        repeatPassword: this.formBuilder.control('', {
-          validators: [Validators.required, Validators.minLength(6), passwordMatchOnControl],
-        }),
-      }),
-      profile: this.formBuilder.group({
-        profilePictureUrl: this.formBuilder.control(''),
-        acceptConditions: this.formBuilder.control(false, {
-          validators: [Validators.requiredTrue],
-        }),
-      }),
-    });
+    this.formGroup = buildFormRegister(this.formBuilder);
   }
 
   protected get accountGroup() {
