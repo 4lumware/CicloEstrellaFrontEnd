@@ -1,108 +1,191 @@
 <form class="form-group-container" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-  <section class="form-input-container">
-    <app-input
-      id="register-student-name"
-      label="Nombre"
-      type="text"
-      placeholder="Casilla para el nombre"
-      [control]="formGroup.controls.name"
-    />
-
-    <app-input
-      id="register-student-email"
-      label="Correo Electronico"
-      type="text"
-      placeholder="Casilla para el Correo Electronico"
-      [control]="formGroup.controls.email"
-    />
-
-    <app-select
-      id="register-student-select-career"
-      label="Selecciona una carrera"
-      [options]="careerGroup()"
-      [control]="formGroup.controls.career"
-    />
-
-    <app-select
-      id="register-student-select-term"
-      label="Seleccione su ciclo"
-      [options]="termOptions"
-      panel="up"
-      [control]="formGroup.controls.term"
-    />
-
-    <app-input
-      id="register-student-password"
-      label="Contraseña"
-      type="password"
-      placeholder="Casilla para la Contraseña"
-      [control]="formGroup.controls.password"
-    />
-
-    <app-input
-      id="register-student-repeat-password"
-      label="Repetir Contraseña"
-      type="password"
-      placeholder="Casilla para Repetir Contraseña"
-      [control]="formGroup.controls.repeatPassword"
-    />
-
-    <div class="profile-image-group">
-      <label for="profileImageInput" class="profile-image-label">Foto de perfil (opcional)</label>
-      <div
-        class="profile-image-preview"
-        (click)="profileImageInput.click()"
-        role="button"
-        tabindex="0"
-      >
-        <ng-container *ngIf="profileImagePreview(); else uploadPlaceholder">
-          <div class="image-preview-container">
-            <img
-              [src]="profileImagePreview()"
-              alt="Preview"
-              class="preview-img"
-              (error)="onPreviewError()"
-            />
-            <button
-              mat-icon-button
-              type="button"
-              (click)="removeImage(); $event.stopPropagation()"
-              aria-label="Quitar imagen"
-              class="remove-image-btn"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
-          </div>
-        </ng-container>
-
-        <ng-template #uploadPlaceholder>
-          <div class="upload-placeholder">
-            <mat-icon class="upload-icon">add_photo_alternate</mat-icon>
-            <p>Selecciona una imagen</p>
-            <span class="upload-hint">JPG, PNG (Máx. 5MB)</span>
+  <div class="register-card">
+    <mat-stepper class="bg-mt-step large-stepper" [linear]="isLinear" #stepper>
+      <mat-step [stepControl]="accountGroup">
+        <ng-template matStepLabel>
+          <div class="step-header">
+            <div>
+              <div class="step-title">Cuenta</div>
+              <div class="step-sub">Nombre y correo</div>
+            </div>
           </div>
         </ng-template>
 
-        <input
-          #profileImageInput
-          id="profileImageInput"
-          type="file"
-          accept="image/*"
-          (change)="onFileSelected($event)"
-          style="display: none"
-        />
-      </div>
-    </div>
-  </section>
+        <div class="step-body">
+          <p class="step-desc">
+            Introduce tu nombre completo y un correo válido; te servirá como usuario.
+          </p>
+          <div [formGroup]="accountGroup" class="form-column">
+            <app-input
+              id="register-student-name"
+              label="Nombre"
+              type="text"
+              placeholder="Tu nombre completo"
+              [control]="nameControl"
+            />
+            <app-input
+              id="register-student-email"
+              label="Correo Electrónico"
+              type="text"
+              placeholder="ejemplo@correo.com"
+              [control]="emailControl"
+            />
+          </div>
+        </div>
 
-  <section class="submit-form">
-    <mat-checkbox [formControl]="formGroup.controls.acceptConditions"
-      >Aceptar terminos y condiciones</mat-checkbox
-    >
+        <div class="step-actions">
+          <button
+            [disabled]="accountGroup.invalid"
+            type="button"
+            mat-flat-button
+            color="primary"
+            matStepperNext
+          >
+            Siguiente
+          </button>
+        </div>
+      </mat-step>
 
-    <section class="button-content">
-      <button matButton="filled" type="submit" [disabled]="formGroup.invalid">Crear Cuenta</button>
-      <p class="p-button-cta">Ya tienes cuenta? <a class="span-button-cta">Inicia Sesion</a></p>
-    </section>
-  </section>
+      <mat-step [stepControl]="academicGroup">
+        <ng-template matStepLabel>
+          <div class="step-header">
+            <div>
+              <div class="step-title">Académico</div>
+              <div class="step-sub">Carrera y contraseña</div>
+            </div>
+          </div>
+        </ng-template>
+
+        <div class="step-body">
+          <p class="step-desc">
+            Selecciona tu carrera y ciclo; crea una contraseña segura (mín. 6 caracteres).
+          </p>
+          <div [formGroup]="academicGroup" class="form-column">
+            <app-select
+              id="register-student-select-career"
+              label="Carrera"
+              [options]="careerGroup()"
+              [control]="careerControl"
+            />
+            <app-select
+              id="register-student-select-term"
+              label="Ciclo"
+              [options]="termOptions"
+              panel="up"
+              [control]="termControl"
+            />
+            <app-input
+              id="register-student-password"
+              label="Contraseña"
+              type="password"
+              placeholder="Contraseña"
+              [control]="passwordControl"
+            />
+            <app-input
+              id="register-student-repeat-password"
+              label="Repetir Contraseña"
+              type="password"
+              placeholder="Repetir Contraseña"
+              [control]="repeatPasswordControl"
+            />
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button type="button" mat-stroked-button class="btn-back" matStepperPrevious>
+            Anterior
+          </button>
+          <button
+            [disabled]="academicGroup.invalid"
+            type="button"
+            mat-flat-button
+            color="primary"
+            matStepperNext
+          >
+            Siguiente
+          </button>
+        </div>
+      </mat-step>
+
+      <mat-step [stepControl]="profileGroup">
+        <ng-template matStepLabel>
+          <div class="step-header">
+            <div>
+              <div class="step-title">Perfil</div>
+              <div class="step-sub">Foto y confirmación</div>
+            </div>
+          </div>
+        </ng-template>
+
+        <div class="step-body">
+          <p class="step-desc">Sube una foto y acepta los términos para crear tu cuenta.</p>
+          <div [formGroup]="profileGroup" class="form-column">
+            <app-profile-image-uploader
+              [control]="profilePictureControl"
+            ></app-profile-image-uploader>
+            <mat-checkbox [formControl]="acceptConditionsControl"
+              >Acepto términos y condiciones</mat-checkbox
+            >
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button type="button" mat-stroked-button class="btn-back" matStepperPrevious>
+            Anterior
+          </button>
+          <button
+            [disabled]="profileGroup.invalid"
+            type="button"
+            mat-flat-button
+            color="primary"
+            matStepperNext
+          >
+            Siguiente
+          </button>
+        </div>
+      </mat-step>
+
+      <!-- Review / Summary Step -->
+      <mat-step>
+        <ng-template matStepLabel>
+          <div class="step-header">
+            <div>
+              <div class="step-title">Resumen</div>
+              <div class="step-sub">Revisa tus datos antes de crear la cuenta</div>
+            </div>
+          </div>
+        </ng-template>
+
+        <div class="step-body review-body">
+          <div class="review-card">
+            <div class="review-image">
+              <img [src]="profilePictureValue()" alt="" />
+              <ng-template #noImage>
+                <div class="no-image">Sin imagen</div>
+              </ng-template>
+            </div>
+            <div class="review-data">
+              <h3 class="review-title">{{ userResume().username }}</h3>
+              <p class="review-line"><strong>Email:</strong> {{ userResume().email }}</p>
+              <p class="review-line"><strong>Carrera (id):</strong> {{ userResume().career }}</p>
+              <p class="review-line"><strong>Ciclo:</strong> {{ userResume().term }}</p>
+              <p class="review-line">
+                <strong>Acepta términos:</strong>
+                {{ profileGroup.value.acceptConditions ? 'Sí' : 'No' }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button type="button" mat-stroked-button class="btn-back" matStepperPrevious>
+            Anterior
+          </button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="formGroup.invalid">
+            Crear Cuenta
+          </button>
+        </div>
+      </mat-step>
+    </mat-stepper>
+  </div>
 </form>

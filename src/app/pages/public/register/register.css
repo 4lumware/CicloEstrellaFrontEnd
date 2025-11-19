@@ -1,30 +1,66 @@
 :host {
   display: grid;
-  height: 100vh;
   place-content: center;
-}
+  min-height: 100vh;
 
-.register-content {
-  display: flex;
-  flex-flow: column nowrap;
-  gap: 2rem ;
-  width: 25rem;
-}
-
-.register-header {
-  font-size: 2.8rem;
-  font-weight: 500;
-  text-align: center;
-  color:  var(--primary-color);
 }
 
 .main-register-content {
   display: flex;
   flex-flow: row nowrap;
-  gap: 7.5rem;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  padding: 32px;
+}
+
+.register-content {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1rem;
+  width: 420px; /* comfortable form width */
+  max-width: calc(100vw - 48px);
+}
+
+.register-header {
+  font-size: 2.4rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--primary-color);
+  margin: 0 0 8px 0;
+  line-height: 1.05;
+  letter-spacing: -0.4px;
 }
 
 .img-register {
   border-radius: 1rem;
+  width: 480px;
+  max-width: 45vw;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+/* Responsive: stack vertically on small screens */
+@media (max-width: 980px) {
+  .main-register-content {
+    flex-direction: column-reverse;
+    gap: 18px;
+    align-items: center;
+    padding: 20px;
+  }
+  .img-register {
+    width: 80%;
+    max-width: 360px;
+    max-height: 40vh;
+  }
+  .register-content { width: 100%; max-width: 720px; }
+  .register-header { text-align: center; }
+}
+
+/* Small devices: hide image to prioritize form space */
+@media (max-width: 520px) {
+  .img-register { display: none; }
+  .main-register-content { padding: 12px; }
 }
 

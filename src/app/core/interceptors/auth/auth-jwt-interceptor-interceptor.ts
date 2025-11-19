@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { BehaviorSubject, catchError, filter, switchMap, take, throwError, finalize } from 'rxjs';
 import { AuthUserService, JWTTokensDTO } from '../../services/users/auth/auth-user-service';
 import { ApiResponse } from '../../models/responses/response';
+import { STATIC_URL } from '../../constants/api';
 
 // Estado compartido entre todas las invocaciones del interceptor
 
@@ -12,7 +13,7 @@ const refreshTokenSubject$ = new BehaviorSubject<string | null>(null);
 export const authJwtInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthUserService);
 
-  if (req.url.endsWith('/login') || req.url.includes('/refresh-token')) {
+  if (STATIC_URL.some((url) => req.url.includes(url))) {
     return next(req);
   }
 
