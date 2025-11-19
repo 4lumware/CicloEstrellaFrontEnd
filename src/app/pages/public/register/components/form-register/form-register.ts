@@ -1,4 +1,14 @@
-import { Component, inject, OnInit, output, Output, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  OnInit,
+  output,
+  Output,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AbstractControl,
@@ -13,6 +23,7 @@ import {
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatAnchor, MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatStepperModule } from '@angular/material/stepper';
 import { Option, Select } from '../../../../../shared/components/forms/select/select';
 import { Input } from '../../../../../shared/components/forms/input/input';
 import { CareerService } from '../../../../../core/services/careers/career-service';
@@ -23,6 +34,10 @@ import {
 } from '../../../../../core/models/students/student';
 import { StudentAdapterRest } from '../../../../../core/adapters/students/StudentAdapterRest';
 import { Router } from '@angular/router';
+import { SnackbarNotificationService } from '../../../../../core/services/notifications/snackbar-notification-service';
+import { ProfileImageUploader } from '../../../../../shared/components/forms/profile-image-uploader/profile-image-uploader';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { of } from 'rxjs';
 
 export const TERM_OPTIONS: Option[] = [
   { label: '1er Ciclo', value: 1 },
@@ -48,18 +63,16 @@ export interface RegisterStudentFormValue {
   acceptConditions: FormControl<boolean>;
 }
 
-export const passwordMatchValidator: ValidatorFn = (
+export const passwordMatchOnControl: ValidatorFn = (
   control: AbstractControl
 ): ValidationErrors | null => {
-  const password = control.get('password')?.value;
-  const repeatPassword = control.get('repeatPassword')?.value;
+  const parent = control.parent;
+  if (!parent) return null; // si aún no está enlazado al parent
+  const password = parent.get('password')?.value;
+  const repeat = control.value;
 
-  if (password && repeatPassword && password !== repeatPassword) {
-    return { passwordMismatch: true };
-  }
-  return null;
+  return password && repeat && password !== repeat ? { passwordMismatch: true } : null;
 };
-
 @Component({
   selector: 'app-form-register',
   standalone: true,
@@ -72,47 +85,106 @@ export const passwordMatchValidator: ValidatorFn = (
     MatAnchor,
     MatButtonModule,
     MatIconModule,
+    MatStepperModule,
+    ProfileImageUploader,
   ],
   templateUrl: './form-register.html',
   styleUrl: './form-register.css',
 })
 export class FormRegister implements OnInit {
-  protected formGroup!: FormGroup<RegisterStudentFormValue>;
+  protected formGroup!: FormGroup;
   private formBuilder = inject(NonNullableFormBuilder);
   private studentService = inject(StudentService);
   private careerService = inject(CareerService);
   private router = inject(Router);
+  private snackbar = inject(SnackbarNotificationService);
   protected termOptions = TERM_OPTIONS;
   protected careerGroup: WritableSignal<Option[]> = signal<Option[]>([]);
-  protected profileImagePreview: WritableSignal<string | null> = signal<string | null>(null);
-  protected selectedFile: WritableSignal<File | null> = signal<File | null>(null);
-
+  protected isLinear = true;
+  private destroyRef = inject(DestroyRef);
+  protected profilePictureValue: WritableSignal<string | null> = signal<string | null>(null);
+  protected userResume = signal({
+    username: '',
+    email: '',
+    career: '',
+    term: '',
+    profilePictureUrl: '',
+  });
   constructor() {
-    this.formGroup = this.formBuilder.group<RegisterStudentFormValue>(
-      {
+    this.formGroup = this.formBuilder.group({
+      account: this.formBuilder.group({
         name: this.formBuilder.control('', {
           validators: [Validators.required, Validators.minLength(2)],
         }),
         email: this.formBuilder.control('', {
           validators: [Validators.required, Validators.email],
         }),
+      }),
+      academic: this.formBuilder.group({
+        career: this.formBuilder.control<number | null>(null, {
+          validators: [Validators.required],
+        }),
+        term: this.formBuilder.control<number | null>(null, {
+          validators: [Validators.required],
+        }),
         password: this.formBuilder.control('', {
           validators: [Validators.required, Validators.minLength(6)],
         }),
         repeatPassword: this.formBuilder.control('', {
-          validators: [Validators.required, Validators.minLength(6)],
+          validators: [Validators.required, Validators.minLength(6), passwordMatchOnControl],
         }),
+      }),
+      profile: this.formBuilder.group({
         profilePictureUrl: this.formBuilder.control(''),
-        career: this.formBuilder.control<number | null>(null, {
-          validators: [Validators.required],
-        }),
-        term: this.formBuilder.control<number | null>(null, { validators: [Validators.required] }),
         acceptConditions: this.formBuilder.control(false, {
           validators: [Validators.requiredTrue],
         }),
-      },
-      { validators: passwordMatchValidator }
-    );
+      }),
+    });
+  }
+
+  protected get accountGroup() {
+    return this.formGroup.get('account') as FormGroup;
+  }
+
+  protected get academicGroup() {
+    return this.formGroup.get('academic') as FormGroup;
+  }
+
+  protected get profileGroup() {
+    return this.formGroup.get('profile') as FormGroup;
+  }
+
+  protected get nameControl(): FormControl {
+    return this.accountGroup.get('name') as FormControl;
+  }
+
+  protected get emailControl(): FormControl {
+    return this.accountGroup.get('email') as FormControl;
+  }
+
+  protected get careerControl(): FormControl {
+    return this.academicGroup.get('career') as FormControl;
+  }
+
+  protected get termControl(): FormControl {
+    return this.academicGroup.get('term') as FormControl;
+  }
+
+  protected get passwordControl(): FormControl {
+    return this.academicGroup.get('password') as FormControl;
+  }
+
+  protected get repeatPasswordControl(): FormControl {
+    return this.academicGroup.get('repeatPassword') as FormControl;
+  }
+
+  protected get profilePictureControl(): FormControl {
+    return this.profileGroup.get('profilePictureUrl') as FormControl;
+  }
+
+  protected get acceptConditionsControl(): FormControl {
+    return this.profileGroup.get('acceptConditions') as FormControl;
   }
 
   ngOnInit() {
@@ -122,6 +194,33 @@ export class FormRegister implements OnInit {
         this.careerGroup.set(response);
       },
     });
+
+    this.formGroup.get('password')?.valueChanges.subscribe(() => {
+      this.formGroup.get('repeatPassword')?.updateValueAndValidity({ onlySelf: true });
+    });
+
+    const ctrl = this.profilePictureControl;
+    this.profilePictureValue.set(ctrl?.value ?? null);
+
+    ctrl?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((v) => this.profilePictureValue.set(v));
+
+    this.formGroup.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => {
+      const account = value.account;
+      const academic = value.academic;
+      const profile = value.profile;
+
+      this.userResume.set({
+        username: account?.name ?? '',
+        email: account?.email ?? '',
+        career: this.careerGroup().find((o) => o.value === academic?.career)?.label || '',
+        term: this.termOptions.find((o) => o.value === academic?.term)?.label || '',
+        profilePictureUrl: profile?.profilePictureUrl ?? '',
+      });
+
+      console.log('Form changes:', this.userResume());
+    });
   }
 
   onSubmit() {
@@ -130,17 +229,17 @@ export class FormRegister implements OnInit {
       return;
     }
 
-    const v = this.formGroup.getRawValue();
+    const account = this.accountGroup.getRawValue();
+    const academic = this.academicGroup.getRawValue();
+    const profile = this.profileGroup.getRawValue();
 
     const payload: StudentModelCreateRest = {
-      username: this.formGroup.value.name ?? '',
-      email: this.formGroup.value.email ?? '',
-      password: this.formGroup.value.password ?? '',
-      currentSemester: this.formGroup.value.term ?? 0,
-      careerIds: this.formGroup.value.career != null ? [this.formGroup.value.career] : [],
-      profilePictureUrl: this.selectedFile()
-        ? this.profileImagePreview() ?? ''
-        : v.profilePictureUrl || '',
+      username: account.name ?? '',
+      email: account.email ?? '',
+      password: academic.password ?? '',
+      currentSemester: academic.term ?? 0,
+      careerIds: academic.career != null ? [academic.career] : [],
+      profilePictureUrl: profile.profilePictureUrl || '',
     };
 
     console.log('Submitting registration with payload:', payload);
@@ -151,34 +250,9 @@ export class FormRegister implements OnInit {
         this.router.navigate(['/private/home']);
       },
       error: (error) => {
-        console.error('Error registering student:', error);
+        const message = error?.error?.message || 'Ocurrio un error al registrar el estudiante';
+        this.snackbar.error(message);
       },
     });
-  }
-
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      if (!file.type.startsWith('image/')) return;
-      if (file.size > 2 * 1024 * 1024) return; // 2MB limit
-      this.selectedFile.set(file);
-      const reader = new FileReader();
-      reader.onload = (e) => this.profileImagePreview.set(e.target?.result as string);
-      reader.readAsDataURL(file);
-    }
-  }
-
-  removeImage(): void {
-    this.selectedFile.set(null);
-    this.profileImagePreview.set(null);
-    this.formGroup.controls.profilePictureUrl.setValue('');
-  }
-
-  onPreviewError(): void {
-    // If preview image fails to load, clear preview to show placeholder
-    this.selectedFile.set(null);
-    this.profileImagePreview.set(null);
-    this.formGroup.controls.profilePictureUrl.setValue('');
   }
 }
