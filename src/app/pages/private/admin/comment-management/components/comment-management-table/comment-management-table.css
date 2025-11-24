@@ -94,6 +94,9 @@
 .table-container {
   overflow-x: auto;
   width: 100%;
+  display: block;
+  overflow-y: auto;
+  max-height: 40vh;
 }
 
 .comment-table {
@@ -101,6 +104,21 @@
   background: white;
 }
 
+.mat-mdc-header-row {
+  position: sticky !important;
+  top: 0;
+  z-index: 100;
+}
+
+/* Asegura que cada celda del header también sea sticky */
+.mat-mdc-header-cell {
+  z-index: 101;
+}
+
+.header-actions-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
 .comment-table th {
   text-align: left;
   background-color: #f5f5f5;
@@ -274,4 +292,20 @@
 ::ng-deep .mat-mdc-paginator-container {
   justify-content: space-between;
   padding: 0.5rem 1rem;
+}
+
+/* Refresh icon spin animation */
+.spin {
+  display: inline-block;
+  transform-origin: center center;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

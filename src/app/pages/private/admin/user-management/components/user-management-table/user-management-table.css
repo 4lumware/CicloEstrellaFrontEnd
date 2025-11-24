@@ -90,10 +90,22 @@
 .dashboard-card mat-card-content {
   padding: 0 !important;
 }
-
+.header-actions-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
 .table-container {
-  overflow-x: auto;
+   overflow-x: auto;
   width: 100%;
+  display: block;
+  overflow-y: auto;
+  max-height: 40vh;
+}
+
+.mat-mdc-header-row {
+  position: sticky !important;
+  top: 0;
+  z-index: 100;
 }
 
 .user-table {
@@ -241,4 +253,20 @@
 ::ng-deep .mat-mdc-paginator-container {
   justify-content: space-between;
   padding: 0.5rem 1rem;
+}
+
+/* Refresh icon spin animation (same as comments table) */
+.spin {
+  display: inline-block;
+  transform-origin: center center;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

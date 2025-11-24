@@ -1,0 +1,60 @@
+.comment-detail-card {
+  width: 560px;
+  max-width: 90vw;
+  border-radius: 12px;
+  padding: 0.5rem 0.75rem;
+}
+
+.header {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.author-name {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.meta {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.comment-body {
+  max-height: 42vh;
+  overflow: auto;
+  padding: 0.5rem 0.75rem 1rem 0.75rem;
+  line-height: 1.5;
+  color: #111827;
+}
+
+.comment-body p {
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+/* Ensure the dialog content is centered visually */
+.mat-mdc-dialog-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

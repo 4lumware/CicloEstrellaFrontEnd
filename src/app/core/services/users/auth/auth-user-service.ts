@@ -5,6 +5,8 @@ import { API_URL } from '../../../constants/api';
 import { StaffModel } from '../../../models/staffs/staff';
 import { StudentModel } from '../../../models/students/student';
 import { ApiResponse } from '../../../models/responses/response';
+import { AuthRefreshTokenService } from './auth-refresh-token-service';
+import { AuthCurrentUserService } from './auth-current-user-service';
 
 export interface JWTTokensDTO {
   access_token: string;
@@ -20,12 +22,10 @@ export interface JsonResponseDTO<T> {
   providedIn: 'root',
 })
 export class AuthUserService {
-  private _currentUser = new BehaviorSubject<StaffModel | StudentModel | null>(null);
-
-  public readonly currentUser$ = this._currentUser.asObservable();
-
   private apiUrl = API_URL + '/auth';
   private http = inject(HttpClient);
+  private refreshService = inject(AuthRefreshTokenService);
+  private currentUserService = inject(AuthCurrentUserService);
 
   login<T extends StaffModel | StudentModel>(
     email: string,
@@ -36,32 +36,29 @@ export class AuthUserService {
       .pipe(
         tap((response) => {
           const user = response.data.user;
-          this._currentUser.next(user);
+          this.currentUserService.setCurrentUser(user as any);
+
           const tokens = response.data.tokens;
 
-          localStorage.setItem('access_token', tokens.access_token);
-          localStorage.setItem('refresh_token', tokens.refresh_token);
+          this.refreshService.setTokens(tokens as any);
         })
       );
   }
 
   refreshToken(token: string): Observable<ApiResponse<JWTTokensDTO>> {
-    return this.http.post<ApiResponse<JWTTokensDTO>>(
-      `${this.apiUrl}/refresh-token`,
-      {},
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    return this.refreshService.refreshToken(token);
   }
 
   logout(): void {
-    this._currentUser.next(null);
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
+    this.refreshService.clearTokens();
+    this.currentUserService.logout();
+  }
+
+  public loadUserFromStorage() {
+    return this.currentUserService.initialize();
   }
 
   setCurrentUser(user: StaffModel | StudentModel | null) {
-    this._currentUser.next(user);
+    this.currentUserService.setCurrentUser(user);
   }
 }

@@ -14,23 +14,15 @@ import { AuthUserService, JsonResponseDTO } from '../../users/auth/auth-user-ser
   providedIn: 'root',
 })
 export class StudentService {
-  private authService = inject(AuthUserService);
   private apiUrl = API_URL + '/students';
   private storeStudentUrl = API_URL + '/auth/students/register';
   private http = inject(HttpClient);
 
   store(student: StudentModelCreateRest): Observable<ApiResponse<JsonResponseDTO<StudentModel>>> {
-    return this.http
-      .post<ApiResponse<JsonResponseDTO<StudentModel>>>(this.storeStudentUrl, student)
-      .pipe(
-        tap((response) => {
-          const user = response.data.user;
-          this.authService.setCurrentUser(user);
-          const tokens = response.data.tokens;
-          localStorage.setItem('access_token', tokens.access_token);
-          localStorage.setItem('refresh_token', tokens.refresh_token);
-        })
-      );
+    return this.http.post<ApiResponse<JsonResponseDTO<StudentModel>>>(
+      this.storeStudentUrl,
+      student
+    );
   }
 
   update(

@@ -1,6 +1,9 @@
 <section class="section-table-container">
   <!-- Search Panel -->
-  <app-comment-management-search-form />
+  <app-comment-management-search-form
+    (applyFilters)="onSearchApply($event)"
+    (clearFilters)="onSearchClear()"
+  />
 
   <!-- Search Results Info -->
   <div class="search-results-info">
@@ -14,17 +17,33 @@
       Comentarios Seleccionados:
       <span class="section-count-comment">{{ selectedRows().length }}</span>
     </p>
-    @if (selectedRows().length) {
-    <button
-      mat-raised-button
-      color="warn"
-      (click)="deleteSelected()"
-      class="delete-selected-button"
-    >
-      <mat-icon>delete_sweep</mat-icon>
-      Eliminar Seleccionados ({{ selectedRows().length }})
-    </button>
-    }
+    <div class="header-actions-buttons">
+      <button
+        mat-icon-button
+        color="primary"
+        matTooltip="Refrescar tabla"
+        (click)="loadComments(); $event.stopPropagation()"
+        aria-label="Refrescar tabla"
+        [attr.aria-busy]="isRefreshing()"
+        [disabled]="isRefreshing()"
+      >
+        <mat-icon [class.spin]="isRefreshing()">refresh</mat-icon>
+      </button>
+      @if (selectedRows().length) {
+      <button
+        mat-raised-button
+        color="warn"
+        matTooltip="Eliminar seleccionados"
+        (click)="deleteSelected(); $event.stopPropagation()"
+        aria-label="Eliminar seleccionados"
+        [disabled]="isRefreshing()"
+        class="delete-selected-button"
+      >
+        <mat-icon>delete_sweep</mat-icon>
+        Eliminar Seleccionados ({{ selectedRows().length }})
+      </button>
+      }
+    </div>
   </div>
 
   <!-- Data Table Card -->
@@ -46,21 +65,31 @@
             </td>
           </ng-container>
 
+          <!-- Formality Title -->
+
+          <ng-container matColumnDef="formalityTitle">
+            <th mat-header-cell *matHeaderCellDef>Título del Tramite</th>
+            <td mat-cell *matCellDef="let comment">{{ comment.formality.title }}</td>
+          </ng-container>
+
           <!-- Created Date Column -->
           <ng-container matColumnDef="createdAt">
             <th mat-header-cell *matHeaderCellDef>Fecha Creación</th>
-            <td mat-cell *matCellDef="let comment">{{ comment.createdAt | date : 'short' }}</td>
+            <td mat-cell *matCellDef="let comment">
+              {{ comment.createdAt | date : 'short' }}
+            </td>
           </ng-container>
 
           <!-- Actions Column -->
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef>Acciones</th>
-            <td mat-cell *matCellDef="let user" class="actions-cell">
+            <td mat-cell *matCellDef="let comment" class="actions-cell">
               <button
                 mat-icon-button
                 color="primary"
                 matTooltip="Ver Detalle del Comentario"
                 class="action-button"
+                (click)="openDetail(comment); $event.stopPropagation()"
               >
                 <mat-icon>visibility</mat-icon>
               </button>
@@ -69,6 +98,7 @@
                 color="warn"
                 matTooltip="Eliminar Comentario"
                 class="action-button"
+                (click)="$event.stopPropagation(); onDeleteComment(comment)"
               >
                 <mat-icon>delete</mat-icon>
               </button>
@@ -90,16 +120,12 @@
       </div>
 
       <!-- Paginator -->
-      <mat-paginator
+      <app-shared-paginator
         [length]="totalItems()"
-        [pageSize]="pagination().pageSize"
-        [pageIndex]="pagination().pageIndex"
-        [pageSizeOptions]="pageSizeOptions"
+        [allPageSizeOptions]="[5, 10, 25, 50, 100]"
         (page)="onPageChange($event)"
-        showFirstLastButtons
         class="table-paginator"
-      >
-      </mat-paginator>
+      ></app-shared-paginator>
     </mat-card-content>
   </mat-card>
 </section>

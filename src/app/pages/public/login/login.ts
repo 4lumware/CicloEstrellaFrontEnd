@@ -19,6 +19,8 @@ import {
 import { Input } from '../../../shared/components/forms/input/input';
 import { StaffModel } from '../../../core/models/staffs/staff';
 import { StudentModel } from '../../../core/models/students/student';
+import { SnackbarNotificationService } from '../../../core/services/notifications/snackbar-notification-service';
+import { AuthCurrentUserService } from '../../../core/services/users/auth/auth-current-user-service';
 
 export interface LoginFormValue {
   email: FormControl<string>;
@@ -34,15 +36,17 @@ export interface LoginFormValue {
 })
 export class Login {
   protected loginForm: FormGroup<LoginFormValue>;
-
+  private snackbar = inject(SnackbarNotificationService);
   protected loading: WritableSignal<boolean> = signal<boolean>(false);
   protected loginError: WritableSignal<string> = signal<string>('');
 
   private fb: NonNullableFormBuilder = inject(NonNullableFormBuilder);
   private router: Router = inject(Router);
   private authService = inject(AuthUserService);
+  private authCurrentUserService = inject(AuthCurrentUserService);
 
   constructor() {
+    this.authService.logout();
     this.loginForm = this.fb.group<LoginFormValue>({
       email: this.fb.control('', {
         validators: [Validators.required, Validators.email],
@@ -71,16 +75,22 @@ export class Login {
 
         if (!('roles' in user)) {
           this.router.navigate(['/private/home']);
+          localStorage.setItem('user_role', 'STUDENT');
+          this.authCurrentUserService.setCurrentUser(user);
           return;
         }
 
         if (user.roles.some((role) => role.roleName === 'ADMIN' || role.roleName === 'STAFF')) {
           this.router.navigate(['/dashboard/home']);
+          localStorage.setItem('user_role', 'STAFF');
+          this.authCurrentUserService.setCurrentUser(user);
+          console.log('✅ Usuario con rol ADMIN o STAFF, redirigiendo a /dashboard/home');
         }
       },
       error: (err) => {
         console.error('❌ Error en login:', err);
         this.loginError.set('Correo o contraseña incorrectos');
+        this.snackbar.error('Error al iniciar sesión. Por favor, verifique sus credenciales.');
         this.loading.set(false);
       },
       complete: () => this.loading.set(false),

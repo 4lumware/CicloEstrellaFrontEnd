@@ -1,0 +1,23 @@
+<mat-card class="comment-detail-card">
+  <div class="header">
+    <img
+      class="avatar"
+      [src]="data.author.profilePictureUrl || '/assets/default-avatar.png'"
+      alt="{{ data.author.username }}"
+    />
+    <div class="title-block">
+      <h2 class="author-name">{{ data.author.username }}</h2>
+      <div class="meta">{{ data.createdAt | date : 'medium' }}</div>
+    </div>
+  </div>
+
+  <mat-card-content>
+    <div class="comment-body">
+      <p>{{ data.text }}</p>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-button color="primary" (click)="close()">Cerrar</button>
+  </mat-card-actions>
+</mat-card>
