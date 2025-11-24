@@ -13,32 +13,32 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
-  CommentFilterForm,
-  CommentFilterFormValue,
-  CommentManagementSearchForm,
-} from '../comment-management-search-form/comment-management-search-form';
-import { CommentModel } from '../../../../../../core/models/comments/comment';
-import { CommentService } from '../../../../../../core/services/comments/comment-service';
+  ReviewFilterForm,
+  ReviewFilterFormValue,
+  ReviewManagementSearchForm,
+} from '../review-management-search-form/review-management-search-form';
+import { ReviewModel, ReviewParamsFilter } from '../../../../../../core/models/reviews/review';
 import { PageResponse } from '../../../../../../core/models/responses/response';
 import { DatePipe } from '@angular/common';
-import { CommentDetailDialog } from './dialogs/comment-detail-dialog/comment-detail-dialog';
+import { ReviewDetailDialog } from '../dialogs/review-detail-dialog/review-detail-dialog';
 import { ConfirmDialog } from '../../../../../../shared/components/ui/confirm-dialog/confirm-dialog';
 import { forkJoin } from 'rxjs';
 import { SharedPaginator } from '../../../../../../shared/components/ui/shared-paginator/shared-paginator';
+import { ReviewService } from '../../../../../../core/services/reviews/review-service';
+import { MatChipSet, MatChip, MatChipsModule } from '@angular/material/chips';
 
 export interface PaginationState {
   pageSize: number;
   pageIndex: number;
 }
 
-export interface CommentFilter {}
+export interface ReviewFilter {}
 @Component({
-  selector: 'app-comment-management-table',
+  selector: 'app-review-management-table',
   imports: [
     ReactiveFormsModule,
     MatTableModule,
@@ -48,28 +48,43 @@ export interface CommentFilter {}
     MatTooltipModule,
     MatSnackBarModule,
     MatDialogModule,
-    CommentManagementSearchForm,
+    ReviewManagementSearchForm,
     DatePipe,
     SharedPaginator,
+    MatChipsModule,
   ],
-  templateUrl: './comment-management-table.html',
-  styleUrl: './comment-management-table.css',
+  templateUrl: './review-management-table.html',
+  styleUrl: './review-management-table.css',
 })
-export class CommentManagementTable implements AfterViewInit {
-  private commentService = inject(CommentService);
+export class ReviewManagementTable implements AfterViewInit {
+  private reviewService = inject(ReviewService);
   private dialog = inject(MatDialog);
   protected snackBar: MatSnackBar = inject(MatSnackBar);
-  protected selectedRows: WritableSignal<CommentModel[]> = signal<CommentModel[]>([]);
+  protected selectedRows: WritableSignal<ReviewModel[]> = signal<ReviewModel[]>([]);
   protected size = signal<number>(0);
   protected totalItems = signal<number>(0);
-  protected displayedColumns: string[] = ['id', 'author', 'formalityTitle', 'createdAt', 'actions'];
-  protected dataSource: WritableSignal<CommentModel[]> = signal<CommentModel[]>([]);
+  protected displayedColumns: string[] = [
+    'id',
+    'author',
+    'teacherName',
+    'rating',
+    'tags',
+    'createdAt',
+    'actions',
+  ];
+  protected dataSource: WritableSignal<ReviewModel[]> = signal<ReviewModel[]>([]);
   protected isRefreshing: WritableSignal<boolean> = signal<boolean>(false);
   private refreshStartedAt: number | null = null;
-  protected filters: WritableSignal<CommentFilterFormValue> = signal<CommentFilterFormValue>({
+  protected filters: WritableSignal<ReviewParamsFilter> = signal<ReviewParamsFilter>({
     keyword: '',
     studentName: '',
-    formalityTitle: '',
+    studentId: null,
+    teacherId: null,
+    teacherName: '',
+    minRating: null,
+    maxRating: null,
+    tagId: null,
+    tagName: '',
     from: null,
     to: null,
   });
@@ -77,33 +92,39 @@ export class CommentManagementTable implements AfterViewInit {
   private paginator = viewChild(SharedPaginator);
 
   onPageChange(event: any): void {
-    this.loadComments();
+    this.loadReviews();
   }
 
-  onSearchApply(filters: CommentFilterFormValue): void {
+  onSearchApply(filters: ReviewFilterFormValue): void {
     this.filters.set(filters);
-    this.loadComments();
+    this.loadReviews();
   }
 
   onSearchClear(): void {
     this.filters.set({
       keyword: '',
       studentName: '',
-      formalityTitle: '',
+      studentId: null,
+      teacherId: null,
+      teacherName: '',
+      minRating: null,
+      maxRating: null,
+      tagId: null,
+      tagName: '',
       from: null,
       to: null,
     });
-    this.loadComments();
+    this.loadReviews();
   }
 
   ngAfterViewInit(): void {}
 
   ngOnInit(): void {
-    Promise.resolve().then(() => this.loadComments());
+    Promise.resolve().then(() => this.loadReviews());
   }
 
-  openDetail(comment: CommentModel): void {
-    this.dialog.open(CommentDetailDialog, {
+  openDetail(comment: ReviewModel): void {
+    this.dialog.open(ReviewDetailDialog, {
       data: comment,
       width: '560px',
       maxWidth: '90vw',
@@ -111,7 +132,7 @@ export class CommentManagementTable implements AfterViewInit {
     });
   }
 
-  public loadComments(): void {
+  public loadReviews(): void {
     const pIndex = this.paginator()?.currentPageIndex ?? 0;
     const pSize = this.paginator()?.currentPageSize ?? 5;
 
@@ -123,23 +144,31 @@ export class CommentManagementTable implements AfterViewInit {
     };
 
     const f = this.filters();
+    console.log('Applying filters:', f);
     if (f) {
       if (f.keyword) params.keyword = f.keyword;
       if (f.studentName) params.studentName = f.studentName;
-      if (f.formalityTitle) params.formalityTitle = f.formalityTitle;
+      if (f.studentId !== null && f.studentId !== undefined) params.studentId = f.studentId;
+      if (f.teacherId !== null && f.teacherId !== undefined) params.teacherId = f.teacherId;
+      if (f.teacherName) params.teacherName = f.teacherName;
+      if (f.minRating !== null && f.minRating !== undefined) params.minRating = f.minRating;
+      if (f.maxRating !== null && f.maxRating !== undefined) params.maxRating = f.maxRating;
+      if (f.tagId !== null && f.tagId !== undefined) params.tagId = f.tagId;
+      if (f.tagName) params.tagName = f.tagName;
       if (f.from) params.from = f.from instanceof Date ? f.from.toISOString() : f.from;
       if (f.to) params.to = f.to instanceof Date ? f.to.toISOString() : f.to;
     }
 
-    this.commentService.index(params).subscribe({
-      next: (response: PageResponse<CommentModel[]>) => {
+    this.reviewService.index(params).subscribe({
+      next: (response: PageResponse<ReviewModel[]>) => {
         this.size.set(response.data.size);
         this.totalItems.set(response.data.totalElements);
         this.dataSource.set(response.data.content);
+        console.log('Reviews loaded:', response.data.content);
         this.completeRefreshing();
       },
       error: (error) => {
-        const errorMsg = error?.error?.message || 'Error fetching comments';
+        const errorMsg = error?.error?.message || 'Error fetching reviews';
         this.snackBar.open(errorMsg, 'Cerrar', { duration: 3000 });
         this.dataSource.set([]);
         this.completeRefreshing();
@@ -160,11 +189,11 @@ export class CommentManagementTable implements AfterViewInit {
     }
   }
 
-  isSelected(row: CommentModel): boolean {
+  isSelected(row: ReviewModel): boolean {
     return this.selectedRows().some((selected) => selected.id === row.id);
   }
 
-  onRowClick(row: CommentModel): void {
+  onRowClick(row: ReviewModel): void {
     const currentSelected = this.selectedRows();
 
     if (this.isSelected(row)) {
@@ -181,7 +210,7 @@ export class CommentManagementTable implements AfterViewInit {
     const ref = this.dialog.open(ConfirmDialog, {
       data: {
         title: 'Eliminar seleccionados',
-        message: `¿Estás seguro de que deseas eliminar ${selected.length} comentario(s) seleccionado(s)?`,
+        message: `¿Estás seguro de que deseas eliminar ${selected.length} review(s) seleccionado(s)?`,
         confirmLabel: 'Eliminar',
         cancelLabel: 'Cancelar',
         icon: 'delete_sweep',
@@ -192,44 +221,30 @@ export class CommentManagementTable implements AfterViewInit {
     ref.afterClosed().subscribe((ok) => {
       if (!ok) return;
 
-      const valid = selected.filter(
-        (c) => c.formality && (c.formality as any).idFormality !== undefined
-      );
-      if (valid.length === 0) {
-        this.snackBar.open(
-          'No se pudo identificar la formality de los comentarios seleccionados',
-          'Cerrar',
-          { duration: 3000 }
-        );
-        return;
-      }
-
-      const ops = valid.map((c) =>
-        this.commentService.destroy((c.formality as any).idFormality, c.id)
-      );
+      const ops = selected.map((c) => this.reviewService.destroy(c.id));
 
       forkJoin(ops).subscribe({
         next: () => {
           this.selectedRows.set([]);
-          this.loadComments();
-          this.snackBar.open(`${valid.length} comentario(s) eliminados`, 'Cerrar', {
+          this.loadReviews();
+          this.snackBar.open(`${selected.length} review(s) eliminados`, 'Cerrar', {
             duration: 3000,
           });
         },
         error: (err) => {
-          console.error('Error deleting comments:', err);
-          this.snackBar.open('Error al eliminar comentarios', 'Cerrar', { duration: 3000 });
+          console.error('Error deleting reviews:', err);
+          this.snackBar.open('Error al eliminar reviews', 'Cerrar', { duration: 3000 });
         },
       });
     });
   }
 
-  onDeleteComment(comment: CommentModel): void {
+  onDeleteReview(review: ReviewModel): void {
     const ref = this.dialog.open(ConfirmDialog, {
       data: {
-        title: 'Eliminar comentario',
-        message: `¿Estás seguro de que deseas eliminar el comentario de ${
-          comment.author?.username || 'este usuario'
+        title: 'Eliminar review',
+        message: `¿Estás seguro de que deseas eliminar la review de ${
+          review.student.username || 'este usuario'
         }?`,
         confirmLabel: 'Eliminar',
         cancelLabel: 'Cancelar',
@@ -241,24 +256,38 @@ export class CommentManagementTable implements AfterViewInit {
     ref.afterClosed().subscribe((ok) => {
       if (!ok) return;
 
-      const formalityId = (comment.formality as any)?.idFormality;
-      if (!formalityId) {
-        this.snackBar.open('No se pudo identificar la formality del comentario', 'Cerrar', {
-          duration: 3000,
-        });
-        return;
-      }
-
-      this.commentService.destroy(formalityId, comment.id).subscribe({
+      this.reviewService.destroy(review.id).subscribe({
         next: () => {
-          this.snackBar.open('Comentario eliminado', 'Cerrar', { duration: 3000 });
-          this.loadComments();
+          this.snackBar.open('Review eliminado', 'Cerrar', { duration: 3000 });
+          this.loadReviews();
         },
         error: (err) => {
-          console.error('Error deleting comment:', err);
-          this.snackBar.open('Error al eliminar comentario', 'Cerrar', { duration: 3000 });
+          console.error('Error deleting review:', err);
+          this.snackBar.open('Error al eliminar review', 'Cerrar', { duration: 3000 });
         },
       });
     });
+  }
+
+  teacherName(review: ReviewModel): string {
+    if (!review?.teacher) return '-';
+    const first = review.teacher.firstName || '';
+    const last = review.teacher.lastName || '';
+    const full = `${first}${last ? ' ' + last : ''}`.trim();
+    return full || '-';
+  }
+
+  tagsToString(review: ReviewModel): string {
+    if (!review?.tags || review.tags.length === 0) return '-';
+    return review.tags.map((t) => t.tagName).join(', ');
+  }
+
+  tagColor(tagName: string | undefined): 'primary' | 'accent' | 'warn' | undefined {
+    if (!tagName) return undefined;
+    const first = tagName.trim().charAt(0).toLowerCase();
+    if (first === 'c') return 'primary';
+    if (first === 'i') return 'accent';
+    if (first === 'e') return 'warn';
+    return undefined;
   }
 }

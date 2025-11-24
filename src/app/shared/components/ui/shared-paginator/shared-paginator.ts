@@ -36,19 +36,6 @@ export class SharedPaginator {
     return filtered.length ? filtered : [total];
   });
 
-  constructor() {
-    effect(() => {
-      const total = this.length();
-      const currentSize = this.paginator().pageSize;
-      if (total > 0 && currentSize > total) {
-        this.paginator.set({
-          pageSize: total,
-          pageIndex: 0,
-        });
-      }
-    });
-  }
-
   onPage(e: PageEvent): void {
     this.paginator.set({
       pageIndex: e.pageIndex,
