@@ -37,9 +37,21 @@ export class AuthenticatedAdminCustomSidenav {
       label: 'Usuarios',
     },
     {
-      path: 'comentarios',
-      icon: 'comment',
-      label: 'Comentarios',
+      path: 'retroalimentacion',
+      icon: 'rate_review',
+      label: 'Retroalimentación',
+      children: [
+        {
+          path: 'comentarios',
+          icon: 'comment',
+          label: 'Comentarios',
+        },
+        {
+          path: 'reviews',
+          icon: 'reviews',
+          label: 'Reviews',
+        },
+      ],
     },
     {
       path: 'profesores',

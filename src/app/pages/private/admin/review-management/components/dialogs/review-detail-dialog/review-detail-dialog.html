@@ -1,0 +1,70 @@
+<mat-card class="review-detail-card">
+  <mat-card-header>
+    <div mat-card-avatar class="avatar-wrap">
+      <img
+        [src]="data.student.profilePictureUrl || '/assets/images/avatar-placeholder.png'"
+        alt="avatar"
+      />
+    </div>
+    <mat-card-title>Review de {{ data.student.username }}</mat-card-title>
+    <mat-card-subtitle>{{ data.createdAt | date : 'short' }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="top-row">
+      <div class="student-block">
+        <div class="student-name">{{ data.student.username }}</div>
+        <div class="teacher-name">Profesor: {{ teacherFullName() }}</div>
+        <div class="rating-row" aria-label="Valoración" [title]="data.rating + ' / 5'">
+          @for(i of stars; track stars.indexOf(i)) {
+          <mat-icon
+            class="star"
+            [class.filled]="starIcon(i) === 'star'"
+            [class.half]="starIcon(i) === 'star_half'"
+            aria-hidden="true"
+            >{{ starIcon(i) }}</mat-icon
+          >
+          }
+          <span class="rating-value">{{ data.rating }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tags-block">
+      <mat-chip-set aria-label="Tags de la review">
+        @for(t of data.tags; track t.tagName) {
+        <mat-chip [color]="tagColor(t.tagName)" selected>{{ t.tagName }}</mat-chip>
+        }
+      </mat-chip-set>
+    </div>
+
+    <div class="description-block">
+      <h3>Descripción</h3>
+      <p class="description">{{ data.description || '-' }}</p>
+    </div>
+
+    <div class="reactions-block">
+      <h4>Reacciones</h4>
+      <div class="reactions-list">
+        @for(r of data.reactions; track r.reactionName) {
+        <div class="reaction">
+          <img [src]="reactionImg(r)" alt="{{ r.reactionName }}" />
+          <div class="reaction-meta">
+            <div class="reaction-name">{{ r.reactionName }}</div>
+            <div class="reaction-count">{{ r.count }}</div>
+          </div>
+        </div>
+        } @if(!data.reactions || data.reactions.length === 0) {
+        <div class="no-reactions">Sin reacciones</div>
+        }
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-button color="primary" (click)="close()">
+      <mat-icon>close</mat-icon>
+      Cerrar
+    </button>
+  </mat-card-actions>
+</mat-card>

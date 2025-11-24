@@ -135,6 +135,35 @@
   vertical-align: middle;
 }
 
+/* Tag chips styling */
+.tag-chip {
+  margin-right: 0.4rem;
+  margin-bottom: 0.25rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: default;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+.tag-chip:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.tag-chip.mat-primary {
+  background: linear-gradient(90deg, #3f51b5, #5c6bc0);
+  color: white;
+}
+.tag-chip.mat-accent {
+  background: linear-gradient(90deg, #ff4081, #ff80ab);
+  color: white;
+}
+.tag-chip.mat-warn {
+  background: linear-gradient(90deg, #f44336, #ef5350);
+  color: white;
+}
+
 /* Row interactions */
 .table-row {
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
@@ -232,7 +261,6 @@
 }
 
 
-
 /* Ensure image stays centered inside the flex container */
 .author-comment-image {
     align-self: center;
@@ -247,7 +275,6 @@
   transform: none !important;
   box-shadow: none !important;
 }
-
 
 
 /* Responsive Design */

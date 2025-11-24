@@ -16,6 +16,7 @@ import { Solicitudes } from './pages/private/admin/solicitudes/solicitudes';
 import { Library } from './pages/private/user/library/library';
 import { hasRoleGuard } from './core/guards/has-role-guard';
 import { CommentManagement } from './pages/private/admin/comment-management/comment-management';
+import { ReviewManagement } from './pages/private/admin/review-management/review-management';
 
 export const routes: Routes = [
   { path: '', component: Layout, children: [{ path: '', component: LandingComponent }] },
@@ -60,6 +61,10 @@ export const routes: Routes = [
       {
         path: 'comentarios',
         component: CommentManagement,
+      },
+      {
+        path: 'reviews',
+        component: ReviewManagement,
       },
       {
         path: '**',

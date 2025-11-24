@@ -1,0 +1,105 @@
+<mat-expansion-panel class="search-panel">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <mat-icon>search</mat-icon>
+      <span>Buscador Avanzado</span>
+    </mat-panel-title>
+    <mat-panel-description>
+      Filtra reviews por palabras clave , autor , nombre del profesor , etiqueta , valoración y
+      rango de fechas
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+
+  <form [formGroup]="formGroup" class="search-form">
+    <div class="form-row">
+      <div class="form-field">
+        <app-input
+          id="keyword"
+          [control]="formGroup.controls.keyword"
+          [label]="'Palabras Clave'"
+          [placeholder]="'Buscar por Palabras Clave...'"
+          variant="outline"
+        />
+      </div>
+
+      <div class="form-field">
+        <app-input
+          id="studentName"
+          [control]="formGroup.controls.studentName"
+          [label]="'Autor'"
+          [placeholder]="'Buscar por Autor...'"
+          variant="outline"
+        />
+      </div>
+
+      <div class="form-field">
+        <app-input
+          id="teacherName"
+          [control]="formGroup.controls.teacherName"
+          [label]="'Docente'"
+          [placeholder]="'Buscar por Docente...'"
+          variant="outline"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <app-select
+          [id]="'tagId'"
+          [control]="formGroup.controls.tagId"
+          [label]="'Tag'"
+          [options]="tagOptions()"
+          variant="outline"
+        />
+      </div>
+
+      <div class="form-field">
+        <label>Valoración</label>
+        <mat-slider min="0" max="10" step="0.1" showTickMarks discrete>
+          <input [formControl]="formGroup.controls.minRating" matSliderStartThumb />
+          <input [formControl]="formGroup.controls.maxRating" matSliderEndThumb />
+        </mat-slider>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Ingresar rango de fechas</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input [formControl]="formGroup.controls.from" matStartDate placeholder="Start date" />
+          <input [formControl]="formGroup.controls.to" matEndDate placeholder="End date" />
+        </mat-date-range-input>
+
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+
+      <div class="form-field form-actions">
+        <div class="search-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="onApplyFilters()"
+            class="apply-button"
+          >
+            <mat-icon>search</mat-icon>
+            Aplicar Filtros
+          </button>
+          <button
+            mat-raised-button
+            color="accent"
+            type="button"
+            (click)="onClearFilters()"
+            class="clear-button"
+          >
+            <mat-icon>clear_all</mat-icon>
+            Limpiar Filtros
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-expansion-panel>

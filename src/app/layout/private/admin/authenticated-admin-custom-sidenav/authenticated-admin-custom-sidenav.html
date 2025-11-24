@@ -8,13 +8,13 @@
           <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
         </mat-panel-title>
         <mat-panel-description>
-          <span class="nav-span-list">{{ item.label }}</span>
+          {{ item.label }}
         </mat-panel-description>
       </mat-expansion-panel-header>
       <mat-nav-list class="sidenav-sublist-content">
         @for (subItem of item.children; track subItem.label) {
         <mat-list-item
-          class="nav-list-item sublist-item"
+          class="sublist-item"
           [routerLink]="subItem.path"
           routerLinkActive="item-list-active"
         >
