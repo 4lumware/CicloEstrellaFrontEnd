@@ -1,9 +1,11 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { BehaviorSubject, catchError, filter, switchMap, take, throwError, finalize } from 'rxjs';
-import { AuthUserService, JWTTokensDTO } from '../../services/users/auth/auth-user-service';
 import { ApiResponse } from '../../models/responses/response';
-import { STATIC_URL } from '../../constants/api';
+import {
+  AuthRefreshTokenService,
+  JWTTokensDTO,
+} from '../../services/users/auth/auth-refresh-token-service';
 
 // Estado compartido entre todas las invocaciones del interceptor
 
@@ -11,11 +13,7 @@ let isRefreshing = false;
 const refreshTokenSubject$ = new BehaviorSubject<string | null>(null);
 
 export const authJwtInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthUserService);
-
-  if (STATIC_URL.some((url) => req.url.includes(url))) {
-    return next(req);
-  }
+  const refreshService = inject(AuthRefreshTokenService);
 
   const token = localStorage.getItem('access_token');
 
@@ -40,7 +38,6 @@ export const authJwtInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
                   .set('Content-Type', 'application/json')
                   .set('Authorization', `Bearer ${t}`),
               });
-
               return next(retryReq);
             })
           );
@@ -53,7 +50,7 @@ export const authJwtInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
         isRefreshing = true;
         refreshTokenSubject$.next(null);
 
-        return authService.refreshToken(refreshTokenValue).pipe(
+        return refreshService.refreshToken(refreshTokenValue).pipe(
           switchMap((response: ApiResponse<JWTTokensDTO>) => {
             const newTokens = response.data;
 

@@ -1,0 +1,10 @@
+<mat-paginator
+  [length]="length()"
+  [pageIndex]="paginator().pageIndex"
+  [pageSize]="paginator().pageSize"
+  [pageSizeOptions]="effectivePageSizeOptions()"
+  (page)="onPage($event)"
+  showFirstLastButtons
+  class="shared-paginator"
+>
+</mat-paginator>

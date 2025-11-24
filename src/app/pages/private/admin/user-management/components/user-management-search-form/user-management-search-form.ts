@@ -57,6 +57,7 @@ export class UserManagementSearchForm {
   public formGroup!: FormGroup<UserManagementSearchFormValue>;
 
   clearFilters = output<void>();
+  applyFilters = output<any>();
 
   protected roleOptions: WritableSignal<SelectOption[]> = signal<SelectOption[]>([]);
   private roleService = inject(RolesService);
@@ -98,5 +99,10 @@ export class UserManagementSearchForm {
       startDate: null,
       endDate: null,
     });
+    this.clearFilters.emit();
+  }
+
+  onApplyFilters(): void {
+    this.applyFilters.emit(this.formGroup.value);
   }
 }

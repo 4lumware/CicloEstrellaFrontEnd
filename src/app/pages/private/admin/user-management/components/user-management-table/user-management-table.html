@@ -1,6 +1,9 @@
 ﻿<section class="section-table-container">
   <!-- Search Panel -->
-  <app-user-management-search-form />
+  <app-user-management-search-form
+    (applyFilters)="onSearchApply($event)"
+    (clearFilters)="onSearchClear()"
+  />
 
   <!-- Search Results Info -->
   <div class="search-results-info">
@@ -13,17 +16,30 @@
     <p class="p-selected-user">
       Usuarios Seleccionados: <span class="section-count-user">{{ countUser() }}</span>
     </p>
-    @if (countUser() > 0) {
-    <button
-      mat-raised-button
-      color="warn"
-      (click)="deleteSelected()"
-      class="delete-selected-button"
-    >
-      <mat-icon>delete_sweep</mat-icon>
-      Eliminar Seleccionados ({{ countUser() }})
-    </button>
-    }
+    <div class="header-actions-buttons">
+      <button
+        mat-icon-button
+        color="primary"
+        matTooltip="Refrescar tabla"
+        (click)="loadUsers(); $event.stopPropagation()"
+        aria-label="Refrescar tabla"
+        [attr.aria-busy]="isRefreshing()"
+        [disabled]="isRefreshing()"
+      >
+        <mat-icon [class.spin]="isRefreshing()">refresh</mat-icon>
+      </button>
+      @if (countUser() > 0) {
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="deleteSelected()"
+        class="delete-selected-button"
+      >
+        <mat-icon>delete_sweep</mat-icon>
+        Eliminar Seleccionados ({{ countUser() }})
+      </button>
+      }
+    </div>
   </div>
 
   <!-- Data Table Card -->
@@ -82,7 +98,9 @@
           <!-- Created Date Column -->
           <ng-container matColumnDef="creationDate">
             <th mat-header-cell *matHeaderCellDef>Fecha Creación</th>
-            <td mat-cell *matCellDef="let user">{{ user.creationDate | date : 'short' }}</td>
+            <td mat-cell *matCellDef="let user">
+              {{ user.creationDate | date : 'short' : 'UTC' | date : 'short' : 'America/Lima' }}
+            </td>
           </ng-container>
 
           <!-- Actions Column -->
@@ -125,16 +143,12 @@
       </div>
 
       <!-- Paginator -->
-      <mat-paginator
+      <app-shared-paginator
         [length]="totalItems()"
-        [pageSize]="pageSize"
-        [pageIndex]="pageIndex"
-        [pageSizeOptions]="pageSizeOptions"
+        [allPageSizeOptions]="[5, 10, 25, 100]"
         (page)="onPageChange($event)"
-        showFirstLastButtons
         class="table-paginator"
-      >
-      </mat-paginator>
+      ></app-shared-paginator>
     </mat-card-content>
   </mat-card>
 </section>

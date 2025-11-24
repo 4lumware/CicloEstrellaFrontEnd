@@ -4,7 +4,9 @@
       <mat-icon>search</mat-icon>
       <span>Buscador Avanzado</span>
     </mat-panel-title>
-    <mat-panel-description> Filtra usuarios por nombre, rol, estado y fecha </mat-panel-description>
+    <mat-panel-description>
+      Filtra comentarios por palabras clave, autor , título del trámite y rango de fechas
+    </mat-panel-description>
   </mat-expansion-panel-header>
 
   <form [formGroup]="formGroup" class="search-form">
@@ -22,8 +24,8 @@
         <app-input
           id="studentName"
           [control]="formGroup.controls.studentName"
-          [label]="'Nombre de Estudiante'"
-          [placeholder]="'Buscar por Nombre de Estudiante...'"
+          [label]="'Autor'"
+          [placeholder]="'Buscar por Autor...'"
           variant="outline"
         />
       </div>
@@ -52,16 +54,28 @@
       </mat-form-field>
 
       <div class="form-field form-actions">
-        <button
-          mat-raised-button
-          color="accent"
-          type="button"
-          (click)="onClearFilters()"
-          class="clear-button"
-        >
-          <mat-icon>clear_all</mat-icon>
-          Limpiar Filtros
-        </button>
+        <div class="search-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="onApplyFilters()"
+            class="apply-button"
+          >
+            <mat-icon>search</mat-icon>
+            Aplicar Filtros
+          </button>
+          <button
+            mat-raised-button
+            color="accent"
+            type="button"
+            (click)="onClearFilters()"
+            class="clear-button"
+          >
+            <mat-icon>clear_all</mat-icon>
+            Limpiar Filtros
+          </button>
+        </div>
       </div>
     </div>
   </form>

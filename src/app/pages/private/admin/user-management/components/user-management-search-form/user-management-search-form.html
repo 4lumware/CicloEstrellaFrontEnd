@@ -58,16 +58,18 @@
       </mat-form-field>
 
       <div class="form-field form-actions">
-        <button
-          mat-raised-button
-          color="accent"
-          type="button"
-          (click)="onClearFilters()"
-          class="clear-button"
-        >
-          <mat-icon>clear_all</mat-icon>
-          Limpiar Filtros
-        </button>
+        <div class="search-actions">
+          <button
+            mat-raised-button
+            color="accent"
+            type="button"
+            (click)="onClearFilters()"
+            class="clear-button"
+          >
+            <mat-icon>clear_all</mat-icon>
+            Limpiar Filtros
+          </button>
+        </div>
       </div>
     </div>
   </form>

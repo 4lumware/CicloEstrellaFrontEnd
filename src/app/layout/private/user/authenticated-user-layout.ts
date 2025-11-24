@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { HeaderComponent } from './authenticated-user-header/header.component';
 import { RouterOutlet } from '@angular/router';
 import { AuthUserService } from '../../../core/services/users/auth/auth-user-service';
+import { AuthCurrentUserService } from '../../../core/services/users/auth/auth-current-user-service';
 
 @Component({
   selector: 'app-user',
@@ -10,7 +11,7 @@ import { AuthUserService } from '../../../core/services/users/auth/auth-user-ser
   styleUrl: './authenticated-user-layout.css',
 })
 export class AuthenticatedUserLayout {
-  private authService = inject(AuthUserService);
+  private authService = inject(AuthCurrentUserService);
 
   protected currentUser$ = this.authService.currentUser$;
 

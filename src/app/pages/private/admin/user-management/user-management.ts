@@ -37,8 +37,6 @@ export class UserManagement {
   private updateUserHandler = inject(UpdateUserHandlerService);
   private createUserHandler = inject(CreateUserHandlerService);
   private deleteUserHandler = inject(DeleteUserHandlerService);
-  private authService = inject(AuthUserService);
-  protected currentUser$ = this.authService.currentUser$;
 
   onAddUser(): void {
     const ref = this.dialog.open(UserCreateDialog, {
@@ -97,6 +95,38 @@ export class UserManagement {
       if (confirmed) {
         this.deleteUserHandler.deleteUser(user, () => tableComponent.loadUsers());
       }
+    });
+  }
+
+  onUserDeleteMultiple(users: UserModel[]): void {
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      width: '420px',
+      data: {
+        title: 'Eliminar varios usuarios',
+        message: `¿Está seguro de que desea eliminar ${users.length} usuario(s)? Esta acción no se puede deshacer.`,
+        confirmLabel: 'Eliminar',
+        cancelLabel: 'Cancelar',
+        icon: 'delete_forever',
+        color: 'warn',
+      },
+    });
+
+    const tableComponent = this.tableComponent();
+    if (!tableComponent) return;
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+
+      // Deshabilitar temporalmente el refresco en la tabla mientras se procesan las eliminaciones
+      if (tableComponent.setRefreshing) tableComponent.setRefreshing(true);
+
+      // Llamar al handler para cada usuario; solo recargar al final.
+      users.forEach((user, idx) => {
+        const isLast = idx === users.length - 1;
+        this.deleteUserHandler.deleteUser(user, () => {
+          if (isLast) tableComponent.loadUsers();
+        });
+      });
     });
   }
 }

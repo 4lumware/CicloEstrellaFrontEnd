@@ -39,6 +39,7 @@ import { ProfileImageUploader } from '../../../../../shared/components/forms/pro
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 import { buildFormRegister } from '../../logic/form-register-builder';
+import { AuthCurrentUserService } from '../../../../../core/services/users/auth/auth-current-user-service';
 
 export const TERM_OPTIONS: Option[] = [
   { label: '1er Ciclo', value: 1 },
@@ -182,7 +183,6 @@ export class FormRegister implements OnInit {
       const account = value.account;
       const academic = value.academic;
       const profile = value.profile;
-
       this.userResume.set({
         username: account?.name ?? '',
         email: account?.email ?? '',
@@ -218,8 +218,11 @@ export class FormRegister implements OnInit {
 
     this.studentService.store(payload).subscribe({
       next: (response) => {
-        console.log('Student registered successfully:', response);
+        localStorage.setItem('user_role', 'STUDENT');
+        localStorage.setItem('access_token', response.data.tokens.access_token);
+        localStorage.setItem('refresh_token', response.data.tokens.refresh_token);
         this.router.navigate(['/private/home']);
+        this.snackbar.success('Estudiante registrado correctamente');
       },
       error: (error) => {
         const message = error?.error?.message || 'Ocurrio un error al registrar el estudiante';

@@ -2,27 +2,36 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthUserService } from '../services/users/auth/auth-user-service';
 import { Role, UserRole } from '../models/users/user';
-import { catchError, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, filter, map, Observable, of, switchMap, take, tap } from 'rxjs';
 import { StaffModel } from '../models/staffs/staff';
 import { StudentModel } from '../models/students/student';
 import { RolesService } from '../services/roles/role-service';
+import { AuthCurrentUserService } from '../services/users/auth/auth-current-user-service';
 
 export const hasRoleGuard = (roles: UserRole[]): CanActivateFn => {
   return (): Observable<boolean> => {
     const router = inject(Router);
     const rolesService = inject(RolesService);
-    return inject(AuthUserService).currentUser$.pipe(
-      switchMap((user: StaffModel | StudentModel | null) => {
-        if (!user) {
-          router.navigate(['/login']);
-          return of(false);
-        }
+    const authCurrentUserService = inject(AuthCurrentUserService);
 
-        const userId = user.id;
-        console.log('Verificando roles para el usuario ID:', userId, 'Roles requeridos:', roles);
-        return rolesService.hasRole(userId, roles).pipe(
-          map((response) => response.data.hasRole),
-          catchError(() => of(false))
+    authCurrentUserService.initialize();
+
+    return authCurrentUserService.currentUser$.pipe(
+      filter((user) => user !== null), // ⛔ Espera hasta que llegue un usuario
+      take(1), // 🔒 Solo la primera vez
+      switchMap((user: StaffModel | StudentModel) => {
+        return rolesService.hasRole(user.id, roles).pipe(
+          map((response) => {
+            if (response.data.hasRole) {
+              return true;
+            }
+            router.navigate(['/login']);
+            return false;
+          }),
+          catchError(() => {
+            router.navigate(['/login']);
+            return of(false);
+          })
         );
       })
     );

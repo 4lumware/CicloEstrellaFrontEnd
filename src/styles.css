@@ -21,7 +21,25 @@ body {
   font-family: var(--font-main), sans-serif;
   line-height: 1.6;
   overflow-x: hidden;
+  background-color: white;
 }
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;  }
+
+.mat-mdc-card.mdc-card {
+  background-color: white !important;
+}
+
+.ufd-container {
+  background-color: white;
+}
+
+.cd-container {
+  background-color: white;
+}
+
+@keyframes slide-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}

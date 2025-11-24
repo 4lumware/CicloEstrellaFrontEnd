@@ -1,24 +1,42 @@
-import { Component, effect, inject, signal, WritableSignal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  effect,
+  inject,
+  signal,
+  computed,
+  viewChild,
+  WritableSignal,
+} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CommentManagementSearchForm } from '../comment-management-search-form/comment-management-search-form';
+import {
+  CommentFilterForm,
+  CommentFilterFormValue,
+  CommentManagementSearchForm,
+} from '../comment-management-search-form/comment-management-search-form';
 import { CommentModel } from '../../../../../../core/models/comments/comment';
 import { CommentService } from '../../../../../../core/services/comments/comment-service';
 import { PageResponse } from '../../../../../../core/models/responses/response';
-import { DatePipe, TitleCasePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
+import { CommentDetailDialog } from './dialogs/comment-detail-dialog/comment-detail-dialog';
+import { ConfirmDialog } from '../../../../../../shared/components/ui/confirm-dialog/confirm-dialog';
+import { forkJoin } from 'rxjs';
+import { SharedPaginator } from '../../../../../../shared/components/ui/shared-paginator/shared-paginator';
 
 export interface PaginationState {
   pageSize: number;
   pageIndex: number;
 }
 
+export interface CommentFilter {}
 @Component({
   selector: 'app-comment-management-table',
   imports: [
@@ -29,51 +47,117 @@ export interface PaginationState {
     MatCardModule,
     MatTooltipModule,
     MatSnackBarModule,
-    MatPaginatorModule,
     MatDialogModule,
     CommentManagementSearchForm,
     DatePipe,
+    SharedPaginator,
   ],
   templateUrl: './comment-management-table.html',
   styleUrl: './comment-management-table.css',
 })
-export class CommentManagementTable {
+export class CommentManagementTable implements AfterViewInit {
   private commentService = inject(CommentService);
-  private paginator = inject(MatPaginatorModule);
+  private dialog = inject(MatDialog);
+  protected snackBar: MatSnackBar = inject(MatSnackBar);
   protected selectedRows: WritableSignal<CommentModel[]> = signal<CommentModel[]>([]);
-
-  protected pagination = signal<PaginationState>({
-    pageSize: 10,
-    pageIndex: 0,
-  });
-
-  protected pageSizeOptions: number[] = [5, 10, 25, 100];
   protected size = signal<number>(0);
   protected totalItems = signal<number>(0);
-  protected displayedColumns: string[] = ['id', 'author', 'createdAt', 'actions'];
+  protected displayedColumns: string[] = ['id', 'author', 'formalityTitle', 'createdAt', 'actions'];
   protected dataSource: WritableSignal<CommentModel[]> = signal<CommentModel[]>([]);
+  protected isRefreshing: WritableSignal<boolean> = signal<boolean>(false);
+  private refreshStartedAt: number | null = null;
+  protected filters: WritableSignal<CommentFilterFormValue> = signal<CommentFilterFormValue>({
+    keyword: '',
+    studentName: '',
+    formalityTitle: '',
+    from: null,
+    to: null,
+  });
 
-  constructor() {
-    effect(() => {
-      this.loadComments();
+  private paginator = viewChild(SharedPaginator);
+
+  onPageChange(event: any): void {
+    this.loadComments();
+  }
+
+  onSearchApply(filters: CommentFilterFormValue): void {
+    this.filters.set(filters);
+    this.loadComments();
+  }
+
+  onSearchClear(): void {
+    this.loadComments();
+    this.filters.set({
+      keyword: '',
+      studentName: '',
+      formalityTitle: '',
+      from: null,
+      to: null,
     });
   }
 
-  private loadComments(): void {
-    this.commentService
-      .index({ page: this.pagination().pageIndex, size: this.pagination().pageSize })
-      .subscribe({
-        next: (response: PageResponse<CommentModel[]>) => {
-          this.size.set(response.data.size);
-          this.totalItems.set(response.data.totalElements);
-          console.log('API Response:', response);
-          this.dataSource.set(response.data.content);
-          console.log('Fetched comments:', this.dataSource);
-        },
-        error: (error) => {
-          console.error('Error fetching comments:', error);
-        },
-      });
+  ngAfterViewInit(): void {}
+
+  ngOnInit(): void {
+    Promise.resolve().then(() => this.loadComments());
+  }
+
+  openDetail(comment: CommentModel): void {
+    this.dialog.open(CommentDetailDialog, {
+      data: comment,
+      width: '560px',
+      maxWidth: '90vw',
+      autoFocus: false,
+    });
+  }
+
+  public loadComments(): void {
+    const pIndex = this.paginator()?.currentPageIndex ?? 0;
+    const pSize = this.paginator()?.currentPageSize ?? 5;
+
+    this.isRefreshing.set(true);
+    this.refreshStartedAt = Date.now();
+    const params: any = {
+      page: pIndex,
+      size: pSize,
+    };
+
+    const f = this.filters();
+    if (f) {
+      if (f.keyword) params.keyword = f.keyword;
+      if (f.studentName) params.studentName = f.studentName;
+      if (f.formalityTitle) params.formalityTitle = f.formalityTitle;
+      if (f.from) params.from = f.from instanceof Date ? f.from.toISOString() : f.from;
+      if (f.to) params.to = f.to instanceof Date ? f.to.toISOString() : f.to;
+    }
+
+    this.commentService.index(params).subscribe({
+      next: (response: PageResponse<CommentModel[]>) => {
+        this.size.set(response.data.size);
+        this.totalItems.set(response.data.totalElements);
+        this.dataSource.set(response.data.content);
+        this.completeRefreshing();
+      },
+      error: (error) => {
+        const errorMsg = error?.error?.message || 'Error fetching comments';
+        this.snackBar.open(errorMsg, 'Cerrar', { duration: 3000 });
+        this.dataSource.set([]);
+        this.completeRefreshing();
+      },
+    });
+  }
+
+  private completeRefreshing(): void {
+    const minMs = 1000;
+    const started = this.refreshStartedAt ?? 0;
+    const elapsed = Date.now() - started;
+    const remaining = minMs - elapsed;
+    this.refreshStartedAt = null;
+    if (remaining > 0) {
+      setTimeout(() => this.isRefreshing.set(false), remaining);
+    } else {
+      this.isRefreshing.set(false);
+    }
   }
 
   isSelected(row: CommentModel): boolean {
@@ -88,18 +172,93 @@ export class CommentManagementTable {
     } else {
       this.selectedRows.set([...currentSelected, row]);
     }
-    console.log('Current selected rows:', this.selectedRows());
-  }
-
-  onPageChange(event: any): void {
-    this.pagination.set({
-      pageSize: event.pageSize,
-      pageIndex: event.pageIndex,
-    });
   }
 
   deleteSelected(): void {
     const selected = this.selectedRows();
-    console.log('Deleting selected comments:', selected);
+    if (!selected || selected.length === 0) return;
+
+    const ref = this.dialog.open(ConfirmDialog, {
+      data: {
+        title: 'Eliminar seleccionados',
+        message: `¿Estás seguro de que deseas eliminar ${selected.length} comentario(s) seleccionado(s)?`,
+        confirmLabel: 'Eliminar',
+        cancelLabel: 'Cancelar',
+        icon: 'delete_sweep',
+        color: 'warn',
+      },
+    });
+
+    ref.afterClosed().subscribe((ok) => {
+      if (!ok) return;
+
+      const valid = selected.filter(
+        (c) => c.formality && (c.formality as any).idFormality !== undefined
+      );
+      if (valid.length === 0) {
+        this.snackBar.open(
+          'No se pudo identificar la formality de los comentarios seleccionados',
+          'Cerrar',
+          { duration: 3000 }
+        );
+        return;
+      }
+
+      const ops = valid.map((c) =>
+        this.commentService.destroy((c.formality as any).idFormality, c.id)
+      );
+
+      forkJoin(ops).subscribe({
+        next: () => {
+          this.selectedRows.set([]);
+          this.loadComments();
+          this.snackBar.open(`${valid.length} comentario(s) eliminados`, 'Cerrar', {
+            duration: 3000,
+          });
+        },
+        error: (err) => {
+          console.error('Error deleting comments:', err);
+          this.snackBar.open('Error al eliminar comentarios', 'Cerrar', { duration: 3000 });
+        },
+      });
+    });
+  }
+
+  onDeleteComment(comment: CommentModel): void {
+    const ref = this.dialog.open(ConfirmDialog, {
+      data: {
+        title: 'Eliminar comentario',
+        message: `¿Estás seguro de que deseas eliminar el comentario de ${
+          comment.author?.username || 'este usuario'
+        }?`,
+        confirmLabel: 'Eliminar',
+        cancelLabel: 'Cancelar',
+        icon: 'delete',
+        color: 'warn',
+      },
+    });
+
+    ref.afterClosed().subscribe((ok) => {
+      if (!ok) return;
+
+      const formalityId = (comment.formality as any)?.idFormality;
+      if (!formalityId) {
+        this.snackBar.open('No se pudo identificar la formality del comentario', 'Cerrar', {
+          duration: 3000,
+        });
+        return;
+      }
+
+      this.commentService.destroy(formalityId, comment.id).subscribe({
+        next: () => {
+          this.snackBar.open('Comentario eliminado', 'Cerrar', { duration: 3000 });
+          this.loadComments();
+        },
+        error: (err) => {
+          console.error('Error deleting comment:', err);
+          this.snackBar.open('Error al eliminar comentario', 'Cerrar', { duration: 3000 });
+        },
+      });
+    });
   }
 }

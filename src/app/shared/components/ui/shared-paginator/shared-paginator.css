@@ -1,0 +1,25 @@
+
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* igual que Material */
+  width: 100%;
+}
+
+/* Eliminar padding/margins del mat-paginator */
+:host ::ng-deep .mat-mdc-paginator {
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100%;
+}
+
+/* También elimina paddings del contenedor interno */
+:host ::ng-deep .mat-mdc-paginator-outer-container {
+  padding: 0 !important;
+}
+
+.shared-paginator {
+  width: 100%;
+  background-color:  #fafafa;
+
+}
