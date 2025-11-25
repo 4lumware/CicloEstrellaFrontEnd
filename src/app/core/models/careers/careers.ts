@@ -5,5 +5,5 @@ export interface CareerModelRest {
 
 export interface CareerModel {
   id: number;
-  name: string;
+  careerName: string;
 }

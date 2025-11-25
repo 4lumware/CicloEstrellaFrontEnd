@@ -4,6 +4,7 @@
   background-color: #ffffff;
   margin: 0 auto;
   border-radius: 0.5rem;
+  border: 1px solid #e3f2fd;
 }
 
 .full-width {
@@ -25,6 +26,7 @@
   background-color: #e3f2fd;
   border-radius: 0.375rem;
   color: #1565c0;
+  border: 1px solid #0b8fec;
   font-size: 0.875rem;
   font-weight: 500;
   margin-top: 1rem;
@@ -85,10 +87,7 @@
 .dashboard-card {
   border-radius: 0.5rem;
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-}
-
-.dashboard-card mat-card-content {
-  padding: 0 !important;
+  border: 1px solid #b4b7ba;
 }
 
 .table-container {
@@ -144,11 +143,11 @@
   font-size: 0.8rem;
   cursor: default;
   transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 .tag-chip:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 .tag-chip.mat-primary {
@@ -257,15 +256,13 @@
   flex-shrink: 0;
   /* ensure the image doesn't get transformed or resized on hover */
   transition: none;
-
 }
-
 
 /* Ensure image stays centered inside the flex container */
 .author-comment-image {
-    align-self: center;
-    max-width: 2rem;
-    max-height: 2rem;
+  align-self: center;
+  max-width: 2rem;
+  max-height: 2rem;
 }
 
 /* Override potential Material transform/elevation on row hover that may shift layout */
@@ -276,14 +273,11 @@
   box-shadow: none !important;
 }
 
-
 /* Responsive Design */
 @media (max-width: 48rem) {
   .section-table-container {
     padding: 1rem;
   }
-
-
 
   .comment-table th,
   .comment-table td {
@@ -330,5 +324,128 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Canonical admin table styles (from comment-management) applied to multiple table classes */
+.section-table-container {
+  padding: 2rem;
+  max-width: 100%;
+  background-color: #ffffff;
+  margin: 0 auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.search-results-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: #e3f2fd;
+  border: 1px solid #0b8fec;
+  border-radius: 0.375rem;
+  color: #1565c0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.dashboard-card {
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  border: 1px solid #b4b7ba;
+}
+.table-container {
+  overflow-x: auto;
+  width: 100%;
+  display: block;
+  overflow-y: auto;
+  max-height: 40vh;
+}
+
+.comment-table,
+.user-table,
+.request-table,
+.review-table {
+  width: 100%;
+  background: white;
+}
+
+.comment-table th,
+.user-table th,
+.request-table th,
+.review-table th {
+  text-align: left;
+  background-color: #f5f5f5;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #424242;
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.comment-table td,
+.user-table td,
+.request-table td,
+.review-table td {
+  padding: 1rem;
+  background-color: #ffffff;
+  vertical-align: middle;
+}
+
+.table-row {
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+.comment-table .table-row:hover > td,
+.user-table .table-row:hover > td,
+.request-table .table-row:hover > td,
+.review-table .table-row:hover > td {
+  background-color: rgba(25, 118, 210, 0.06);
+}
+
+.role-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  display: inline-block;
+}
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.table-paginator {
+  border-top: 0.063rem solid #e0e0e0;
+  background-color: #fafafa;
+  padding: 1rem;
+}
+
+@media (max-width: 48rem) {
+  .section-table-container {
+    padding: 1rem;
+  }
+  .comment-table th,
+  .comment-table td,
+  .user-table th,
+  .user-table td,
+  .request-table th,
+  .request-table td,
+  .review-table th,
+  .review-table td {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+  .header-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
   }
 }

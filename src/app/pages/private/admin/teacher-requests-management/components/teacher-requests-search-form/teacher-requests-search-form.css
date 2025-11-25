@@ -37,6 +37,9 @@
   margin-bottom: 1rem;
   align-items: end;
 }
+.datetime-picker-search {
+  width: 40%;
+}
 
 .form-field {
   display: flex;

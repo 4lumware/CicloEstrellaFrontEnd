@@ -1,3 +1,5 @@
 .header-content {
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
 }
