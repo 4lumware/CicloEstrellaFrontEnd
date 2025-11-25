@@ -12,11 +12,11 @@ import { UserProfesoresComponent } from './pages/private/user/user-profesores/us
 import { Formality } from './pages/private/user/formality/formality';
 import { StudentProfile } from './pages/private/user-profiles/student-profile/student-profile';
 import { StudentProfileEdit } from './pages/private/user-profiles/student-profile/student-profile-edit/student-profile-edit';
-import { Solicitudes } from './pages/private/admin/solicitudes/solicitudes';
 import { Library } from './pages/private/user/library/library';
 import { hasRoleGuard } from './core/guards/has-role-guard';
 import { CommentManagement } from './pages/private/admin/comment-management/comment-management';
 import { ReviewManagement } from './pages/private/admin/review-management/review-management';
+import { TeacherRequestsManagement } from './pages/private/admin/teacher-requests-management/teacher-requests-management';
 
 export const routes: Routes = [
   { path: '', component: Layout, children: [{ path: '', component: LandingComponent }] },
@@ -55,16 +55,16 @@ export const routes: Routes = [
         component: UserManagement,
       },
       {
-        path: 'solicitudes',
-        component: Solicitudes,
-      },
-      {
         path: 'comentarios',
         component: CommentManagement,
       },
       {
         path: 'reviews',
         component: ReviewManagement,
+      },
+      {
+        path: 'teacher-requests',
+        component: TeacherRequestsManagement,
       },
       {
         path: '**',

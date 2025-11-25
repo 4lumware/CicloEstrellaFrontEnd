@@ -1,14 +1,17 @@
-
 .sidenav-content {
   height: 100vh;
+  background-color: white;
 }
 
 .sidenav-app {
   width: 18rem;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
 }
 
-
 .sidenav-app-opened {
-  width: 5rem ;
+  width: 5rem;
 }

@@ -4,6 +4,8 @@
   background-color: #ffffff;
   margin: 0 auto;
   border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  border: 1px solid #e3f2fd;
 }
 
 .full-width {
@@ -23,6 +25,7 @@
   gap: 0.5rem;
   padding: 0.75rem 1rem;
   background-color: #e3f2fd;
+  border: 1px solid #0b8fec;
   border-radius: 0.375rem;
   color: #1565c0;
   font-size: 0.875rem;
@@ -85,10 +88,7 @@
 .dashboard-card {
   border-radius: 0.5rem;
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-}
-
-.dashboard-card mat-card-content {
-  padding: 0 !important;
+  border: 1px solid #b4b7ba;
 }
 
 .table-container {
@@ -228,16 +228,13 @@
   flex-shrink: 0;
   /* ensure the image doesn't get transformed or resized on hover */
   transition: none;
-
 }
-
-
 
 /* Ensure image stays centered inside the flex container */
 .author-comment-image {
-    align-self: center;
-    max-width: 2rem;
-    max-height: 2rem;
+  align-self: center;
+  max-width: 2rem;
+  max-height: 2rem;
 }
 
 /* Override potential Material transform/elevation on row hover that may shift layout */
@@ -248,15 +245,11 @@
   box-shadow: none !important;
 }
 
-
-
 /* Responsive Design */
 @media (max-width: 48rem) {
   .section-table-container {
     padding: 1rem;
   }
-
-
 
   .comment-table th,
   .comment-table td {

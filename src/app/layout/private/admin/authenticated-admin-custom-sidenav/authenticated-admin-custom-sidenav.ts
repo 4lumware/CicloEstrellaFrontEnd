@@ -59,7 +59,7 @@ export class AuthenticatedAdminCustomSidenav {
       label: 'Profesores',
       children: [
         {
-          path: 'revisar',
+          path: 'teacher-requests',
           icon: 'rate_review',
           label: 'Revisar',
         },

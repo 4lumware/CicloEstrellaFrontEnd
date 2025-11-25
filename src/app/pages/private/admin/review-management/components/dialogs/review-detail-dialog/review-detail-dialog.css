@@ -7,13 +7,20 @@
   padding: 1rem 1rem;
 }
 
+.review-detail-card {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  border: 1px solid #b4b7ba;
+}
+
 .avatar-wrap img {
-  width: 72px;
-  height: 72px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid rgba(25, 118, 210, 0.12);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
 .top-row {
@@ -52,8 +59,13 @@
   transition: transform 120ms ease, filter 120ms ease;
 }
 
-.star.filled { transform: translateY(-1px); filter: drop-shadow(0 1px 0 rgba(0,0,0,0.08)); }
-.star.half { color: #ffcf66 }
+.star.filled {
+  transform: translateY(-1px);
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.08));
+}
+.star.half {
+  color: #ffcf66;
+}
 
 .rating-value {
   margin-left: 0.25rem;
@@ -73,7 +85,6 @@ mat-chip {
   padding: 0 8px;
   font-weight: 600;
 }
-
 
 .description-block {
   font-weight: 500;
@@ -104,7 +115,7 @@ mat-chip {
   border-radius: 6px;
   padding: 0.25rem 0.5rem;
   background: #fafafa;
-  border: 1px solid rgba(0,0,0,0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .reaction img {
@@ -115,22 +126,39 @@ mat-chip {
 }
 
 .reaction-meta {
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.reaction-name { font-size: 0.9rem; color: #424242 }
-.reaction-count { font-weight: 800; color: #1976d2 }
+.reaction-name {
+  font-size: 0.9rem;
+  color: #424242;
+}
+.reaction-count {
+  font-weight: 800;
+  color: #1976d2;
+}
 
-.reaction:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(25,118,210,0.06); }
-.reaction { transition: transform 160ms ease, box-shadow 160ms ease }
+.reaction:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(25, 118, 210, 0.06);
+}
+.reaction {
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
 
-.no-reactions { color: #757575 }
+.no-reactions {
+  color: #757575;
+}
 
 @media (max-width: 520px) {
-  .review-detail-card { width: 100%; }
-  .top-row { flex-direction: column; }
+  .review-detail-card {
+    width: 100%;
+  }
+  .top-row {
+    flex-direction: column;
+  }
 }
 .detail-card {
   width: 100%;

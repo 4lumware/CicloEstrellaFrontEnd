@@ -1,0 +1,68 @@
+<mat-card class="teacher-detail-card">
+  <mat-card-header>
+    <div mat-card-avatar class="avatar-wrap">
+      <img [src]="teacher?.profilePictureUrl" alt="avatar" (error)="onImgError($event)" />
+    </div>
+    <mat-card-title>{{ fullName() }}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="top-row">
+      <div class="info-block">
+        <div
+          class="rating-row"
+          *ngIf="originalRating() !== null"
+          aria-label="Valoración"
+          [title]="originalRating() + ' / 10'"
+        >
+          <div class="stars">
+            @for(i of starArray(); track starArray().indexOf(i)) {
+            <mat-icon
+              class="star"
+              [class.filled]="starIcon(i) === 'star'"
+              [class.half]="starIcon(i) === 'star_half'"
+              aria-hidden="true"
+              >{{ starIcon(i) }}</mat-icon
+            >
+            }
+          </div>
+          <span class="rating-value">{{ originalRating() }} / 10</span>
+        </div>
+
+        <div class="label">Descripción</div>
+        <p class="desc">{{ teacher?.generalDescription || '-' }}</p>
+
+        <div class="small-grid">
+          <div>
+            <div class="label">Carreras</div>
+            <div class="chips">
+              @for(c of teacher?.careers; track c.careerName) {
+              <mat-chip>{{ c.careerName }}</mat-chip>
+              }
+            </div>
+          </div>
+
+          <div>
+            <div class="label">Sedes</div>
+            <div class="chips">
+              @for(s of teacher?.campuses; track s.campusName) {
+              <mat-chip>{{ s.campusName }}</mat-chip>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="label">Cursos</div>
+        <div class="chips">
+          @for(cr of teacher?.courses; track cr.courseName) {
+          <mat-chip>{{ cr.courseName }}</mat-chip>
+          }
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-button color="primary" (click)="close()"><mat-icon>close</mat-icon> Cerrar</button>
+  </mat-card-actions>
+</mat-card>
