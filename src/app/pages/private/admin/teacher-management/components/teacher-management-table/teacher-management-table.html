@@ -1,0 +1,181 @@
+<section class="section-table-container">
+  <app-teacher-management-search-form
+    (applyFilters)="onSearchApply($event)"
+    (clearFilters)="onSearchClear()"
+  ></app-teacher-management-search-form>
+
+  <div class="search-results-info">
+    <mat-icon>info</mat-icon>
+    <span>Mostrando {{ size() }} de {{ totalItems() }} resultados</span>
+  </div>
+
+  <!-- Actions Header -->
+  <div class="header-actions">
+    <p class="p-selected-teacher">
+      Profesores Seleccionados:
+      <span class="section-count-teacher">{{ selectedRows().length }}</span>
+    </p>
+    <div class="header-actions-buttons">
+      <button
+        mat-icon-button
+        color="primary"
+        matTooltip="Refrescar tabla"
+        (click)="loadRequests(); $event.stopPropagation()"
+        aria-label="Refrescar tabla"
+        [attr.aria-busy]="isRefreshing()"
+        [disabled]="isRefreshing()"
+      >
+        <mat-icon [class.spin]="isRefreshing()">refresh</mat-icon>
+      </button>
+
+      @if(selectedRows().length) {
+      <button
+        mat-raised-button
+        color="warn"
+        matTooltip="Eliminar seleccionados"
+        (click)="deleteSelected(); $event.stopPropagation()"
+        aria-label="Eliminar seleccionados"
+        [disabled]="isRefreshing()"
+        class="delete-selected-button"
+      >
+        <mat-icon>delete_sweep</mat-icon>
+        Eliminar Seleccionados ({{ selectedRows().length }})
+      </button>
+      }
+    </div>
+  </div>
+
+  <mat-card class="dashboard-card">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource()" class="request-table">
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let r">{{ r.id }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="fullName">
+            <th mat-header-cell *matHeaderCellDef>Docente</th>
+            <td mat-cell *matCellDef="let r">
+              <div class="student-cell">
+                <div class="student-avatar">
+                  <img [src]="r.profilePictureUrl" (error)="onImgError($event)" alt="avatar" />
+                </div>
+                <div class="student-info">
+                  <div class="student-name">{{ r.firstName + ' ' + r.lastName | titlecase }}</div>
+                  <div class="student-meta">ID: {{ r.id }}</div>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="averageRating">
+            <th mat-header-cell *matHeaderCellDef>Promedio de Calificaciones</th>
+            <td mat-cell *matCellDef="let r">
+              {{ r.averageRating }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="careers">
+            <th mat-header-cell *matHeaderCellDef>Carreras</th>
+            <td mat-cell *matCellDef="let r">
+              <mat-chip-set class="chip-row">
+                @for (career of r.careers.slice(0, 1); track career.careerName) {
+                <mat-chip>{{ career.careerName }}</mat-chip>
+                } @if (r.careers.length > 3) {
+                <mat-chip color="primary" class="more-chip">
+                  +{{ r.careers.length - 3 }} más
+                </mat-chip>
+                }
+              </mat-chip-set>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="campuses">
+            <th mat-header-cell *matHeaderCellDef>Campus</th>
+            <td mat-cell *matCellDef="let r">
+              <mat-chip-set>
+                @for (campus of r.campuses.slice(0, 1); track campus.campusName) {
+                <mat-chip>{{ campus.campusName }}</mat-chip>
+                } @if (r.campuses.length > 1) {
+                <mat-chip color="primary" class="more-chip">
+                  +{{ r.campuses.length - 1 }} más
+                </mat-chip>
+                }
+              </mat-chip-set>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="courses">
+            <th mat-header-cell *matHeaderCellDef>Asignaturas</th>
+            <td mat-cell *matCellDef="let r">
+              <mat-chip-set>
+                @for (course of r.courses.slice(0, 1); track course.courseName) {
+                <mat-chip>{{ course.courseName }}</mat-chip>
+                } @if (r.courses.length > 1) {
+                <mat-chip color="primary" class="more-chip">
+                  +{{ r.courses.length - 1 }} más
+                </mat-chip>
+                }
+              </mat-chip-set>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let user" class="actions-cell">
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="onUpdate(user); $event.stopPropagation()"
+                matTooltip="Editar Usuario"
+                class="action-button"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="onDelete(user); $event.stopPropagation()"
+                matTooltip="Eliminar Usuario"
+                class="action-button"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="primary"
+                matTooltip="Ver Detalles del Docente"
+                class="action-button"
+                (click)="onViewDetails(user); $event.stopPropagation()"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            class="table-row"
+            (click)="onRowClick(row)"
+            [class.selected]="isSelected(row)"
+            [attr.aria-selected]="isSelected(row)"
+            tabindex="0"
+            (keydown.enter)="onRowClick(row)"
+          ></tr>
+        </table>
+      </div>
+
+      <app-shared-paginator
+        [length]="totalItems()"
+        [allPageSizeOptions]="[5, 10, 25]"
+        (page)="onPageChange($event)"
+        class="table-paginator"
+      ></app-shared-paginator>
+    </mat-card-content>
+  </mat-card>
+</section>

@@ -17,6 +17,7 @@ import { hasRoleGuard } from './core/guards/has-role-guard';
 import { CommentManagement } from './pages/private/admin/comment-management/comment-management';
 import { ReviewManagement } from './pages/private/admin/review-management/review-management';
 import { TeacherRequestsManagement } from './pages/private/admin/teacher-requests-management/teacher-requests-management';
+import { TeacherManagement } from './pages/private/admin/teacher-management/teacher-management';
 
 export const routes: Routes = [
   { path: '', component: Layout, children: [{ path: '', component: LandingComponent }] },
@@ -65,6 +66,10 @@ export const routes: Routes = [
       {
         path: 'teacher-requests',
         component: TeacherRequestsManagement,
+      },
+      {
+        path: 'profesores',
+        component: TeacherManagement,
       },
       {
         path: '**',

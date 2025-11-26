@@ -1,0 +1,74 @@
+<mat-expansion-panel class="search-panel">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <mat-icon>search</mat-icon>
+      <span>Buscar Profesores</span>
+    </mat-panel-title>
+    <mat-panel-description>
+      Filtra por docente , valoración, campus, carrera o curso
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+
+  <form [formGroup]="formGroup" class="search-form">
+    <div class="form-row">
+      <div class="form-field">
+        <app-input
+          id="fullName"
+          [control]="formGroup.controls.fullName"
+          [label]="'Docente'"
+          [placeholder]="'Buscar por Docente...'"
+          variant="outline"
+        />
+      </div>
+      <div class="form-field">
+        <label>Valoración</label>
+        <mat-slider min="0" max="10" step="0.1" showTickMarks discrete>
+          <input [formControl]="formGroup.controls.minRating" matSliderStartThumb />
+          <input [formControl]="formGroup.controls.maxRating" matSliderEndThumb />
+        </mat-slider>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <app-select
+          id="campusIds"
+          [control]="formGroup.controls.campusIds"
+          [label]="'Campus'"
+          [options]="campusOptions()"
+          variant="outline"
+        />
+      </div>
+      <div class="form-field">
+        <app-select
+          id="careerIds"
+          [control]="formGroup.controls.careerIds"
+          [label]="'Carrera'"
+          [options]="careerOptions()"
+          variant="outline"
+        />
+      </div>
+      <div class="form-field">
+        <app-select
+          id="courseIds"
+          [control]="formGroup.controls.courseIds"
+          [label]="'Curso'"
+          [options]="courseOptions()"
+          variant="outline"
+        />
+      </div>
+    </div>
+
+    <div class="form-field form-actions">
+      <div class="search-actions">
+        <button mat-raised-button color="primary" type="button" (click)="onApplyFilters()">
+          <mat-icon>search</mat-icon>
+          Aplicar Filtros
+        </button>
+        <button mat-raised-button color="warn" type="button" (click)="onClearFilters()">
+          <mat-icon>clear_all</mat-icon>
+          Limpiar Filtros
+        </button>
+      </div>
+    </div>
+  </form>
+</mat-expansion-panel>

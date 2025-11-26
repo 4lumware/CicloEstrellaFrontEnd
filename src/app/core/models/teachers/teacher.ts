@@ -19,10 +19,9 @@ export interface TeacherModelCreate {
   lastName: string;
   generalDescription: string;
   profilePictureUrl: string;
-  averageRating: number;
-  career: CareerModel[];
-  campuses: CampusModel[];
-  courses: CourseModel[];
+  careerIds: number[];
+  campusIds: number[];
+  courseIds: number[];
 }
 
 export interface TeacherModelUpdate {
@@ -30,11 +29,11 @@ export interface TeacherModelUpdate {
   lastName: string;
   generalDescription: string;
   profilePictureUrl: string;
-  averageRating: number;
-  career: CareerModel[];
-  campuses: CampusModel[];
-  courses: CourseModel[];
+  careerIds: number[];
+  campusIds: number[];
+  courseIds: number[];
 }
+
 export interface TeacherParamsFilter {
   fullName?: string;
   minRating?: number | null;

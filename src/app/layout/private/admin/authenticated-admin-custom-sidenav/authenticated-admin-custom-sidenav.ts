@@ -64,7 +64,7 @@ export class AuthenticatedAdminCustomSidenav {
           label: 'Revisar',
         },
         {
-          path: 'gestionar',
+          path: 'profesores',
           icon: 'manage_accounts',
           label: 'Gestionar',
         },
