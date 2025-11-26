@@ -44,6 +44,13 @@ export class SharedPaginator {
     this.page.emit(e);
   }
 
+  goToFirstPage(): void {
+    this.paginator.set({
+      ...this.paginator(),
+      pageIndex: 0,
+    });
+  }
+
   get currentPageIndex(): number {
     return this.paginator().pageIndex;
   }

@@ -9,6 +9,7 @@ import {
   TeacherModelUpdate,
   TeacherParamsFilter,
 } from '../../models/teachers/teacher';
+import { ApiResponse, PageResponse } from '../../models/responses/response';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class TeacherService {
   private apiUrl = API_URL + '/teachers';
   private http = inject(HttpClient);
 
-  public index(params: TeacherParamsFilter): Observable<TeacherModel[]> {
+  public index(params: TeacherParamsFilter): Observable<PageResponse<TeacherModel[]>> {
     let teacherParams = new HttpParams();
 
     Object.keys(params).forEach((key) => {
@@ -27,20 +28,23 @@ export class TeacherService {
       }
     });
 
-    return this.http.get<TeacherModel[]>(this.apiUrl, {
+    return this.http.get<PageResponse<TeacherModel[]>>(this.apiUrl, {
       params: teacherParams,
     });
   }
 
-  public destroy(teacherId: number): Observable<TeacherModel> {
-    return this.http.delete<TeacherModel>(`${this.apiUrl}/${teacherId}`);
+  public destroy(teacherId: number): Observable<ApiResponse<TeacherModel>> {
+    return this.http.delete<ApiResponse<TeacherModel>>(`${this.apiUrl}/${teacherId}`);
   }
 
-  public store(teacher: TeacherModelCreate): Observable<TeacherModelCreate> {
-    return this.http.post<TeacherModelCreate>(this.apiUrl, teacher);
+  public store(teacher: TeacherModelCreate): Observable<ApiResponse<TeacherModel>> {
+    return this.http.post<ApiResponse<TeacherModel>>(this.apiUrl, teacher);
   }
 
-  public update(teacherId: number, teacher: TeacherModelUpdate): Observable<TeacherModelUpdate> {
-    return this.http.put<TeacherModelUpdate>(`${this.apiUrl}/${teacherId}`, teacher);
+  public update(
+    teacherId: number,
+    teacher: TeacherModelUpdate
+  ): Observable<ApiResponse<TeacherModelUpdate>> {
+    return this.http.put<ApiResponse<TeacherModelUpdate>>(`${this.apiUrl}/${teacherId}`, teacher);
   }
 }

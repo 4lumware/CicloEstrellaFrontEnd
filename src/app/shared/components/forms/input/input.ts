@@ -46,6 +46,7 @@ export class Input {
   public type: InputSignal<string> = input<string>('text');
   public variant: InputSignal<InputType['value']> = input<InputType['value']>('outline');
   public placeholder: InputSignal<string> = input('');
+  public suffix: InputSignal<string> = input('');
 
   protected errorMessage: WritableSignal<string> = signal<string>('');
   protected showPassword = signal(false);
@@ -97,6 +98,23 @@ export class Input {
 
     if (control.errors['passwordMismatch']) {
       this.errorMessage.set(`Las contraseñas no coinciden`);
+      return;
+    }
+
+    if (control.errors['min'] && control.errors['max']) {
+      this.errorMessage.set(
+        `El valor debe estar entre ${control.errors['min'].min} y ${control.errors['max'].max}`
+      );
+      return;
+    }
+
+    if (control.errors['min']) {
+      this.errorMessage.set(`El valor mínimo es ${control.errors['min'].min}`);
+      return;
+    }
+
+    if (control.errors['max']) {
+      this.errorMessage.set(`El valor máximo es ${control.errors['max'].max}`);
       return;
     }
 

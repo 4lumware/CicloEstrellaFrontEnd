@@ -16,7 +16,7 @@ export class ImageService {
    * @returns Observable con el Blob de la imagen
    */
   getProfileImage(filename: string): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/api/images/profiles/${filename}`, {
+    return this.http.get(`${this.apiUrl}/images/profiles/${filename}`, {
       responseType: 'blob',
     });
   }
