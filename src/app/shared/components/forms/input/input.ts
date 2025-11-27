@@ -108,6 +108,16 @@ export class Input {
       return;
     }
 
+    if (control.errors['maxlength']) {
+      this.errorMessage.set(`Máximo ${control.errors['maxLength'].requiredLength} caracteres`);
+      return;
+    }
+
+    if (control.errors['minLength']) {
+      this.errorMessage.set(`Mínimo ${control.errors['minLength'].requiredLength} caracteres`);
+      return;
+    }
+
     if (control.errors['min']) {
       this.errorMessage.set(`El valor mínimo es ${control.errors['min'].min}`);
       return;

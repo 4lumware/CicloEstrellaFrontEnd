@@ -1,0 +1,129 @@
+<section class="section-table-container">
+  <app-formality-management-search-form
+    (applyFilters)="onSearchApply($event)"
+    (clearFilters)="onSearchClear()"
+  />
+  <div class="search-results-info">
+    <mat-icon>info</mat-icon>
+    <span>Mostrando {{ size() }} de {{ totalItems() }} resultados</span>
+  </div>
+
+  <!-- Actions Header -->
+  <div class="header-actions">
+    <p class="p-selected-teacher">
+      Trámites Seleccionados:
+      <span class="section-count-teacher">{{ selectedRows().length }}</span>
+    </p>
+    <div class="header-actions-buttons">
+      <button
+        mat-icon-button
+        color="primary"
+        matTooltip="Refrescar tabla"
+        (click)="loadRequests(); $event.stopPropagation()"
+        aria-label="Refrescar tabla"
+        [attr.aria-busy]="isRefreshing()"
+        [disabled]="isRefreshing()"
+      >
+        <mat-icon [class.spin]="isRefreshing()">refresh</mat-icon>
+      </button>
+
+      @if(selectedRows().length) {
+      <button
+        mat-raised-button
+        color="warn"
+        matTooltip="Eliminar seleccionados"
+        (click)="deleteSelected(); $event.stopPropagation()"
+        aria-label="Eliminar seleccionados"
+        [disabled]="isRefreshing()"
+        class="delete-selected-button"
+      >
+        <mat-icon>delete_sweep</mat-icon>
+        Eliminar Seleccionados ({{ selectedRows().length }})
+      </button>
+      }
+    </div>
+  </div>
+
+  <mat-card class="dashboard-card">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="data()" class="request-table">
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox
+                (change)="$event ? toggleSelectAll($event.checked) : null"
+                [checked]="selectedRows().length === data().length"
+              ></mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <mat-checkbox
+                (change)="$event ? toggleRowSelection(element, $event.checked) : null"
+                [checked]="isSelected(element)"
+              ></mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let r">{{ r.idFormality }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef>Título</th>
+            <td mat-cell *matCellDef="let r">{{ r.title }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="startDate">
+            <th mat-header-cell *matHeaderCellDef>Inicio</th>
+            <td mat-cell *matCellDef="let r">{{ r.startDate | date }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="endDate">
+            <th mat-header-cell *matHeaderCellDef>Fin</th>
+            <td mat-cell *matCellDef="let r">{{ r.endDate | date }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let r" class="actions-cell">
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="onUpdate(r); $event.stopPropagation()"
+                matTooltip="Editar"
+                class="action-button"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="onDelete(r); $event.stopPropagation()"
+                matTooltip="Eliminar"
+                class="action-button"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            class="table-row"
+            [class.selected]="isSelected(row)"
+            (click)="toggleRowSelection(row, !isSelected(row))"
+          ></tr>
+        </table>
+      </div>
+
+      <app-shared-paginator
+        [length]="totalItems()"
+        [allPageSizeOptions]="[5, 10, 25]"
+        (page)="loadRequests($event.pageIndex, $event.pageSize)"
+        class="table-paginator"
+      ></app-shared-paginator>
+    </mat-card-content>
+  </mat-card>
+</section>

@@ -25,6 +25,7 @@ import { ConfirmDialog } from '../../../../../../shared/components/ui/confirm-di
 import { SharedPaginator } from '../../../../../../shared/components/ui/shared-paginator/shared-paginator';
 import { TeacherDetailDialog } from '../dialogs/teacher-detail-dialog/teacher-detail-dialog';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SnackbarNotificationService } from '../../../../../../core/services/notifications/snackbar-notification-service';
 
 @Component({
   selector: 'app-teacher-requests-table',
@@ -49,7 +50,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class TeacherRequestsTable implements AfterViewInit {
   private service = inject(TeacherRequestService);
   private dialog = inject(MatDialog);
-  protected snackBar: MatSnackBar = inject(MatSnackBar);
+  protected snackBar: SnackbarNotificationService = inject(SnackbarNotificationService);
 
   protected displayedColumns: string[] = [
     'id',
@@ -138,7 +139,7 @@ export class TeacherRequestsTable implements AfterViewInit {
   }
 
   private afterMutate(msg: string): void {
-    this.snackBar.open(`Solicitud ${msg}`, 'Cerrar', { duration: 3000 });
+    this.snackBar.success(`Solicitud ${msg}`);
     this.loadRequests();
   }
 
@@ -179,13 +180,11 @@ export class TeacherRequestsTable implements AfterViewInit {
           const elapsed = Date.now() - start;
           const remaining = Math.max(0, spinnerMinMs - elapsed);
           setTimeout(() => this.isRefreshing.set(false), remaining);
-          this.snackBar.open('No se encontraron solicitudes de profesores', 'Cerrar', {
-            duration: 3000,
-          });
+          this.snackBar.error('No se encontraron solicitudes de profesores');
           return;
         }
 
-        this.snackBar.open('Error cargando solicitudes', 'Cerrar', { duration: 3000 });
+        this.snackBar.error('Error cargando solicitudes');
         this.dataSource.set([]);
         const elapsed = Date.now() - start;
         const remaining = Math.max(0, spinnerMinMs - elapsed);

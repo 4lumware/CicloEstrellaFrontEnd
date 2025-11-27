@@ -18,6 +18,7 @@ import { CommentManagement } from './pages/private/admin/comment-management/comm
 import { ReviewManagement } from './pages/private/admin/review-management/review-management';
 import { TeacherRequestsManagement } from './pages/private/admin/teacher-requests-management/teacher-requests-management';
 import { TeacherManagement } from './pages/private/admin/teacher-management/teacher-management';
+import { FormalityManagement } from './pages/private/admin/formality-management/formality-management';
 
 export const routes: Routes = [
   { path: '', component: Layout, children: [{ path: '', component: LandingComponent }] },
@@ -70,6 +71,10 @@ export const routes: Routes = [
       {
         path: 'profesores',
         component: TeacherManagement,
+      },
+      {
+        path: 'tramites',
+        component: FormalityManagement,
       },
       {
         path: '**',

@@ -70,5 +70,10 @@ export class AuthenticatedAdminCustomSidenav {
         },
       ],
     },
+    {
+      path: 'tramites',
+      icon: 'assignment',
+      label: 'Trámites',
+    },
   ]);
 }

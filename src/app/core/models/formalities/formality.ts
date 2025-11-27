@@ -22,7 +22,8 @@ export interface FormalityModelUpdate {
 }
 
 export interface FormalityParamsFilter {
-  keyword?: string;
+  title?: string;
+  description?: string;
   from?: Date | null;
   to?: Date | null;
   page?: number;

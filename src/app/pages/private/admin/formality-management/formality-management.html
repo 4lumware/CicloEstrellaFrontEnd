@@ -1,0 +1,20 @@
+<div class="formality-management-container">
+  <mat-toolbar color="primary" class="dashboard-header">
+    <span class="header-title">
+      <mat-icon class="header-icon">gavel</mat-icon>
+      Gestión de Trámites
+    </span>
+    <span class="spacer"></span>
+    <button matButton="filled" color="accent" (click)="onAddFormality()" class="add-button">
+      <mat-icon>add</mat-icon>
+      Agregar Trámite
+    </button>
+  </mat-toolbar>
+
+  <app-formality-management-table
+    (formalityUpdate)="onFormalityUpdate($event)"
+    (formalityDelete)="onFormalityDelete($event)"
+    (formalityDeleteMultiple)="onFormalityDeleteMultiple($event)"
+  >
+  </app-formality-management-table>
+</div>
