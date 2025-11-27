@@ -9,6 +9,7 @@ import { StudentsByCareer } from './components/students-by-career/students-by-ca
 import { UsersByRole } from './components/users-by-role/users-by-role';
 import { DashboardService } from '../../../../core/services/dashboard/dashboard-service';
 import { DashboardKPIs, KPIItem } from '../../../../core/models/dashboard/dashboard';
+import { LastCommentsChart } from './components/last-comments-chart/last-comments-chart';
 
 @Component({
   selector: 'app-admin-dashboard-home',
@@ -22,6 +23,7 @@ import { DashboardKPIs, KPIItem } from '../../../../core/models/dashboard/dashbo
     AvgRatingChart,
     StudentsByCareer,
     UsersByRole,
+    LastCommentsChart,
   ],
   templateUrl: './admin-dashboard-home.html',
   styleUrl: './admin-dashboard-home.css',
