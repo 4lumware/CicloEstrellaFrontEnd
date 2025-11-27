@@ -1,3 +1,32 @@
-<div style="display: block">
-  <canvas baseChart [data]="chartData" [options]="chartOptions"> </canvas>
+<div class="dashboard-root">
+  <div class="kpi-row">
+    <h2>Mes Actual VS Mes Anterior</h2>
+    <app-kpi-card
+      label="Nuevas inscripciones"
+      [value]="kpiNewRegistrations()?.value ?? '-'"
+      [trend]="kpiNewRegistrations()?.trend ?? 'neutral'"
+      [changePercent]="kpiNewRegistrations()?.changePercent ?? 0"
+    ></app-kpi-card>
+    <app-kpi-card
+      label="Promedio calificación"
+      [value]="kpiAvgRating()?.value ?? '-'"
+      [trend]="kpiAvgRating()?.trend ?? 'neutral'"
+      [changePercent]="kpiAvgRating()?.changePercent ?? 0"
+    ></app-kpi-card>
+    <app-kpi-card
+      label="Nuevas reseñas"
+      [value]="kpiNewReviews()?.value ?? '-'"
+      [trend]="kpiNewReviews()?.trend ?? 'neutral'"
+      [changePercent]="kpiNewReviews()?.changePercent ?? 0"
+    ></app-kpi-card>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-main"><app-registrations-chart /></div>
+    <div class="chart-side">
+      <app-avg-rating-chart />
+      <app-students-by-career />
+      <app-users-by-role />
+    </div>
+  </div>
 </div>

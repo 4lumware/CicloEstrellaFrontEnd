@@ -72,7 +72,6 @@ export class FormalityUpdateDialog {
   submit(): void {
     if (this.formGroup.invalid) return;
     const payload: any = {
-      idFormality: this.data.item.idFormality,
       ...this.formGroup.value,
     };
     this.dialogRef.close(payload);

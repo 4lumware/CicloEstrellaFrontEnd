@@ -38,7 +38,13 @@ export class FormalityService {
     return this.http.post<ApiResponse<FormalityModelCreate>>(this.apiUrl, formality);
   }
 
-  update(formality: FormalityModelUpdate): Observable<ApiResponse<FormalityModelUpdate>> {
-    return this.http.put<ApiResponse<FormalityModelUpdate>>(`${this.apiUrl}`, formality);
+  update(
+    formality: FormalityModelUpdate,
+    formalityId: number
+  ): Observable<ApiResponse<FormalityModelUpdate>> {
+    return this.http.put<ApiResponse<FormalityModelUpdate>>(
+      `${this.apiUrl}/${formalityId}`,
+      formality
+    );
   }
 }

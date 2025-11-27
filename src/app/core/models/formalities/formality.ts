@@ -14,7 +14,6 @@ export interface FormalityModelCreate {
 }
 
 export interface FormalityModelUpdate {
-  idFormality: number;
   title: string;
   description: string;
   startDate: Date;

@@ -62,7 +62,7 @@ export class FormalityManagement {
       const table = this.tableComponent();
       if (!table) return;
 
-      this.service.update(result).subscribe({
+      this.service.update(result, item.idFormality).subscribe({
         next: () => {
           this.snackBar.open('Trámite actualizado', 'Cerrar', { duration: 3000 });
           table.loadRequests();
