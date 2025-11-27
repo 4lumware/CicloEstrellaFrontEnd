@@ -1,8 +1,10 @@
 import { Component, inject, input, InputSignal, signal, WritableSignal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { Route, Router, RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
-import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
+import { AuthUserService } from '../../../../core/services/users/auth/auth-user-service';
 
 interface MenuItem {
   path: string;
@@ -20,11 +22,13 @@ interface MenuItem {
     RouterLinkActive,
     MatExpansionModule,
     MatListModule,
+    MatButtonModule,
   ],
   templateUrl: './authenticated-admin-custom-sidenav.html',
   styleUrl: './authenticated-admin-custom-sidenav.css',
 })
 export class AuthenticatedAdminCustomSidenav {
+  private authService = inject(AuthUserService);
   items: WritableSignal<MenuItem[]> = signal<MenuItem[]>([
     {
       path: 'home',
@@ -76,4 +80,8 @@ export class AuthenticatedAdminCustomSidenav {
       label: 'Trámites',
     },
   ]);
+
+  onLogout(): void {
+    this.authService.logout();
+  }
 }

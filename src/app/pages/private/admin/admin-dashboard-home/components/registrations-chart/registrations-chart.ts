@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, HostListener, OnInit, inject, signal, viewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartOptions, ChartData, ChartType } from 'chart.js';
 import { MatCardModule } from '@angular/material/card';
@@ -15,6 +15,7 @@ import { DashboardService } from '../../../../../../core/services/dashboard/dash
 })
 export class RegistrationsChart implements OnInit {
   private srv = inject(DashboardService);
+  private chart = viewChild<BaseChartDirective>(BaseChartDirective);
   protected loading = signal<boolean>(false);
 
   public chartOptions: ChartOptions = {
@@ -52,5 +53,10 @@ export class RegistrationsChart implements OnInit {
       },
       error: () => this.loading.set(false),
     });
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.chart()?.update();
   }
 }

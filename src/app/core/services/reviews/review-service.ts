@@ -4,7 +4,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { ReviewModel, ReviewParamsFilter } from '../../models/reviews/review';
 import { ApiResponse, PageResponse } from '../../models/responses/response';
 import { Observable } from 'rxjs';
-import { CommentModel } from '../../models/comments/comment';
 
 @Injectable({
   providedIn: 'root',
