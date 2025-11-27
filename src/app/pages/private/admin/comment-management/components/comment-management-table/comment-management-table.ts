@@ -30,6 +30,7 @@ import { CommentDetailDialog } from './dialogs/comment-detail-dialog/comment-det
 import { ConfirmDialog } from '../../../../../../shared/components/ui/confirm-dialog/confirm-dialog';
 import { forkJoin } from 'rxjs';
 import { SharedPaginator } from '../../../../../../shared/components/ui/shared-paginator/shared-paginator';
+import { SnackbarNotificationService } from '../../../../../../core/services/notifications/snackbar-notification-service';
 
 export interface PaginationState {
   pageSize: number;
@@ -58,7 +59,7 @@ export interface CommentFilter {}
 export class CommentManagementTable implements AfterViewInit {
   private commentService = inject(CommentService);
   private dialog = inject(MatDialog);
-  protected snackBar: MatSnackBar = inject(MatSnackBar);
+  protected snackBar: SnackbarNotificationService = inject(SnackbarNotificationService);
   protected selectedRows: WritableSignal<CommentModel[]> = signal<CommentModel[]>([]);
   protected size = signal<number>(0);
   protected totalItems = signal<number>(0);
@@ -140,7 +141,7 @@ export class CommentManagementTable implements AfterViewInit {
       },
       error: (error) => {
         const errorMsg = error?.error?.message || 'Error fetching comments';
-        this.snackBar.open(errorMsg, 'Cerrar', { duration: 3000 });
+        this.snackBar.error(errorMsg);
         this.dataSource.set([]);
         this.completeRefreshing();
       },
@@ -196,10 +197,8 @@ export class CommentManagementTable implements AfterViewInit {
         (c) => c.formality && (c.formality as any).idFormality !== undefined
       );
       if (valid.length === 0) {
-        this.snackBar.open(
-          'No se pudo identificar la formality de los comentarios seleccionados',
-          'Cerrar',
-          { duration: 3000 }
+        this.snackBar.error(
+          'No se pudieron identificar las formalities de los comentarios seleccionados'
         );
         return;
       }
@@ -212,13 +211,11 @@ export class CommentManagementTable implements AfterViewInit {
         next: () => {
           this.selectedRows.set([]);
           this.loadComments();
-          this.snackBar.open(`${valid.length} comentario(s) eliminados`, 'Cerrar', {
-            duration: 3000,
-          });
+          this.snackBar.success(`${valid.length} comentario(s) eliminados`);
         },
         error: (err) => {
           console.error('Error deleting comments:', err);
-          this.snackBar.open('Error al eliminar comentarios', 'Cerrar', { duration: 3000 });
+          this.snackBar.error('Error al eliminar comentarios');
         },
       });
     });
@@ -243,20 +240,18 @@ export class CommentManagementTable implements AfterViewInit {
 
       const formalityId = (comment.formality as any)?.idFormality;
       if (!formalityId) {
-        this.snackBar.open('No se pudo identificar la formality del comentario', 'Cerrar', {
-          duration: 3000,
-        });
+        this.snackBar.error('No se pudo identificar la formality del comentario');
         return;
       }
 
       this.commentService.destroy(formalityId, comment.id).subscribe({
         next: () => {
-          this.snackBar.open('Comentario eliminado', 'Cerrar', { duration: 3000 });
+          this.snackBar.success('Comentario eliminado');
           this.loadComments();
         },
         error: (err) => {
           console.error('Error deleting comment:', err);
-          this.snackBar.open('Error al eliminar comentario', 'Cerrar', { duration: 3000 });
+          this.snackBar.error('Error al eliminar comentario');
         },
       });
     });

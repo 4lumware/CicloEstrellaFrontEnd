@@ -14,7 +14,6 @@ export interface FormalityModelCreate {
 }
 
 export interface FormalityModelUpdate {
-  idFormality: number;
   title: string;
   description: string;
   startDate: Date;
@@ -22,7 +21,8 @@ export interface FormalityModelUpdate {
 }
 
 export interface FormalityParamsFilter {
-  keyword?: string;
+  title?: string;
+  description?: string;
   from?: Date | null;
   to?: Date | null;
   page?: number;

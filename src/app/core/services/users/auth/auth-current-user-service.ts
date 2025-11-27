@@ -1,43 +1,48 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 import { firstValueFrom } from 'rxjs';
 import { API_URL } from '../../../constants/api';
 import { StaffModel } from '../../../models/staffs/staff';
 import { StudentModel } from '../../../models/students/student';
 import { ApiResponse } from '../../../models/responses/response';
+import { MapType } from '@angular/compiler';
 
 @Injectable({ providedIn: 'root' })
 export class AuthCurrentUserService {
   private _currentUser = new BehaviorSubject<StaffModel | StudentModel | null>(null);
   public readonly currentUser$ = this._currentUser.asObservable();
 
-  private initialized = false;
+  private _initialized = new BehaviorSubject<boolean>(false);
+  public readonly initialized$ = this._initialized.asObservable();
 
   private http = inject(HttpClient);
   private apiUrl = API_URL + '/auth';
 
-  initialize() {
-    if (this.initialized) return;
-    this.initialized = true;
+  public initialize(): Observable<StaffModel | StudentModel | null> {
+    if (this._initialized.value) return of(this._currentUser.value);
 
     const access = localStorage.getItem('access_token');
-    if (!access) return;
+    if (!access) return of(null);
 
     const role = localStorage.getItem('user_role');
-    if (!role) return;
+    if (!role) return of(null);
 
     const endpoint = role === 'STAFF' ? `${this.apiUrl}/staffs/me` : `${this.apiUrl}/students/me`;
 
-    this.http.get<ApiResponse<any>>(endpoint).subscribe({
-      next: (response) => {
+    return this.http.get<ApiResponse<any>>(endpoint).pipe(
+      tap((response) => {
         this._currentUser.next(response.data);
-      },
-      error: (err) => {
+        this._initialized.next(true);
+      }),
+      map((response) => response.data),
+      catchError((err) => {
         console.error('Error fetching current user', err);
         this.logout();
-      },
-    });
+        this._initialized.next(true);
+        return of(null);
+      })
+    );
   }
 
   setCurrentUser(user: any | null) {

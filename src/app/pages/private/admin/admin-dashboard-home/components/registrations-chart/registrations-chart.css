@@ -1,0 +1,28 @@
+.spinner {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+.mat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.registrations-chart-content {
+  display: flex;
+  padding: 3rem;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.registration-canva {
+  width: 1000%;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

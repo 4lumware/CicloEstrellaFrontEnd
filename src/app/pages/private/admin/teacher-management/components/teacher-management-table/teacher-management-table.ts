@@ -26,6 +26,7 @@ import { TeacherManagementDetailDialog } from '../dialogs/teacher-management-det
 import { HttpErrorResponse } from '@angular/common/http';
 import { TeacherService } from '../../../../../../core/services/teachers/teachers-service';
 import { MatChipsModule } from '@angular/material/chips';
+import { SnackbarNotificationService } from '../../../../../../core/services/notifications/snackbar-notification-service';
 
 @Component({
   selector: 'app-teacher-management-table',
@@ -55,7 +56,7 @@ export class TeacherManagementTable implements AfterViewInit {
   public teacherDeleteMultiple = output<TeacherModel[]>();
   private service = inject(TeacherService);
   private dialog = inject(MatDialog);
-  protected snackBar: MatSnackBar = inject(MatSnackBar);
+  protected snackBar: SnackbarNotificationService = inject(SnackbarNotificationService);
 
   // include a selection column at the start
   protected displayedColumns: string[] = [
@@ -157,13 +158,11 @@ export class TeacherManagementTable implements AfterViewInit {
           const elapsed = Date.now() - start;
           const remaining = Math.max(0, spinnerMinMs - elapsed);
           setTimeout(() => this.isRefreshing.set(false), remaining);
-          this.snackBar.open('No se encontraron profesores', 'Cerrar', {
-            duration: 3000,
-          });
+          this.snackBar.error('No se encontraron profesores');
           return;
         }
 
-        this.snackBar.open('Error cargando profesores', 'Cerrar', { duration: 3000 });
+        this.snackBar.error('Error cargando profesores');
         this.dataSource.set([]);
         const elapsed = Date.now() - start;
         const remaining = Math.max(0, spinnerMinMs - elapsed);
@@ -172,7 +171,6 @@ export class TeacherManagementTable implements AfterViewInit {
     });
   }
 
-  // Expose a small public API for parent components to control the refreshing state
   public setRefreshing(value: boolean): void {
     this.isRefreshing.set(value);
   }
@@ -194,7 +192,6 @@ export class TeacherManagementTable implements AfterViewInit {
   }
 
   onRowClick(row: TeacherModel): void {
-    // Toggle selection when clicking row
     this.toggleRowSelection(row);
   }
 

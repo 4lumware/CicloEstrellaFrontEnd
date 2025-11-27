@@ -9,6 +9,7 @@ import {
   FormalityModelUpdate,
   FormalityParamsFilter,
 } from '../../models/formalities/formality';
+import { ApiResponse, PageResponse } from '../../models/responses/response';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class FormalityService {
   private apiUrl = API_URL + '/formalities';
   private http = inject(HttpClient);
 
-  index(params: FormalityParamsFilter): Observable<FormalityModel[]> {
+  index(params: FormalityParamsFilter): Observable<PageResponse<FormalityModel[]>> {
     let formalityParams = new HttpParams();
 
     Object.keys(params).forEach((key) => {
@@ -26,20 +27,23 @@ export class FormalityService {
         formalityParams = formalityParams.set(key, value.toString());
       }
     });
-    return this.http.get<FormalityModel[]>(this.apiUrl, { params: formalityParams });
+    return this.http.get<PageResponse<FormalityModel[]>>(this.apiUrl, { params: formalityParams });
   }
 
-  destroy(formalityId: number): Observable<FormalityModel> {
-    return this.http.delete<FormalityModel>(`${this.apiUrl}/${formalityId}`);
+  destroy(formalityId: number): Observable<ApiResponse<FormalityModel>> {
+    return this.http.delete<ApiResponse<FormalityModel>>(`${this.apiUrl}/${formalityId}`);
   }
 
-  store(formality: FormalityModelCreate): Observable<FormalityModelCreate> {
-    return this.http.post<FormalityModelCreate>(this.apiUrl, formality);
+  store(formality: FormalityModelCreate): Observable<ApiResponse<FormalityModelCreate>> {
+    return this.http.post<ApiResponse<FormalityModelCreate>>(this.apiUrl, formality);
   }
 
-  update(formality: FormalityModelUpdate): Observable<FormalityModelUpdate> {
-    return this.http.put<FormalityModelUpdate>(
-      `${this.apiUrl}/${formality.idFormality}`,
+  update(
+    formality: FormalityModelUpdate,
+    formalityId: number
+  ): Observable<ApiResponse<FormalityModelUpdate>> {
+    return this.http.put<ApiResponse<FormalityModelUpdate>>(
+      `${this.apiUrl}/${formalityId}`,
       formality
     );
   }

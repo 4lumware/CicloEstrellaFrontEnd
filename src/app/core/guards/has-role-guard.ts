@@ -1,6 +1,5 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthUserService } from '../services/users/auth/auth-user-service';
 import { Role, UserRole } from '../models/users/user';
 import { catchError, filter, map, Observable, of, switchMap, take, tap } from 'rxjs';
 import { StaffModel } from '../models/staffs/staff';
@@ -14,25 +13,31 @@ export const hasRoleGuard = (roles: UserRole[]): CanActivateFn => {
     const rolesService = inject(RolesService);
     const authCurrentUserService = inject(AuthCurrentUserService);
 
-    authCurrentUserService.initialize();
+    return authCurrentUserService.initialize().pipe(
+      switchMap((user: StaffModel | StudentModel | null) => {
+        if (!user) {
+          console.log('No user logged in');
+          router.navigate(['/login']);
+          return of(false);
+        }
 
-    return authCurrentUserService.currentUser$.pipe(
-      filter((user) => user !== null), // ⛔ Espera hasta que llegue un usuario
-      take(1), // 🔒 Solo la primera vez
-      switchMap((user: StaffModel | StudentModel) => {
         return rolesService.hasRole(user.id, roles).pipe(
           map((response) => {
-            if (response.data.hasRole) {
-              return true;
+            const hasRole = response.data.hasRole;
+            if (!hasRole) {
+              router.navigate(['/login']);
             }
-            router.navigate(['/login']);
-            return false;
+            return hasRole;
           }),
           catchError(() => {
             router.navigate(['/login']);
             return of(false);
           })
         );
+      }),
+      catchError(() => {
+        router.navigate(['/login']);
+        return of(false);
       })
     );
   };
