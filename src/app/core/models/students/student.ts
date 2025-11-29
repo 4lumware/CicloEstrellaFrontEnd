@@ -13,7 +13,7 @@ export interface StudentModelCreate {
 export interface StudentModelCreateRest {
   username: string;
   email: string;
-  password: string;
+  password?: string;
   profilePictureUrl?: string;
   currentSemester: number;
   careerIds: number[];
@@ -22,8 +22,8 @@ export interface StudentModelCreateRest {
 export interface StudentModelUpdate {
   username: string;
   email: string;
-  password: string;
-  profilePictureUrl: string;
+  password?: string;
+  profilePictureUrl?: string;
   currentSemester: number;
   careerIds: number[];
 }
