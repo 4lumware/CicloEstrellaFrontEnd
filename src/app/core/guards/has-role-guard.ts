@@ -12,7 +12,7 @@ export const hasRoleGuard = (roles: UserRole[]): CanActivateFn => {
     const router = inject(Router);
     const rolesService = inject(RolesService);
     const authCurrentUserService = inject(AuthCurrentUserService);
-
+    console.log('hasRoleGuard invoked with roles:', roles);
     return authCurrentUserService.initialize().pipe(
       switchMap((user: StaffModel | StudentModel | null) => {
         if (!user) {
@@ -20,7 +20,7 @@ export const hasRoleGuard = (roles: UserRole[]): CanActivateFn => {
           router.navigate(['/login']);
           return of(false);
         }
-
+        console.log('Checking roles for user:', user);
         return rolesService.hasRole(user.id, roles).pipe(
           map((response) => {
             const hasRole = response.data.hasRole;
