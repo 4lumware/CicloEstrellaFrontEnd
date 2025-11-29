@@ -18,6 +18,8 @@ import { ReviewManagement } from './pages/private/admin/review-management/review
 import { TeacherRequestsManagement } from './pages/private/admin/teacher-requests-management/teacher-requests-management';
 import { TeacherManagement } from './pages/private/admin/teacher-management/teacher-management';
 import { FormalityManagement } from './pages/private/admin/formality-management/formality-management';
+import { UserTeacherRequestsSearchForm } from './pages/private/user/teacher-requests/components/teacher-requests-search-form/teacher-requests-search-form';
+import { TeacherRequestsComponent } from './pages/private/user/teacher-requests/teacher-requests.component';
 
 export const routes: Routes = [
   { path: '', component: Layout, children: [{ path: '', component: LandingComponent }] },
@@ -31,6 +33,8 @@ export const routes: Routes = [
       { path: 'tramites', component: Formality },
       { path: 'biblioteca', component: Library },
       { path: 'student', component: StudentProfile },
+      { path: 'teacher-requests', component: TeacherRequestsComponent },
+      { path: '**', redirectTo: 'home', pathMatch: 'full' },
     ],
   },
   {
