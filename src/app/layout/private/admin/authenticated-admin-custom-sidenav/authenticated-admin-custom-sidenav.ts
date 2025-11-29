@@ -23,6 +23,7 @@ interface MenuItem {
     MatExpansionModule,
     MatListModule,
     MatButtonModule,
+    RouterLink,
   ],
   templateUrl: './authenticated-admin-custom-sidenav.html',
   styleUrl: './authenticated-admin-custom-sidenav.css',

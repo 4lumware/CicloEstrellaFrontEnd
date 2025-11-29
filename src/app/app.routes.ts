@@ -10,8 +10,7 @@ import { AdminDashboardHome } from './pages/private/admin/admin-dashboard-home/a
 import { UserHomeComponent } from './pages/private/user/user-home.component';
 import { UserProfesoresComponent } from './pages/private/user/user-profesores/user-profesores.component';
 import { Formality } from './pages/private/user/formality/formality';
-import { StudentProfile } from './pages/private/user-profiles/student-profile/student-profile';
-import { StudentProfileEdit } from './pages/private/user-profiles/student-profile/student-profile-edit/student-profile-edit';
+import { StudentProfile } from './pages/private/user/profile/student-profile/student-profile';
 import { Library } from './pages/private/user/library/library';
 import { hasRoleGuard } from './core/guards/has-role-guard';
 import { CommentManagement } from './pages/private/admin/comment-management/comment-management';
@@ -32,7 +31,6 @@ export const routes: Routes = [
       { path: 'tramites', component: Formality },
       { path: 'biblioteca', component: Library },
       { path: 'student', component: StudentProfile },
-      { path: 'student/edit', component: StudentProfileEdit },
     ],
   },
   {
@@ -76,6 +74,7 @@ export const routes: Routes = [
         path: 'tramites',
         component: FormalityManagement,
       },
+
       {
         path: '**',
         redirectTo: 'home',
