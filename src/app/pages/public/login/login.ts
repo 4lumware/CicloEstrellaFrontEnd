@@ -27,6 +27,7 @@ export interface LoginFormValue {
   password: FormControl<string>;
 }
 
+const STAFF_ROLES = ['ADMIN', 'MODERATOR', 'WRITER'];
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -80,7 +81,7 @@ export class Login {
           return;
         }
 
-        if (user.roles.some((role) => role.roleName === 'ADMIN' || role.roleName === 'STAFF')) {
+        if (user.roles.some((role) => STAFF_ROLES.includes(role.roleName))) {
           this.router.navigate(['/dashboard/home']);
           localStorage.setItem('user_role', 'STAFF');
           this.authCurrentUserService.setCurrentUser(user);
