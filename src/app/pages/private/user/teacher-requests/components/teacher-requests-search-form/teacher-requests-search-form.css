@@ -1,0 +1,28 @@
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+
+  align-items: center;
+}
+
+.actions {
+  display: flex;
+  grid-column: span 2;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+mat-expansion-panel {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.date-range-picker-filter {
+  grid-column: span 2;
+}
