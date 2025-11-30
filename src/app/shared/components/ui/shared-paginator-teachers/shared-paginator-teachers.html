@@ -1,0 +1,11 @@
+<!-- shared-paginator.html -->
+<mat-paginator
+  [length]="length()"
+  [pageIndex]="currentPageIndex()"
+  [pageSize]="currentPageSize()"
+  [pageSizeOptions]="effectivePageSizeOptions()"
+  (page)="onPage($event)"
+  showFirstLastButtons
+  class="shared-paginator"
+>
+</mat-paginator>

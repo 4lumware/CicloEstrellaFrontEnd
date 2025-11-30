@@ -1,0 +1,417 @@
+@import url('https://fonts.googleapis.com/css2?family=Inria+Sans:wght@300;400;600;700&display=swap');
+
+.review-card {
+  background: #f8f8f8;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  font-family: 'Inria Sans', sans-serif;
+}
+
+.review-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* ==================== HEADER ==================== */
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  gap: 12px;
+}
+
+.student-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.student-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffcb47;
+  flex-shrink: 0;
+}
+
+.student-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.student-name {
+  font-size: 1em;
+  font-weight: 600;
+  color: #4b2c5e;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.review-date {
+  font-size: 0.85em;
+  color: #666;
+  margin: 2px 0 0 0;
+}
+
+.review-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  padding: 8px 14px;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.rating-value {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #4b2c5e;
+  line-height: 1;
+}
+
+.star-icon {
+  color: #ffcb47 !important;
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.review-actions {
+  flex-shrink: 0;
+}
+
+.actions-btn {
+  color: #666 !important;
+}
+
+.actions-btn:hover {
+  color: #4b2c5e !important;
+  background: rgba(75, 44, 94, 0.05) !important;
+}
+
+/* ==================== BODY ==================== */
+.review-body {
+  margin-bottom: 15px;
+}
+
+.review-description {
+  font-size: 0.95em;
+  line-height: 1.6;
+  color: #333;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+/* ==================== TAGS ==================== */
+.review-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.tag-badge {
+  background: #ffcb47;
+  color: #333;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: transform 0.2s;
+}
+
+.tag-badge:hover {
+  transform: scale(1.05);
+}
+
+/* ==================== REACTIONS SECTION ==================== */
+.reactions-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.reactions-display {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.reaction-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #fff;
+  border: 2px solid #e0e0e0;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inria Sans', sans-serif;
+}
+
+.reaction-badge:not(:disabled):hover {
+  border-color: #ffcb47;
+  background: #fff9e6;
+  transform: scale(1.05);
+}
+
+.reaction-badge:disabled {
+  cursor: default;
+  opacity: 0.8;
+}
+
+.reaction-badge.user-reacted {
+  background: #fff9e6;
+  border-color: #ffcb47;
+  box-shadow: 0 2px 6px rgba(255, 203, 71, 0.3);
+}
+
+.reaction-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.reaction-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b2c5e;
+  min-width: 16px;
+  text-align: center;
+}
+
+/* ==================== REACTION ACTIONS ==================== */
+.reaction-actions {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.add-reaction-btn {
+  border-color: #4b2c5e !important;
+  color: #4b2c5e !important;
+  font-family: 'Inria Sans', sans-serif !important;
+  font-size: 14px !important;
+  padding: 6px 16px !important;
+  height: 36px !important;
+}
+
+.add-reaction-btn:hover {
+  background: rgba(75, 44, 94, 0.05) !important;
+}
+
+.change-reaction-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 6px 12px !important;
+  background: #fff9e6 !important;
+  border: 2px solid #ffcb47 !important;
+  border-radius: 20px !important;
+  font-family: 'Inria Sans', sans-serif !important;
+  color: #4b2c5e !important;
+  height: 36px !important;
+  min-width: auto !important;
+}
+
+.change-reaction-btn:hover {
+  background: #fff3cd !important;
+}
+
+.current-reaction-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+/* ==================== REACTION PICKER MENU ==================== */
+::ng-deep .reaction-menu .mat-mdc-menu-content {
+  padding: 8px !important;
+}
+
+.reaction-picker {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  max-width: 320px;
+  padding: 4px;
+}
+
+.reaction-option {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 12px 8px !important;
+  min-height: auto !important;
+  height: auto !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+  border: 2px solid transparent !important;
+}
+
+.reaction-option:hover {
+  background: #f5f5f5 !important;
+}
+
+.reaction-option.selected {
+  background: #fff9e6 !important;
+  border-color: #ffcb47 !important;
+}
+
+.reaction-icon-large {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.reaction-name {
+  font-size: 11px;
+  color: #666;
+  text-align: center;
+  font-family: 'Inria Sans', sans-serif;
+  line-height: 1.2;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+.remove-reaction {
+  color: #d32f2f !important;
+  grid-column: 1 / -1;
+  justify-content: center !important;
+  margin-top: 4px !important;
+}
+
+.remove-reaction mat-icon {
+  margin-right: 8px;
+}
+
+/* ==================== MENU STYLES ==================== */
+::ng-deep .review-menu {
+  font-family: 'Inria Sans', sans-serif !important;
+}
+
+::ng-deep .review-menu .mat-mdc-menu-item {
+  font-family: 'Inria Sans', sans-serif !important;
+}
+
+::ng-deep .review-menu .delete-option {
+  color: #d32f2f;
+}
+
+::ng-deep .review-menu .delete-option mat-icon {
+  color: #d32f2f;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .review-card {
+    padding: 16px;
+  }
+
+  .review-header {
+    flex-wrap: wrap;
+  }
+
+  .student-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .student-name {
+    font-size: 0.95em;
+  }
+
+  .review-rating {
+    padding: 6px 12px;
+  }
+
+  .rating-value {
+    font-size: 1em;
+  }
+
+  .review-description {
+    font-size: 0.9em;
+  }
+
+  .tag-badge {
+    font-size: 0.8em;
+    padding: 5px 12px;
+  }
+
+  .reactions-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .reactions-display {
+    width: 100%;
+  }
+
+  .reaction-actions {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .add-reaction-btn,
+  .change-reaction-btn {
+    width: 100%;
+    justify-content: center !important;
+  }
+
+  .reaction-picker {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .reaction-picker {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.reaction-display {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.reaction-emoji {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.reaction-emoji-large {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.reaction-icon,
+.current-reaction-icon,
+.reaction-icon-large {
+  display: inline-block;
+}
+
+/* Asegurar que los emojis se vean bien */
+.reaction-emoji,
+.reaction-emoji-large {
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+}

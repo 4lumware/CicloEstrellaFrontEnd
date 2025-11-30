@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { API_URL } from '../../constants/api';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { ReviewModel, ReviewParamsFilter } from '../../models/reviews/review';
+import {CreateReviewRequest, ReviewModel, ReviewParamsFilter, UpdateReviewRequest} from '../../models/reviews/review';
 import { ApiResponse, PageResponse } from '../../models/responses/response';
-import { Observable } from 'rxjs';
+import {map, Observable} from 'rxjs';
 import { CommentModel } from '../../models/comments/comment';
 
 @Injectable({
@@ -31,5 +31,43 @@ export class ReviewService {
 
   public destroy(reviewId: number): Observable<ApiResponse<ReviewModel>> {
     return this.http.delete<ApiResponse<ReviewModel>>(`${this.apiUrl}/${reviewId}`);
+  }
+
+  public getReviewsByTeacher(teacherId: number, keyword?: string): Observable<ReviewModel[]> {
+    let params = new HttpParams();
+    if (keyword) {
+      params = params.set('keyword', keyword);
+    }
+
+    return this.http
+      .get<ApiResponse<ReviewModel[]>>(`${API_URL}/teachers/${teacherId}/reviews`, { params })
+      .pipe(map((response) => response.data || []));
+  }
+
+  public store(review: CreateReviewRequest): Observable<ApiResponse<ReviewModel>> {
+    return this.http.post<ApiResponse<ReviewModel>>(this.apiUrl, review);
+  }
+
+  public update(
+    reviewId: number,
+    review: UpdateReviewRequest
+  ): Observable<ApiResponse<ReviewModel>> {
+    return this.http.put<ApiResponse<ReviewModel>>(`${this.apiUrl}/${reviewId}`, review);
+  }
+
+  public addReaction(reviewId: number, reactionId: number): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
+      `${this.apiUrl}/${reviewId}/reactions/${reactionId}`,
+      {}
+    );
+  }
+
+  public removeReaction(
+    reviewId: number,
+    reviewReactionId: number
+  ): Observable<ApiResponse<any>> {
+    return this.http.delete<ApiResponse<any>>(
+      `${this.apiUrl}/${reviewId}/reactions/${reviewReactionId}`
+    );
   }
 }

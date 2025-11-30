@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { API_URL } from '../../constants/api';
 import { ApiResponse } from '../../models/responses/response';
-import { CareerModelRest } from '../../models/careers/careers';
+import {CareerModel, CareerModelRest} from '../../models/careers/careers';
 import { Option } from '../../../shared/components/forms/select/select';
 
 @Injectable({
@@ -21,6 +21,11 @@ export class CareerService {
           label: item.careerName,
         }))
       )
+    );
+  }
+  getAllCareers(): Observable<CareerModel[]> {
+    return this.http.get<ApiResponse<CareerModel[]>>(this.apiUrl).pipe(
+      map(response => response.data || [])
     );
   }
 }

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { API_URL } from '../../constants/api';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {map, Observable} from 'rxjs';
 import { ApiResponse } from '../../models/responses/response';
 import { CourseModel } from '../../models/courses/courses';
 
@@ -15,5 +15,11 @@ export class CourseService {
 
   index(): Observable<ApiResponse<CourseModel[]>> {
     return this.http.get<ApiResponse<CourseModel[]>>(this.apiUrl);
+  }
+
+  getAllCourses(): Observable<CourseModel[]> {
+    return this.http.get<ApiResponse<CourseModel[]>>(this.apiUrl).pipe(
+      map(response => response.data || [])
+    );
   }
 }
