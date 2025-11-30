@@ -1,0 +1,54 @@
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>Filtros</mat-panel-title>
+  </mat-expansion-panel-header>
+
+  <div class="filters">
+    <app-input
+      [id]="'teacherName'"
+      [label]="'Nombre del docente'"
+      [control]="form.controls.teacherName"
+    />
+
+    <app-select
+      [id]="'courseId'"
+      [label]="'Asignatura'"
+      [options]="courseOptions()"
+      [control]="form.controls.courseId"
+    />
+
+    <app-select
+      [id]="'campusId'"
+      [label]="'Campus'"
+      [options]="campusOptions()"
+      [control]="form.controls.campusId"
+    />
+
+    <app-select
+      [id]="'careerId'"
+      [label]="'Carrera'"
+      [options]="careerOptions()"
+      [control]="form.controls.careerId"
+    />
+
+    <mat-form-field appearance="outline" class="date-range-picker-filter">
+      <mat-label>Ingrese rango de fechas</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate [formControl]="form.controls.startDate" placeholder="Fecha inicio" />
+        <input matEndDate [formControl]="form.controls.endDate" placeholder="Fecha fin" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+    <div class="actions">
+      <button matButton="outlined" color="primary" (click)="onApply()">
+        <mat-icon>search</mat-icon> Buscar
+      </button>
+      <button matButton="filled" (click)="onClear()">
+        <mat-icon>clear_all</mat-icon>
+        Limpiar
+      </button>
+    </div>
+  </div>
+</mat-expansion-panel>

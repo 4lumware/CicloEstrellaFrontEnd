@@ -48,6 +48,7 @@ export class AvgRatingChart implements OnInit {
               data: [...values],
               type: 'bar',
               borderWidth: 1,
+              backgroundColor: 'rgba(54, 162, 235, 0.6)',
               indexAxis: 'y',
             },
           ],

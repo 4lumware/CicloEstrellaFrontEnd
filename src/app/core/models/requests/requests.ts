@@ -19,3 +19,9 @@ export interface RequestContentModel<T> {
   status: string;
   createdAt: Date;
 }
+
+export type RequestType = 'TEACHER';
+export interface RequestModelCreate<T> {
+  requestType: RequestType;
+  content: T;
+}

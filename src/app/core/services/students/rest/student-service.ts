@@ -39,4 +39,19 @@ export class StudentService {
   getById(studentId: number): Observable<ApiResponse<StudentModel>> {
     return this.http.get<ApiResponse<StudentModel>>(`${this.apiUrl}/${studentId}`);
   }
+
+  me(): Observable<ApiResponse<StudentModel>> {
+    return this.http.get<ApiResponse<StudentModel>>(`${API_URL}/auth/students/me`);
+  }
+
+  updatePassword(
+    studentId: string,
+    newPassword: string,
+    oldPassword: string
+  ): Observable<ApiResponse<StudentModel>> {
+    return this.http.put<ApiResponse<StudentModel>>(`${this.apiUrl}/${studentId}/update-password`, {
+      newPassword,
+      oldPassword,
+    });
+  }
 }

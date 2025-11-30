@@ -3,19 +3,36 @@ import { API_URL } from '../../constants/api';
 import { Observable } from 'rxjs';
 import { TagModel } from '../../models/tags/tags';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { PageResponse } from '../../models/responses/response';
-import { TeacherModel } from '../../models/teachers/teacher';
-import { RequestContentModel, TeacherRequestParamsFilter } from '../../models/requests/requests';
+import { PageResponse, ApiResponse } from '../../models/responses/response';
+import { TeacherModel, TeacherModelCreate } from '../../models/teachers/teacher';
+import {
+  RequestContentModel,
+  RequestModelCreate,
+  TeacherRequestParamsFilter,
+} from '../../models/requests/requests';
 import { ReviewModel } from '../../models/reviews/review';
+import {
+  NullableSelectOptionValue,
+  UserTeacherRequestFilterValue,
+} from '../../../pages/private/user/teacher-requests/components/teacher-requests-search-form/teacher-requests-search-form';
 
+export interface UserTeacherRequestParamsFilter {
+  fullName?: string | null;
+  careerIds?: NullableSelectOptionValue<number>;
+  courseIds?: NullableSelectOptionValue<number>;
+  campusIds?: NullableSelectOptionValue<number>;
+  page?: number;
+  size?: number;
+}
 @Injectable({
   providedIn: 'root',
 })
 export class TeacherRequestService {
   private apiUrl = API_URL + '/requests';
+  private studentCreate = (studentId: string) => `${API_URL}/students/${studentId}/requests`;
 
   private destroyApiUrl = (studentId: number, requestId: number) =>
-    `${this.apiUrl}/${requestId}/student/${studentId}`;
+    `${API_URL}/students/${studentId}/requests/${requestId}`;
 
   private http = inject(HttpClient);
 
@@ -42,6 +59,34 @@ export class TeacherRequestService {
   ): Observable<PageResponse<RequestContentModel<TeacherModel>>> {
     return this.http.delete<PageResponse<RequestContentModel<TeacherModel>>>(
       this.destroyApiUrl(studentId, requestId)
+    );
+  }
+
+  public create(
+    studentId: string,
+    payload: RequestModelCreate<TeacherModelCreate>
+  ): Observable<ApiResponse<RequestContentModel<TeacherModel>>> {
+    return this.http.post<ApiResponse<RequestContentModel<TeacherModel>>>(
+      this.studentCreate(studentId),
+      payload
+    );
+  }
+
+  public getByStudentId(
+    params: UserTeacherRequestParamsFilter,
+    studentId: number
+  ): Observable<PageResponse<RequestContentModel<TeacherModel>[]>> {
+    let requestParams = new HttpParams();
+
+    Object.keys(params).forEach((key) => {
+      const value = (params as any)[key];
+      if (value !== null && value !== undefined) {
+        requestParams = requestParams.set(key, value.toString());
+      }
+    });
+    return this.http.get<PageResponse<RequestContentModel<TeacherModel>[]>>(
+      `${API_URL}/students/${studentId}/requests`,
+      { params: requestParams }
     );
   }
 

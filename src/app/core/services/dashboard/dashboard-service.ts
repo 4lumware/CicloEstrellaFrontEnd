@@ -5,6 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { ApiResponse, PageResponse } from '../../models/responses/response';
 import { CharData, DashboardKPIs } from '../../models/dashboard/dashboard';
+import { ReviewModel } from '../../models/reviews/review';
 
 @Injectable({
   providedIn: 'root',
@@ -39,5 +40,12 @@ export class DashboardService {
 
   registrationsByMonth(): Observable<ApiResponse<CharData>> {
     return this.http.get<ApiResponse<CharData>>(`${this.apiUrl}/registrations-by-month`);
+  }
+
+  lastReviews(limit: number = 5): Observable<ApiResponse<ReviewModel[]>> {
+    let params = new HttpParams().set('limit', limit);
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/last-reviews`, {
+      params,
+    });
   }
 }

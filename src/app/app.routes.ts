@@ -10,8 +10,7 @@ import { AdminDashboardHome } from './pages/private/admin/admin-dashboard-home/a
 import { UserHomeComponent } from './pages/private/user/user-home.component';
 import { UserProfesoresComponent } from './pages/private/user/user-profesores/user-profesores.component';
 import { Formality } from './pages/private/user/formality/formality';
-import { StudentProfile } from './pages/private/user-profiles/student-profile/student-profile';
-import { StudentProfileEdit } from './pages/private/user-profiles/student-profile/student-profile-edit/student-profile-edit';
+import { StudentProfile } from './pages/private/user/profile/student-profile/student-profile';
 import { Library } from './pages/private/user/library/library';
 import { hasRoleGuard } from './core/guards/has-role-guard';
 import { CommentManagement } from './pages/private/admin/comment-management/comment-management';
@@ -20,6 +19,8 @@ import { TeacherRequestsManagement } from './pages/private/admin/teacher-request
 import { TeacherManagement } from './pages/private/admin/teacher-management/teacher-management';
 import { FormalityManagement } from './pages/private/admin/formality-management/formality-management';
 import {ProfesorProfile} from './pages/private/user/user-profesores/profesor-profile/profesor-profile';
+import { UserTeacherRequestsSearchForm } from './pages/private/user/teacher-requests/components/teacher-requests-search-form/teacher-requests-search-form';
+import { TeacherRequestsComponent } from './pages/private/user/teacher-requests/teacher-requests.component';
 
 export const routes: Routes = [
   { path: '', component: Layout, children: [{ path: '', component: LandingComponent }] },
@@ -34,7 +35,8 @@ export const routes: Routes = [
       { path: 'tramites', component: Formality },
       { path: 'biblioteca', component: Library },
       { path: 'student', component: StudentProfile },
-      { path: 'student/edit', component: StudentProfileEdit },
+      { path: 'teacher-requests', component: TeacherRequestsComponent },
+      { path: '**', redirectTo: 'home', pathMatch: 'full' },
     ],
   },
   {
@@ -78,6 +80,7 @@ export const routes: Routes = [
         path: 'tramites',
         component: FormalityManagement,
       },
+
       {
         path: '**',
         redirectTo: 'home',

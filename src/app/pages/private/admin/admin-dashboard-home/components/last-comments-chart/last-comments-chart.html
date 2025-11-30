@@ -1,0 +1,31 @@
+<mat-card class="mat-content">
+  <mat-card-header>
+    <mat-card-title>Ultimos {{ limit() }} comentarios</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="registrations-chart-content">
+    @if(loading()){
+    <div class="spinner"><mat-spinner diameter="36"></mat-spinner></div>
+    } @else {
+    <section>
+      @for(review of reviews() ; track review.id){
+      <div class="comment-item">
+        <img
+          class="comment-avatar"
+          [src]="review.student.profilePictureUrl"
+          alt="Avatar de {{ review.student.username }}"
+        />
+        <div class="comment-content">
+          <div class="comment-header">
+            <span class="comment-user">{{ review.student.username }}</span>
+            <span class="comment-date">{{ review.createdAt | date : 'dd/MM/yy HH:mm' }}</span>
+          </div>
+          <div class="comment-content">
+            {{ review.description }}
+          </div>
+        </div>
+      </div>
+      }
+    </section>
+    }
+  </mat-card-content>
+</mat-card>

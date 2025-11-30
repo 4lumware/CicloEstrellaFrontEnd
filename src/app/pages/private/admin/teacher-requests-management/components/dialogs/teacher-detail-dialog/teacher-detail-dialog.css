@@ -6,8 +6,8 @@
   max-width: 96vw;
 }
 .avatar-wrap img {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid rgba(25, 118, 210, 0.12);
@@ -21,9 +21,14 @@
   margin-top: 0.5rem;
 }
 .desc {
-  white-space: pre-wrap;
+  white-space: pre-wrap; /* mantiene saltos de línea */
+  word-wrap: break-word; /* quiebra palabras largas */
+  word-break: break-word; /* fuerza corte en palabras largas */
+  max-width: 100%; /* no crecer más que el contenedor */
+  min-width: 0; /* necesario dentro de flexbox */
   color: #333;
 }
+
 .small-grid {
   display: flex;
   gap: 1rem;

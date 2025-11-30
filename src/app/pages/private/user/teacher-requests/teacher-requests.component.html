@@ -1,0 +1,33 @@
+<div class="requests-root">
+  <section class="requests-content">
+    <app-user-teacher-requests-search-form
+      (applyFilters)="onApplyFilters($event)"
+      (clearFilters)="goToFirstPage()"
+    ></app-user-teacher-requests-search-form>
+    <div class="header">
+      <h2>Solicitudes de creación de profesor</h2>
+      <button matButton="filled" color="primary" (click)="openCreate()">
+        <mat-icon>add</mat-icon>
+        Nueva solicitud
+      </button>
+    </div>
+
+    <div class="cards-grid">
+      @if(!loading() && requests().length === 0) {
+      <div class="empty">No hay solicitudes aún</div>
+      } @else { @for(r of requests() ; track r.id){
+      <app-request-card
+        (onDetails)="onDetails($event)"
+        [request]="r"
+        (cancelled)="onCancelled()"
+      ></app-request-card>
+      } } @if(requests().length > 0) { }
+    </div>
+    <mat-paginator
+      [length]="totalItems()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="pageSizeOptions()"
+      (page)="onPageChange($event)"
+    ></mat-paginator>
+  </section>
+</div>

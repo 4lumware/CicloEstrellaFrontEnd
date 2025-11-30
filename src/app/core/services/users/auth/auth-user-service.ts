@@ -7,6 +7,7 @@ import { StudentModel } from '../../../models/students/student';
 import { ApiResponse } from '../../../models/responses/response';
 import { AuthRefreshTokenService } from './auth-refresh-token-service';
 import { AuthCurrentUserService } from './auth-current-user-service';
+import { Router } from '@angular/router';
 
 export interface JWTTokensDTO {
   access_token: string;
@@ -24,6 +25,7 @@ export interface JsonResponseDTO<T> {
 export class AuthUserService {
   private apiUrl = API_URL + '/auth';
   private http = inject(HttpClient);
+  private router = inject(Router);
   private refreshService = inject(AuthRefreshTokenService);
   private currentUserService = inject(AuthCurrentUserService);
 
@@ -51,7 +53,10 @@ export class AuthUserService {
 
   logout(): void {
     this.refreshService.clearTokens();
+
     this.currentUserService.logout();
+    this.currentUserService.setCurrentUser(null);
+    this.router.navigate(['/login']);
   }
 
   public loadUserFromStorage() {
