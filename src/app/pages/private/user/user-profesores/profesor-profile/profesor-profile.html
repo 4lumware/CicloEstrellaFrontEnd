@@ -1,0 +1,171 @@
+<div class="teacher-profile-container">
+  <!-- Loader -->
+  @if (isLoading()) {
+    <div class="loader-container">
+      <mat-spinner diameter="50" color="accent"></mat-spinner>
+      <p>Cargando perfil del profesor...</p>
+    </div>
+  }
+
+  <!-- Contenido Principal -->
+  @if (!isLoading() && teacher()) {
+    <div class="profile-content">
+      <!-- Header con botón de volver -->
+      <div class="profile-header">
+        <button mat-icon-button (click)="goBack()" class="back-btn">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h1 class="teacher-name">
+          {{ teacher()!.firstName }}, {{ teacher()!.lastName }}
+        </h1>
+        <div class="rating-badge">
+          <span class="rating-text">Calificación General: {{ teacher()!.averageRating | number: '1.1-1' }}/10</span>
+          <mat-icon class="star-icon">star</mat-icon>
+        </div>
+      </div>
+
+      <!-- Información del Profesor -->
+      <div class="teacher-info-section">
+        <div class="teacher-image">
+          <img
+            [src]="teacher()!.profilePictureUrl || 'images/profesora.png'"
+            [alt]="teacher()!.firstName"
+            class="profile-img"
+          />
+        </div>
+
+        <div class="teacher-description">
+          <p>{{ teacher()!.generalDescription }}</p>
+        </div>
+      </div>
+
+      <!-- Características, Sedes y Cursos -->
+      <div class="teacher-details-grid">
+        <!-- Características Destacadas -->
+        <div class="detail-section">
+          <h3 class="section-title">
+            <mat-icon class="section-icon">local_offer</mat-icon>
+            Características Destacadas
+          </h3>
+          <div class="tags-container">
+            @if (topTags().length > 0) {
+              @for (tag of topTags(); track tag.id) {
+                <span class="tag-badge">{{ tag.tagName }}</span>
+              }
+            } @else {
+              <p class="no-data">No hay características destacadas aún</p>
+            }
+          </div>
+        </div>
+
+        <!-- Sedes -->
+        <div class="detail-section">
+          <h3 class="section-title">
+            <mat-icon class="section-icon">location_on</mat-icon>
+            Sedes
+          </h3>
+          <div class="campuses-grid">
+            @if (teacherCampuses().length > 0) {
+              @for (campus of teacherCampuses(); track campus.id) {
+                <div class="campus-card">
+                  <mat-icon class="campus-icon">school</mat-icon>
+                  <span class="campus-name">{{ campus.campusName }}</span>
+                </div>
+              }
+            } @else {
+              <p class="no-data">No hay sedes registradas</p>
+            }
+          </div>
+        </div>
+
+        <!-- Cursos Dictados -->
+        <div class="detail-section">
+          <h3 class="section-title">
+            <mat-icon class="section-icon">menu_book</mat-icon>
+            Cursos Dictados
+          </h3>
+          <div class="courses-display">
+            @if (teacherCourses().length > 0) {
+              @for (course of teacherCourses(); track course.id) {
+                <span class="course-badge">{{ course.courseName }}</span>
+              }
+            } @else {
+              <p class="no-data">No hay cursos registrados</p>
+            }
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Sección de Reseñas -->
+      <div class="reviews-section">
+        <div class="reviews-header">
+          <h2 class="reviews-title">Reseñas</h2>
+          <button mat-flat-button class="write-review-btn" (click)="openReviewModal()">
+            <mat-icon>edit</mat-icon>
+            Escribe una reseña
+          </button>
+        </div>
+
+        <!-- Buscador de Reseñas -->
+        <div class="search-reviews">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Ingrese palabras claves para buscar reseñas o tags</mat-label>
+            <input
+              matInput
+              [(ngModel)]="searchKeyword"
+              (keyup.enter)="onSearchReviews()"
+              placeholder="Buscar..."
+            />
+            <mat-icon matPrefix>search</mat-icon>
+            @if (searchKeyword()) {
+              <button matSuffix mat-icon-button (click)="searchKeyword.set(''); onSearchReviews()">
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+          </mat-form-field>
+          <button mat-icon-button (click)="onSearchReviews()" class="search-btn">
+            <mat-icon>search</mat-icon>
+          </button>
+        </div>
+
+        <!-- Loader de Reseñas -->
+        @if (isLoadingReviews()) {
+          <div class="reviews-loader">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Cargando reseñas...</p>
+          </div>
+        }
+
+        <!-- Lista de Reseñas -->
+        @if (!isLoadingReviews()) {
+          <div class="reviews-list">
+            @if (reviews().length === 0) {
+              <div class="no-reviews">
+                <mat-icon>rate_review</mat-icon>
+                <p>No hay reseñas disponibles</p>
+                <button mat-flat-button (click)="openReviewModal()">
+                  Sé el primero en escribir una reseña
+                </button>
+              </div>
+            } @else {
+              <!-- Dentro del loop de reviews -->
+              @for (review of filteredReviews(); track review.id) {
+                <app-review-card
+                  [review]="review"
+                  [isOwnReview]="isOwnReview(review)"
+                  [currentUserId]="currentUserId()"
+                  [availableReactions]="allReactions()"
+                  [reviewReactions]="reviewReactions().get(review.id) || []"
+                  (onEdit)="openReviewModal($event)"
+                  (onDelete)="deleteReview($event)"
+                  (onReaction)="handleReaction($event)"
+                />
+              }
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

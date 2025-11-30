@@ -1,39 +1,100 @@
+<!-- user-profesores.component.html -->
 <main class="centro">
-  <div class="search-container">
+  <div class="search-container mat-elevation-z2">
     <input
       type="text"
-      placeholder="Buscar profesor o curso..."
-      [(ngModel)]="searchQuery"
+      placeholder="Buscar profesor..."
+      [ngModel]="searchQuery()"
+      (ngModelChange)="searchQuery.set($event)"
+      (keyup.enter)="onSearchEnter()"
       id="searchBar"
     />
-    <button id="searchButton" (click)="search()">
+    <button id="searchButton" (click)="onSearchEnter()" mat-icon-button>
       <img src="images/lupa.png" alt="Buscar" />
     </button>
   </div>
 
   <div class="filtro">
-    <button id="filtroboton" (click)="toggleFiltro()">
+    <button id="filtroboton" (click)="toggleFiltro()" *ngIf="!showFiltro()">
       <img src="images/filtro.png" alt="Filtro" />Filtros
     </button>
   </div>
 
-  <app-filtro *ngIf="showFiltro"></app-filtro>
+  <app-filtro
+    *ngIf="showFiltro()"
+    (close)="toggleFiltro()"
+    (filtersApplied)="onFiltersApplied($event)">
+  </app-filtro>
 
-  <section class="profesores-seccion" *ngFor="let profesor of profesores">
-    <h2>{{ profesor.facultad }}</h2>
-    <div class="profesores-lista">
-      <div class="profesor" *ngFor="let item of profesor.items">
-        <img [src]="item.imagen" alt="{{ item.nombre }}" />
-        <div class="info">
-          <h3>{{ item.nombre }}</h3>
-          <p>Facultad Que Dicta: {{ item.facultad }}</p>
-          <p>Calificación: ⭐ {{ item.calificacion }}/10</p>
+  <div *ngIf="isLoading()" class="loader-container">
+    <mat-spinner diameter="50" color="accent"></mat-spinner>
+    <p>Buscando profesores...</p>
+  </div>
+
+  <section class="profesores-seccion" *ngIf="!isLoading()">
+    <h2 class="section-title">
+      <span *ngIf="!hasSearched() && profesores().length > 0">Profesores Destacados</span>
+      <span *ngIf="hasSearched() && profesores().length > 0">Resultados de la búsqueda 🔍</span>
+      <span *ngIf="profesores().length === 0">Resultados de la búsqueda 🔍</span>
+    </h2>
+
+    <div *ngIf="profesores().length === 0" class="no-results">
+      <p>No hay resultados de profesores</p>
+    </div>
+
+    <div class="profesores-lista" *ngIf="profesores().length > 0">
+      <mat-card *ngFor="let profe of profesores()" class="profesor-card" [routerLink]="['/private/profesor-profile', profe.id]">
+        <div class="card-img-wrapper">
+          <img
+            [src]="profe.profilePictureUrl || 'images/profesora.png'"
+            alt="{{ profe.firstName }}"
+            class="profe-img"
+          />
         </div>
-        <button class="add-button" (click)="addToProfile(item)">+</button>
-      </div>
+
+        <div class="info">
+          <h3 matTooltip="{{ profe.firstName }} {{ profe.lastName }}">
+            {{ profe.firstName }} {{ profe.lastName }}
+          </h3>
+
+          <p class="truncate-text" matTooltip="{{ getCareersDisplay(profe) }}">
+            <strong>Carrera:</strong> {{ getCareersDisplay(profe) }}
+          </p>
+
+          <p class="truncate-text" matTooltip="{{ getCoursesDisplay(profe) }}">
+            <strong>Dicta:</strong> {{ getCoursesDisplay(profe) }}
+          </p>
+
+          <p class="rating">
+            Calificación: ⭐ {{ profe.averageRating | number: '1.1-1' }}/5
+          </p>
+        </div>
+
+        <div class="card-actions">
+          <button
+            class="add-button"
+            (click)="addToProfile(profe)"
+            matTooltip="Agregar a biblioteca">
+            +
+          </button>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- ⭐ PAGINADOR -->
+    <div class="paginator-container" *ngIf="profesores().length > 0">
+      <app-shared-paginator-teachers
+        #paginator
+        [length]="totalElements()"
+        [pageIndex]="pageIndex()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        (page)="onPageChange($event)">
+      </app-shared-paginator-teachers>
     </div>
   </section>
 </main>
+
 <footer class="footerIntro">
   <div class="fraseFooter">
     <h2>Ahorra tiempo y esfuerzo</h2>
@@ -41,7 +102,12 @@
   <div class="faqSection">
     <h3 routerLink="/preguntas-frecuentes">¿Tienes preguntas? Haz Click Aquí</h3>
   </div>
-  <img class="ChatBot" src="/images/Chatbot.png" alt="Botcito" (click)="toggleChatbot()" />
+  <img
+    class="ChatBot"
+    src="/images/Chatbot.png"
+    alt="Botcito"
+    (click)="toggleChatbot()"
+  />
 </footer>
 
-<app-chatbot [visible]="chatbotVisible"></app-chatbot>
+<app-chatbot [visible]="chatbotVisible()"></app-chatbot>

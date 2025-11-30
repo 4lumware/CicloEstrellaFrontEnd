@@ -1,0 +1,355 @@
+/* review-modal.component.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Inria+Sans:wght@300;400;600;700&display=swap');
+
+.review-modal {
+  width: 700px;
+  max-width: 95vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inria Sans', sans-serif;
+  background: #ffffff;
+  border-radius: 16px;
+}
+
+/* ==================== HEADER ==================== */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px 24px 16px 24px;
+  border-bottom: 2px solid #e0e0e0;
+  background: linear-gradient(135deg, #f8f8f8 0%, #ffffff 100%);
+}
+
+.header-content {
+  flex: 1;
+}
+
+.modal-title {
+  margin: 0 0 8px 0;
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #4b2c5e;
+}
+
+.teacher-name {
+  margin: 0;
+  font-size: 1.1em;
+  font-weight: 400;
+  color: #666;
+}
+
+.close-btn {
+  color: #666 !important;
+  flex-shrink: 0;
+}
+
+.close-btn:hover {
+  color: #4b2c5e !important;
+  background: rgba(75, 44, 94, 0.05) !important;
+}
+
+/* ==================== CONTENT ==================== */
+.modal-content {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ==================== RATING SECTION ==================== */
+.rating-section {
+  margin-bottom: 24px;
+}
+
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.star-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #ffcb47 0%, #ffd666 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(255, 203, 71, 0.3);
+}
+
+.star-icon mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #ffffff;
+}
+
+.rating-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.rating-label {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #4b2c5e;
+}
+
+.slider-container {
+  padding: 0 8px;
+}
+
+/* Personalizar el slider de Material */
+::ng-deep .rating-slider {
+  width: 100%;
+}
+
+::ng-deep .rating-slider .mdc-slider__track {
+  height: 8px;
+}
+
+::ng-deep .rating-slider .mdc-slider__track--active_fill {
+  background-color: #ffcb47 !important;
+  border-color: #ffcb47 !important;
+}
+
+::ng-deep .rating-slider .mdc-slider__track--inactive {
+  background-color: #e0e0e0 !important;
+}
+
+::ng-deep .rating-slider .mdc-slider__thumb-knob {
+  background-color: #4b2c5e !important;
+  border-color: #4b2c5e !important;
+  width: 24px;
+  height: 24px;
+}
+
+::ng-deep .rating-slider .mdc-slider__value-indicator {
+  background-color: #4b2c5e !important;
+}
+
+/* ==================== DESCRIPTION SECTION ==================== */
+.description-section {
+  margin-bottom: 24px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+::ng-deep .description-section .mat-mdc-form-field {
+  font-family: 'Inria Sans', sans-serif !important;
+}
+
+::ng-deep .description-section textarea {
+  font-family: 'Inria Sans', sans-serif !important;
+  font-size: 0.95em;
+  line-height: 1.6;
+}
+
+/* ==================== TAGS SECTION ==================== */
+.tags-section {
+  margin-bottom: 16px;
+}
+
+.tags-search {
+  margin-bottom: 16px;
+}
+
+.search-field {
+  width: 100%;
+}
+
+::ng-deep .search-field .mat-mdc-form-field {
+  font-family: 'Inria Sans', sans-serif !important;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.results-label {
+  font-size: 1em;
+  font-weight: 600;
+  color: #4b2c5e;
+}
+
+.selected-count {
+  font-size: 0.9em;
+  color: #666;
+  background: #f0f0f0;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+.tags-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 12px;
+  background: #f8f8f8;
+  border-radius: 8px;
+}
+
+.tags-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tags-grid::-webkit-scrollbar-track {
+  background: #e0e0e0;
+  border-radius: 4px;
+}
+
+.tags-grid::-webkit-scrollbar-thumb {
+  background: #4b2c5e;
+  border-radius: 4px;
+}
+
+.tag-btn {
+  padding: 10px 18px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  border-radius: 20px;
+  font-size: 0.9em;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inria Sans', sans-serif;
+}
+
+.tag-btn:hover {
+  border-color: #4b2c5e;
+  background: #f5f0f8;
+  transform: translateY(-2px);
+}
+
+.tag-btn.selected {
+  border-color: #ffcb47;
+  background: #ffcb47;
+  color: #333;
+  font-weight: 600;
+}
+
+.no-results {
+  width: 100%;
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 20px;
+}
+
+/* ==================== FOOTER ACTIONS ==================== */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 2px solid #e0e0e0;
+  background: #f8f8f8;
+}
+
+.cancel-btn {
+  font-family: 'Inria Sans', sans-serif !important;
+  font-weight: 500 !important;
+  color: #666 !important;
+  border-color: #ccc !important;
+}
+
+.cancel-btn:hover {
+  background: #f0f0f0 !important;
+  border-color: #999 !important;
+}
+
+.publish-btn {
+  font-family: 'Inria Sans', sans-serif !important;
+  font-weight: 600 !important;
+  background: #2f1747 !important;
+  color: white !important;
+  padding: 0 32px !important;
+}
+
+.publish-btn:hover:not(:disabled) {
+  background: #4b2c5e !important;
+  box-shadow: 0 4px 12px rgba(47, 23, 71, 0.3);
+}
+
+.publish-btn:disabled {
+  background: #ccc !important;
+  color: #999 !important;
+  cursor: not-allowed;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .review-modal {
+    width: 100%;
+    max-width: 100vw;
+    border-radius: 0;
+  }
+
+  .modal-header {
+    padding: 20px 16px 12px 16px;
+  }
+
+  .modal-title {
+    font-size: 1.1em;
+  }
+
+  .teacher-name {
+    font-size: 1em;
+  }
+
+  .modal-content {
+    padding: 16px;
+  }
+
+  .star-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .star-icon mat-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .rating-label {
+    font-size: 1em;
+  }
+
+  .tags-grid {
+    max-height: 200px;
+  }
+
+  .modal-actions {
+    padding: 12px 16px;
+    flex-direction: column-reverse;
+  }
+
+  .cancel-btn,
+  .publish-btn {
+    width: 100%;
+  }
+}
+
+/* ==================== DIALOG CONTAINER ==================== */
+::ng-deep .mat-mdc-dialog-container {
+  border-radius: 16px !important;
+  padding: 0 !important;
+}
+
+::ng-deep .mat-mdc-dialog-surface {
+  border-radius: 16px !important;
+}

@@ -59,4 +59,51 @@ export class AuthCurrentUserService {
   get currentUserValue() {
     return this._currentUser.value;
   }
+
+  getCurrentUserId(): number | null {
+    const user = this._currentUser.value;
+    return user?.id || null;
+  }
+
+  getCurrentUser(): StaffModel | StudentModel | null {
+    return this._currentUser.value;
+  }
+
+
+  isAuthenticated(): boolean {
+    return this._currentUser.value !== null;
+  }
+
+
+  isStaff(): boolean {
+    const role = localStorage.getItem('user_role');
+    return role === 'STAFF';
+  }
+
+
+  isStudent(): boolean {
+    const role = localStorage.getItem('user_role');
+    return role === 'STUDENT';
+  }
+
+
+  getUserRole(): 'STAFF' | 'STUDENT' | null {
+    const role = localStorage.getItem('user_role');
+    return role as 'STAFF' | 'STUDENT' | null;
+  }
+
+  getUsername(): string | null {
+    const user = this._currentUser.value;
+    return (user as any)?.username || null;
+  }
+
+  getEmail(): string | null {
+    const user = this._currentUser.value;
+    return (user as any)?.email || null;
+  }
+
+  getProfilePicture(): string | null {
+    const user = this._currentUser.value;
+    return (user as any)?.profilePictureUrl || null;
+  }
 }

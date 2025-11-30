@@ -1,190 +1,165 @@
-/* Estilo para la barra de búsqueda */
-.search-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 30px auto;
-    width: 85%;
-    max-width: 800px;
-    background-color: #ffffff;
-    border-radius: 30px;
-    padding: 5px 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: "Inria Sans", sans-serif;
-}
-
-#searchBar {
-    width: 90%;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 30px;
-    font-size: 1rem;
-    color: #333;
-    outline: none;
-    background-color: #f5f5f5;
-    transition: background-color 0.3s ease;
-    font-family: inherit;
-}
-
-#searchBar:focus {
-    background-color: #ffffff;
-    border: 2px solid #FFCB47;
-}
-
-#searchButton {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    margin-left: 10px;
-}
-
-#searchButton img {
-    width: 20px;
-    height: 20px;
-    filter: none;
-    fill: #333;
-    transition: transform 0.3s ease;
-}
-
-#searchButton:hover img {
-    transform: scale(1.2);
-}
-
-#filtroboton {
-    background-color: transparent;
-    border: none;
-    color: #4b2c5e;
-    font-size: 1em;
-    cursor: pointer;
-    display: flex;
-    padding: 10px;
-    align-items: center;
-    justify-content: left;
-    margin: 2px auto;
-    font-family: inherit;
-    position: absolute;
-    right: 10px;
-    top: 25%;
-    margin-top: 15px;
-    font-family: 'Inria Sans', sans-serif;
-}
-
+/* --- CONTENEDOR PRINCIPAL (Tu estilo original) --- */
 .filtro-panel {
-    width: 80%;
-    position: relative;
-    border-radius: 15px;
-    background-color: #ced6ee;
-    padding: 20px;
-    margin: 20px auto;
-    box-sizing: border-box;
+  background-color: #ced6ee; /* Tu fondo lila original */
+  border-radius: 15px;
+  padding: 24px;
+  margin: 20px auto;
+  width: 80%; /* Tu ancho original */
+  max-width: 900px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
 }
 
+/* --- HEADER --- */
 .filtro-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(75, 44, 94, 0.1); /* Línea sutil morada */
+  padding-bottom: 10px;
 }
 
 .filtro-header h2 {
-    font-size: 1.5em;
-    color: #4b2c5e;
-    margin: 0;
+  font-size: 1.5em;
+  color: #4b2c5e; /* Tu morado */
+  margin: 0;
+  font-family: 'Inria Sans', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-#cerrar-filtro {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5em;
-    color: #4b2c5e;
-    width: 35px;
-    height: 35px;
+/* Botón cerrar (Personalizado sobre Material) */
+.close-btn {
+  color: #4b2c5e !important;
 }
 
+/* --- LAYOUT DE OPCIONES --- */
 .filtro-opciones {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 25px;
 }
 
 .filtro-opcion {
-    flex: 1;
-    min-width: 150px;
-    display: flex;
-    flex-direction: column;
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
 }
 
-.sede, .modalidad-opciones {
-    display: flex;
-    gap: 10px;
+.full-width {
+  width: 100%;
+  flex: 1 1 100%;
 }
 
-.sede-boton, .modalidad-boton {
-    padding: 8px 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.9em;
-    color: #333;
-    transition: background-color 0.3s, color 0.3s;
+.section-label {
+  font-size: 1.1em;
+  color: #4b2c5e;
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-family: 'Inria Sans', sans-serif;
 }
 
-.sede-boton.activo, .modalidad-boton.activo {
-    background-color: #ffcb47;
-    color: #fff;
-    border: none;
+/* --- BOTONES DE SEDE (Adaptando Material a tu estilo) --- */
+.sede-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.sede-boton:hover, .modalidad-boton:hover {
-    background-color: transparent;
-    color: #333;
+/* Estilo base para el botón de sede (Material Stroked) */
+.sede-btn {
+  font-family: 'Inria Sans', sans-serif !important;
+  font-weight: 500;
+  border-radius: 8px !important; /* Tu radio de borde original */
+  border-color: #ccc !important;
+  background-color: #fff !important;
+  color: #333 !important;
+  transition: all 0.3s ease;
 }
 
-.filtro-opcion label {
-    font-size: 1em;
-    color: #4b2c5e;
-    margin-bottom: 5px;
-    font-family: 'Inria Sans';
+/* ESTADO ACTIVO (Cuando es mat-flat-button) */
+/* Sobrescribimos el color 'accent' o 'primary' de material con TU amarillo */
+.sede-btn.mat-mdc-unelevated-button {
+  background-color: #ffcb47 !important; /* Tu amarillo */
+  color: #fff !important; /* Tu texto blanco */
+  border: 1px solid #e0b035 !important;
 }
 
-.filtro-opcion select {
-    padding: 8px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    font-family: inherit;
+/* --- INPUTS / SELECTS (Personalizando Mat-Form-Field) --- */
+/* Forzamos el fondo blanco en los inputs para que se vea como tu diseño */
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: #fff !important;
+  border-radius: 10px !important;
+  border: 1px solid #ccc;
 }
 
-#cerrar-filtro img {
-    width: 35px;
-    height: 35px;
-    background-color: none;
+/* Quitamos la línea inferior fea de Material por defecto */
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none; /* Oculta espacio de error si no lo usas para ahorrar espacio */
+}
+::ng-deep .mdc-line-ripple {
+  display: none;
 }
 
+/* Color del Label Flotante */
+::ng-deep .mdc-floating-label,
+::ng-deep .mat-mdc-select-value {
+  color: #4b2c5e !important; /* Tu morado en el texto */
+  font-family: 'Inria Sans', sans-serif !important;
+}
+
+/* Color del icono de flecha */
+::ng-deep .mat-mdc-select-arrow {
+  color: #4b2c5e !important;
+}
+
+/* --- BOTONES DE ACCIÓN (Pie de página) --- */
 .filtro-botones {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
+  display: flex;
+  justify-content: space-around; /* Tu distribución original */
+  margin-top: 20px;
+  gap: 20px;
 }
 
-#aplicar-filtros, #borrar-filtros {
-    border-radius: 12px;
-    padding: 10px 20px;
-    font-family: inherit;
-    border: none;
-    cursor: pointer;
+.action-btn {
+  border-radius: 12px !important; /* Tu radio original */
+  padding: 22px 20px !important; /* Un poco más altos */
+  font-family: 'Inria Sans', sans-serif !important;
+  font-size: 1em !important;
+  width: 100%;
+  max-width: 200px;
 }
 
-#aplicar-filtros {
-    background-color: #ffcb47;
-    color: #333;
+/* Botón Aplicar (Amarillo) */
+.btn-aplicar {
+  background-color: #ffcb47 !important;
+  color: #333 !important; /* Texto oscuro para mejor lectura */
+  font-weight: 600;
 }
 
-#borrar-filtros {
-    background-color: #2f1747;
-    color: #ffffff;
+/* Botón Borrar/Limpiar (Morado) */
+.btn-borrar {
+  background-color: #2f1747 !important;
+  color: #ffffff !important;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .filtro-panel {
+    width: 95%;
+    padding: 15px;
+  }
+  .filtro-opciones {
+    flex-direction: column;
+  }
+  .filtro-botones {
+    flex-direction: column;
+  }
+  .action-btn {
+    max-width: 100%;
+  }
 }

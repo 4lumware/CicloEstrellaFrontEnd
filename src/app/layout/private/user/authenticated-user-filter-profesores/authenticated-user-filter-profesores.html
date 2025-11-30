@@ -1,36 +1,67 @@
-<div *ngIf="showFiltro" id="filtro-panel" class="filtro-panel">
+<div class="filtro-panel mat-elevation-z4">
   <div class="filtro-header">
-    <h2>Filtros</h2>
-    <button id="cerrar-filtro" class="cerrar-boton" (click)="closeFiltro()">
-      <img src="images/botoncerrarfiltro.png" alt="Cerrar Filtro">
+    <h2><mat-icon inline>filter_list</mat-icon> Filtros</h2>
+    <button mat-icon-button (click)="closeFiltro()" class="close-btn">
+      <mat-icon>close</mat-icon>
     </button>
   </div>
+
   <div class="filtro-opciones">
-    <div class="filtro-opcion">
-      <label>Sede:</label>
-      <div class="sede" id="sede">
-        <button class="sede-boton" *ngFor="let sede of sedes" (click)="selectSede(sede)">{{ sede }}</button>
+
+    <div class="filtro-opcion full-width">
+      <label class="section-label">Sede:</label>
+      <div class="sede-container">
+        <ng-container *ngFor="let campus of campuses">
+          <button *ngIf="selectedCampusId === campus.id"
+                  mat-flat-button
+                  class="sede-btn"
+                  (click)="selectSede(campus.id)">
+            {{ campus.campusName }}
+          </button>
+          <button *ngIf="selectedCampusId !== campus.id"
+                  mat-stroked-button
+                  class="sede-btn"
+                  (click)="selectSede(campus.id)">
+            {{ campus.campusName }}
+          </button>
+        </ng-container>
       </div>
     </div>
+
     <div class="filtro-opcion">
-      <label>Modalidad:</label>
-      <div class="modalidad-opciones" id="modalidad">
-        <button class="modalidad-boton" *ngFor="let modalidad of modalidades" (click)="selectModalidad(modalidad)">
-          {{ modalidad }}
-        </button>
-      </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Curso</mat-label>
+        <mat-select [(ngModel)]="selectedCourseId">
+          <mat-option [value]="null">Todos los cursos</mat-option>
+          <mat-option *ngFor="let course of courses" [value]="course.id">
+            {{ course.courseName }}
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix>book</mat-icon>
+      </mat-form-field>
     </div>
+
     <div class="filtro-opcion">
-      <label>Facultad:</label>
-      <select id="facultad-select">
-        <option value="">Seleccionar Facultad</option>
-        <option *ngFor="let facultad of facultades" [value]="facultad">{{ facultad }}</option>
-      </select>
+      <mat-form-field appearance="outline">
+        <mat-label>Carreras</mat-label>
+        <mat-select [(ngModel)]="selectedCareerId">
+          <mat-option [value]="null">Todas las carreras</mat-option>
+          <mat-option *ngFor="let career of careers" [value]="career.id">
+            {{ career.careerName }}
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix>school</mat-icon>
+      </mat-form-field>
     </div>
+
   </div>
+
   <div class="filtro-botones">
-    <button id="aplicar-filtros" (click)="applyFilters()">Aplicar Filtros</button>
-    <button id="borrar-filtros" (click)="resetFilters()">Borrar Filtros</button>
+    <button mat-flat-button (click)="applyFilters()" class="action-btn btn-aplicar">
+      Aplicar Filtros
+    </button>
+    <button mat-flat-button (click)="resetFilters()" class="action-btn btn-borrar">
+      Borrar Filtros
+    </button>
   </div>
 </div>
-

@@ -1,6 +1,7 @@
 import { CampusModel } from '../campuses/campuses';
 import { CareerModel } from '../careers/careers';
 import { CourseModel } from '../courses/courses';
+import {TagModel} from '../tags/tags';
 
 export interface TeacherModel {
   id: number;
@@ -9,6 +10,7 @@ export interface TeacherModel {
   generalDescription: string;
   profilePictureUrl: string;
   averageRating: number;
+  tags: TagModel[];
   careers: CareerModel[];
   campuses: CampusModel[];
   courses: CourseModel[];
@@ -44,3 +46,12 @@ export interface TeacherParamsFilter {
   page?: number;
   size?: number;
 }
+
+export interface TeacherSearchFilter {
+  name?: string;
+  campus?: string;
+  career?: string;
+  course?: string;
+}
+
+

@@ -1,13 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { API_URL } from '../../constants/api';
-import { Observable } from 'rxjs';
+import {catchError, map, Observable, of} from 'rxjs';
 import { TagModel } from '../../models/tags/tags';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   TeacherModel,
   TeacherModelCreate,
   TeacherModelUpdate,
-  TeacherParamsFilter,
+  TeacherParamsFilter, TeacherSearchFilter,
 } from '../../models/teachers/teacher';
 import { ApiResponse, PageResponse } from '../../models/responses/response';
 
@@ -46,5 +46,12 @@ export class TeacherService {
     teacher: TeacherModelUpdate
   ): Observable<ApiResponse<TeacherModelUpdate>> {
     return this.http.put<ApiResponse<TeacherModelUpdate>>(`${this.apiUrl}/${teacherId}`, teacher);
+  }
+
+
+  public getById(id: number): Observable<TeacherModel> {
+    return this.http.get<ApiResponse<TeacherModel>>(`${this.apiUrl}/${id}`).pipe(
+      map(response => response.data)
+    );
   }
 }
