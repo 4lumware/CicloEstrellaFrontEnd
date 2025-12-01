@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { LibraryService } from '../../../../core/services/library/library-service';
-import { LibraryResponse } from '../../../../core/models/library/library';
+import {FormalityDetails, LibraryResponse, TeacherDetails} from '../../../../core/models/library/library';
 import {MatIcon} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
 import {MatIconButton} from '@angular/material/button';
 import {MatCard, MatCardModule} from '@angular/material/card';
 import {CommonModule, DatePipe, NgIf} from '@angular/common';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {AuthCurrentUserService} from '../../../../core/services/users/auth/auth-current-user-service';
 
 @Component({
   selector: 'app-library',
@@ -24,56 +26,96 @@ import {CommonModule, DatePipe, NgIf} from '@angular/common';
   styleUrls: ['./library.css']
 })
 export class Library implements OnInit {
+  private libraryService = inject(LibraryService);
+  private authService = inject(AuthCurrentUserService);
+  private snackBar = inject(MatSnackBar);
 
-  currentUserId: number = 1; // 🚨 ID harcodeado (Deberías sacarlo de tu AuthService/Token)
+  currentUserId: number | null = null;
 
-  // Listas separadas para el HTML
-  profesoresGuardados: LibraryResponse[] = [];
-  tramitesGuardados: LibraryResponse[] = [];
+  // Listas separadas con tipos específicos
+  profesoresGuardados: Array<LibraryResponse & { details: TeacherDetails }> = [];
+  tramitesGuardados: Array<LibraryResponse & { details: FormalityDetails }> = [];
 
-  // Variables para la Nota General (Amarilla)
+  // Variables para la Nota General
   isGeneralNoteOpen: boolean = false;
   generalNote: string = '';
 
-  constructor(private libraryService: LibraryService) { }
-
   ngOnInit(): void {
-    this.loadLibrary();
-    // Cargar nota general del LocalStorage (ya que el backend 'Favorites' no tiene endpoint para esto)
+    this.currentUserId = this.authService.getCurrentUserId();
+
+    if (this.currentUserId) {
+      this.loadLibrary();
+    }
+
+    // Cargar nota general del LocalStorage
     this.generalNote = localStorage.getItem('library_general_note') || '';
   }
 
-  // --- Carga de Datos ---
   loadLibrary(): void {
+    if (!this.currentUserId) return;
+
+    console.log('🔍 Cargando biblioteca para usuario:', this.currentUserId);
+
     this.libraryService.getLibrary(this.currentUserId).subscribe({
       next: (items) => {
-        // Separamos la lista única que viene del backend en dos arreglos
-        this.profesoresGuardados = items.filter(i => i.favoriteType === 'TEACHER');
-        this.tramitesGuardados = items.filter(i => i.favoriteType === 'FORMALITY');
+        console.log('📦 Datos recibidos del backend:', items);
+
+        // ⭐ CAMBIAR: Usar "type" en lugar de "favoriteType"
+        this.profesoresGuardados = items
+          .filter((i) => i.type === 'TEACHER')
+          .map((i) => {
+            console.log('👨‍🏫 Profesor encontrado:', i);
+            return {
+              ...i,
+              details: i.favorite as TeacherDetails,
+            };
+          });
+
+        this.tramitesGuardados = items
+          .filter((i) => i.type === 'FORMALITY')
+          .map((i) => {
+            console.log('📄 Trámite encontrado:', i);
+            return {
+              ...i,
+              details: i.favorite as FormalityDetails,
+            };
+          });
+
+        console.log('✅ Profesores guardados:', this.profesoresGuardados);
+        console.log('✅ Trámites guardados:', this.tramitesGuardados);
       },
-      error: (err) => console.error('Error cargando biblioteca:', err)
+      error: (err) => {
+        console.error('❌ Error cargando biblioteca:', err);
+        this.snackBar.open('Error al cargar la biblioteca', 'Cerrar', {
+          duration: 3000,
+        });
+      },
     });
   }
 
-  // --- Acciones ---
-
   deleteItem(favoriteId: number): void {
-    if(confirm('¿Estás seguro de eliminar este elemento?')) {
+    if (!this.currentUserId) return;
+
+    if (confirm('¿Estás seguro de eliminar este elemento?')) {
       this.libraryService.removeFromLibrary(this.currentUserId, favoriteId).subscribe({
         next: () => {
-          this.loadLibrary(); // Recargar la lista
+          this.snackBar.open('Elemento eliminado', 'Cerrar', { duration: 2000 });
+          this.loadLibrary();
         },
-        error: (err) => alert('Error al eliminar')
+        error: (err) => {
+          console.error('Error al eliminar:', err);
+          this.snackBar.open('Error al eliminar', 'Cerrar', { duration: 3000 });
+        },
       });
     }
   }
 
-  // --- Lógica Nota General (Sticky Note) ---
   toggleGeneralNote(): void {
     this.isGeneralNoteOpen = !this.isGeneralNoteOpen;
   }
 
   saveGeneralNote(): void {
     localStorage.setItem('library_general_note', this.generalNote);
+    this.snackBar.open('Nota guardada', 'Cerrar', { duration: 1500 });
   }
 }

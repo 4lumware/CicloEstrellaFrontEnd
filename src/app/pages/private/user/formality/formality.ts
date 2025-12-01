@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { FormalityService } from '../../../../core/services/formalities/formality-service';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {MatIcon} from '@angular/material/icon';
@@ -11,6 +11,11 @@ import {PageResponse} from '../../../../core/models/responses/response';
 import {MatInputModule} from '@angular/material/input';
 import { catchError, of } from 'rxjs';
 import {Router} from '@angular/router';
+import {LibraryService} from '../../../../core/services/library/library-service';
+import {AuthCurrentUserService} from '../../../../core/services/users/auth/auth-current-user-service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatDialog} from '@angular/material/dialog';
+import {AddFavoriteDialog} from '../../../../shared/components/add-favorite-dialog/add-favorite-dialog';
 
 @Component({
   selector: 'app-formality-modal-component',
@@ -30,57 +35,62 @@ import {Router} from '@angular/router';
   styleUrls: ['./formality.css']
 })
 export class Formality implements OnInit {
+  private tramitesService = inject(FormalityService);
+  private libraryService = inject(LibraryService); // ⭐ AGREGAR
+  private authService = inject(AuthCurrentUserService); // ⭐ AGREGAR
+  private router = inject(Router);
+  private snackBar = inject(MatSnackBar); // ⭐ AGREGAR
+  private dialog = inject(MatDialog); // ⭐ AGREGAR
+
   searchTerm: string = '';
 
   allTramites: FormalityModel[] = [];
   tramitesExistentesFiltrados: FormalityModel[] = [];
   tramitesDisponiblesFiltrados: FormalityModel[] = [];
 
-  constructor(
-    private tramitesService: FormalityService,
-    private router: Router
-  ) {}
+  // ⭐ AGREGAR
+  currentUserId: number | null = null;
 
   ngOnInit(): void {
+    // ⭐ Obtener ID del usuario actual
+    this.currentUserId = this.authService.getCurrentUserId();
+
     this.loadTramites();
   }
-
-  /**
-   * Carga todos los trámites del backend usando el método index().
-   * Se corrige el error de tipado de PageResponse.
-   */
-// En formality.ts, dentro de loadTramites
 
   loadTramites(search: string = ''): void {
     const params: FormalityParamsFilter = {
       search: search,
     } as FormalityParamsFilter;
 
-    this.tramitesService.index(params).pipe(
-      catchError(error => {
-        console.error('Error HTTP al cargar trámites:', error);
+    this.tramitesService
+      .index(params)
+      .pipe(
+        catchError((error) => {
+          console.error('Error HTTP al cargar trámites:', error);
 
-        // 🚨 CORRECCIÓN TS2352: Construimos la respuesta anidada que PageResponse exige.
-        // Simulamos un objeto de paginación vacío DENTRO de la propiedad 'data'.
-        const emptyResponse: PageResponse<FormalityModel[]> = {
-          status: error.status || 500,
-          message: 'Error al cargar los datos.',
-          data: { // <-- 'data' ahora es un objeto, no un array
-            totalElements: 0,
-            totalPages: 0,
-            size: 0,
-            content: [], // <-- El array vacío va dentro de 'content'
-            number: 0, sort: {}, first: true, last: true, numberOfElements: 0, pageable: {}, empty: true
-            // Asegúrate de que todas las propiedades requeridas por el objeto de paginación (Pageable) dentro de 'data' estén aquí.
-          } as any, // Usamos 'as any' porque el objeto de paginación dentro de 'data' es complejo.
-        } as PageResponse<FormalityModel[]>;
-        return of(emptyResponse);
-      })
-    )
+          const emptyResponse: PageResponse<FormalityModel[]> = {
+            status: error.status || 500,
+            message: 'Error al cargar los datos.',
+            data: {
+              totalElements: 0,
+              totalPages: 0,
+              size: 0,
+              content: [],
+              number: 0,
+              sort: {},
+              first: true,
+              last: true,
+              numberOfElements: 0,
+              pageable: {},
+              empty: true,
+            } as any,
+          } as PageResponse<FormalityModel[]>;
+          return of(emptyResponse);
+        })
+      )
       .subscribe({
         next: (response: PageResponse<FormalityModel[]>) => {
-
-          // 🚨 SOLUCIÓN FINAL: Accedemos a la propiedad anidada: response.data.content
           const dataArray = (response.data as any).content;
 
           if (Array.isArray(dataArray)) {
@@ -96,49 +106,30 @@ export class Formality implements OnInit {
           this.allTramites = [];
           this.splitAndFilterTramites('');
           console.error('Fallo en la suscripción final:', err);
-        }
+        },
       });
   }
-  /**
-   * Realiza el filtrado local de los trámites y los divide en dos secciones.
-   */
+
   splitAndFilterTramites(term: string): void {
     const lowerTerm = term.toLowerCase();
     const today = new Date();
-    // 💡 Establecemos la hora a medianoche para solo comparar la fecha
     today.setHours(0, 0, 0, 0);
 
-    // Filtro principal por término de búsqueda (ya seguro)
-    const filteredBySearch = this.allTramites.filter(t =>
-      (t.title?.toLowerCase().includes(lowerTerm) ?? false) ||
-      (t.description?.toLowerCase().includes(lowerTerm) ?? false)
+    const filteredBySearch = this.allTramites.filter(
+      (t) =>
+        (t.title?.toLowerCase().includes(lowerTerm) ?? false) ||
+        (t.description?.toLowerCase().includes(lowerTerm) ?? false)
     );
 
-    // 1. Trámites Disponibles Actualmente (Filtro por FECHA)
-    this.tramitesDisponiblesFiltrados = filteredBySearch.filter(t => {
-      // Los campos startDate y endDate vienen como tipo Date en tu modelo.
-      // Si vienen como strings del backend, se recomienda convertirlos a Date aquí.
-
-      // 🚨 Es CRÍTICO que startDate y endDate sean objetos Date.
+    this.tramitesDisponiblesFiltrados = filteredBySearch.filter((t) => {
       const start = new Date(t.startDate);
       const end = new Date(t.endDate);
-
-      // La disponibilidad es: (Hoy >= Fecha Inicio) AND (Hoy <= Fecha Fin)
       return start <= today && end >= today;
     });
 
-    // 2. Trámites Existentes (Filtro por Tipo/Propósito)
-    // Usamos el resto de los trámites que no están en "Disponibles Actualmente"
-    // para esta sección, asumiendo que "Existentes" es un concepto más amplio
-    // que incluye trámites fuera de su ventana de disponibilidad actual.
-
-    this.tramitesExistentesFiltrados = filteredBySearch.filter(t => {
-      // Aseguramos que solo incluya trámites que NO están actualmente disponibles
-      // Y además, si tienes alguna propiedad de tipo (e.g., t.type === 'permanente'), la usas aquí.
+    this.tramitesExistentesFiltrados = filteredBySearch.filter((t) => {
       const start = new Date(t.startDate);
       const end = new Date(t.endDate);
-
-      // Está Existente si NO está disponible actualmente (o si la fecha fin ya pasó)
       return !(start <= today && end >= today);
     });
   }
@@ -147,8 +138,55 @@ export class Formality implements OnInit {
     this.splitAndFilterTramites(this.searchTerm);
   }
 
-  addTramite(tramite: FormalityModel): void {
-    console.log('Trámite seleccionado para añadir:', tramite);
+  // ⭐ ACTUALIZAR: Agregar trámite a biblioteca
+  addTramite(event: Event, tramite: FormalityModel): void {
+    event.stopPropagation(); // Evitar navegación al perfil
+
+    if (!this.currentUserId) {
+      this.snackBar.open('Debes iniciar sesión para agregar favoritos', 'Cerrar', {
+        duration: 3000,
+      });
+      return;
+    }
+
+    // Abrir dialog para agregar nota
+    const dialogRef = this.dialog.open(AddFavoriteDialog, {
+      width: '500px',
+      data: {
+        title: `Agregar "${tramite.title}" a Favoritos`,
+        type: 'FORMALITY',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((note: string | undefined) => {
+      if (note !== undefined && this.currentUserId) {
+        this.libraryService
+          .addToLibrary(this.currentUserId, {
+            type: 'FORMALITY',
+            referenceId: tramite.idFormality,
+          })
+          .subscribe({
+            next: () => {
+              this.snackBar.open(`"${tramite.title}" agregado a tu biblioteca`, 'OK', {
+                duration: 2000,
+              });
+            },
+            error: (err) => {
+              console.error('Error adding to library:', err);
+
+              if (err.status === 400 && err.error?.message?.includes('ya existe')) {
+                this.snackBar.open('Este trámite ya está en tus favoritos', 'Cerrar', {
+                  duration: 3000,
+                });
+              } else {
+                this.snackBar.open('Error al agregar a favoritos', 'Cerrar', {
+                  duration: 3000,
+                });
+              }
+            },
+          });
+      }
+    });
   }
 
   viewFormalityProfile(tramite: FormalityModel): void {
