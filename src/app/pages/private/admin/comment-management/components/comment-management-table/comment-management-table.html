@@ -1,0 +1,131 @@
+<section class="section-table-container">
+  <!-- Search Panel -->
+  <app-comment-management-search-form
+    (applyFilters)="onSearchApply($event)"
+    (clearFilters)="onSearchClear()"
+  />
+
+  <!-- Search Results Info -->
+  <div class="search-results-info">
+    <mat-icon>info</mat-icon>
+    <span>Mostrando {{ size() }} de {{ totalItems() }} resultados</span>
+  </div>
+
+  <!-- Actions Header -->
+  <div class="header-actions">
+    <p class="p-selected-comment">
+      Comentarios Seleccionados:
+      <span class="section-count-comment">{{ selectedRows().length }}</span>
+    </p>
+    <div class="header-actions-buttons">
+      <button
+        mat-icon-button
+        color="primary"
+        matTooltip="Refrescar tabla"
+        (click)="loadComments(); $event.stopPropagation()"
+        aria-label="Refrescar tabla"
+        [attr.aria-busy]="isRefreshing()"
+        [disabled]="isRefreshing()"
+      >
+        <mat-icon [class.spin]="isRefreshing()">refresh</mat-icon>
+      </button>
+      @if (selectedRows().length) {
+      <button
+        mat-raised-button
+        color="warn"
+        matTooltip="Eliminar seleccionados"
+        (click)="deleteSelected(); $event.stopPropagation()"
+        aria-label="Eliminar seleccionados"
+        [disabled]="isRefreshing()"
+        class="delete-selected-button"
+      >
+        <mat-icon>delete_sweep</mat-icon>
+        Eliminar Seleccionados ({{ selectedRows().length }})
+      </button>
+      }
+    </div>
+  </div>
+
+  <!-- Data Table Card -->
+  <mat-card class="dashboard-card">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource()" class="comment-table">
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let comment">{{ comment.id }}</td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="author">
+            <th mat-header-cell *matHeaderCellDef>Autor</th>
+            <td class="author-comment-container" mat-cell *matCellDef="let comment">
+              <span> {{ comment.author.username }} </span>
+            </td>
+          </ng-container>
+
+          <!-- Formality Title -->
+
+          <ng-container matColumnDef="formalityTitle">
+            <th mat-header-cell *matHeaderCellDef>Título del Tramite</th>
+            <td mat-cell *matCellDef="let comment">{{ comment.formality.title }}</td>
+          </ng-container>
+
+          <!-- Created Date Column -->
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef>Fecha Creación</th>
+            <td mat-cell *matCellDef="let comment">
+              {{ comment.createdAt | date : 'short' }}
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let comment" class="actions-cell">
+              <button
+                mat-icon-button
+                color="primary"
+                matTooltip="Ver Detalle del Comentario"
+                class="action-button"
+                (click)="openDetail(comment); $event.stopPropagation()"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                matTooltip="Eliminar Comentario"
+                class="action-button"
+                (click)="$event.stopPropagation(); onDeleteComment(comment)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            class="table-row"
+            (click)="onRowClick(row)"
+            [class.selected]="isSelected(row)"
+            [attr.aria-selected]="isSelected(row)"
+            tabindex="0"
+            (keydown.enter)="onRowClick(row)"
+          ></tr>
+        </table>
+      </div>
+
+      <!-- Paginator -->
+      <app-shared-paginator
+        [length]="totalItems()"
+        [allPageSizeOptions]="[5, 10, 25, 50, 100]"
+        (page)="onPageChange($event)"
+        class="table-paginator"
+      ></app-shared-paginator>
+    </mat-card-content>
+  </mat-card>
+</section>

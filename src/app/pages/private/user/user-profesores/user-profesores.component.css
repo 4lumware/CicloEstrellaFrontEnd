@@ -1,326 +1,246 @@
 @import url('https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Poppins:wght@100;400;500;600;700;800&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    text-decoration: none;
-    list-style: none;
-}
-
-body {
-    background-color: #2F1747;
-    font-family: "Inria Sans", sans-serif;
-}
-
+/* --- Estilos Generales --- */
 .centro {
-    background-color: #ffffff;
-    padding: 30px
+  background-color: #ffffff;
+  padding: 30px;
+  min-height: 80vh;
+  font-family: "Inria Sans", sans-serif;
 }
 
-/* Estilo para la barra de búsqueda */
+/* --- Barra de Búsqueda --- */
 .search-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 30px auto;
-    width: 85%;
-    max-width: 800px;
-    background-color: #ffffff;
-    border-radius: 30px;
-    padding: 5px 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: "Inria Sans", sans-serif;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 30px auto;
+  width: 85%;
+  max-width: 800px;
+  background-color: #ffffff;
+  border-radius: 30px;
+  padding: 5px 15px;
+  /* Sombras suaves */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 #searchBar {
-    width: 90%;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 30px;
-    font-size: 1rem;
-    color: #333;
-    outline: none;
-    background-color: #f5f5f5;
-    transition: background-color 0.3s ease;
-    font-family: inherit;
-}
-
-#searchBar:focus {
-    background-color: #ffffff;
-    border: 2px solid #FFCB47;
+  width: 90%;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  color: #333;
+  outline: none;
+  background-color: transparent; /* Fondo transparente para integrar con container */
+  font-family: inherit;
 }
 
 #searchButton {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    margin-left: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
 }
 
 #searchButton img {
-    width: 20px;
-    height: 20px;
-    filter: none;
-    fill: #333;
-    transition: transform 0.3s ease;
+  width: 20px;
+  height: 20px;
 }
 
-#searchButton:hover img {
-    transform: scale(1.2);
+/* --- Botón Filtro --- */
+#filtroboton {
+  background-color: transparent;
+  border: none;
+  color: #4b2c5e;
+  font-size: 1em;
+  cursor: pointer;
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  justify-content: flex-end; /* Alineado a la derecha como en tu diseño */
+  margin: 2px auto;
+  width: 85%;
+  max-width: 800px;
+  font-family: 'Inria Sans', sans-serif;
+  font-weight: bold;
 }
 
-#filtroboton{
-    background-color: transparent;
-    border: none;
-    color: #4b2c5e;
-    font-size: 1em;
-    cursor: pointer;
-    display: flex;
-    padding: 10px;
-    align-items: center;
-    justify-content: left;
-    margin: 2px auto;
-    font-family: inherit;
-    position: absolute;
-    right: 10px;
-    top: 25%;
-    margin-top: 15px;
-    font-family: 'Inria Sans', sans-serif;
+#filtroboton img {
+  margin-right: 5px;
+  width: 20px;
 }
+
+/* --- Sección de Resultados --- */
 .profesores-seccion {
-    margin: 20px;
-    padding: 20px;
-    margin-bottom: 5px;
-    color:#333
+  margin: 20px auto;
+  width: 90%;
+  max-width: 1200px;
+  color: #333;
 }
 
+.section-title {
+  color: #4b2c5e;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #FFCB47; /* Detalle amarillo */
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.no-results {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* --- Grid de Tarjetas (Reemplaza el scroll horizontal si prefieres grid) --- */
+/* Si prefieres scroll horizontal como en el original, usa display: flex; overflow-x: auto; */
 .profesores-lista {
-    display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    padding-top: 10px;
-    padding-bottom: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  padding-bottom: 20px;
 }
 
-.profesor {
-    display: flex;
-    align-items: center;
-    background-color: #f8f8f8;
-    border-radius: 10px;
-    padding: 15px;
-    width: 250px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* --- Card de Profesor (Material Customizado) --- */
+.profesor-card {
+  display: flex;
+  flex-direction: column; /* Columna para mejor control */
+  align-items: center;
+  background-color: #f8f8f8;
+  border-radius: 15px; /* Bordes más redondeados */
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  height: 100%; /* Altura uniforme */
 }
 
-.profesor img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
+.profesor-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 15px;
+  border: 3px solid #FFCB47; /* Borde amarillo para destacar */
+}
+
+.profe-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info {
+  text-align: center;
+  width: 100%;
 }
 
 .info h3 {
-    font-size: 1.1em;
-    margin-bottom: 5px;
-    color: #333;
+  font-size: 1.2em;
+  color: #4b2c5e;
+  margin-bottom: 10px;
+  /* Truncate nombre si es muy largo */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+/* Clases para cortar texto con ... */
+.truncate-text {
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 5px;
+
+  /* Lógica para 3 puntos (...) */
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Máximo 2 líneas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rating {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Botón flotante (+) */
 .add-button {
-    background-color: #4b2c5e;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 1.2em;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    margin-left: auto;
+  background-color: #4b2c5e;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.5em;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  margin-left: auto; /* A la derecha */
+  transition: background-color 0.3s;
 }
 
-.add-button a{
-    color: white;
+.add-button:hover {
+  background-color: #FFCB47; /* Amarillo al hover */
+  color: #333;
 }
 
-.boton-chatbot-icon {
-    padding: 15px;
-    display: block;
-    margin-left: auto;
-    width: 80px;
+/* Loader */
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px 0;
+  color: #4b2c5e;
 }
 
-.filtro-panel{
-    width: 80%;
-    position: relative;
-    border-radius: 15px;
-    background-color: #ced6ee;
-    padding: 20px;
-    margin: 20px auto;
-    box-sizing: border-box;
-
-}
-
-.filtro-header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.filtro-header h2 {
-    font-size: 1.5em;
-    color: #4b2c5e;
-    margin: 0;
-}
-
-#cerrar-filtro {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5em;
-    color: #4b2c5e;
-    width: 35px;
-    height: 35px;
-}
-
-.filtro-opciones {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-
-}
-
-.filtro-opcion {
-    flex: 1;
-    min-width: 150px;
-    display: flex;
-    flex-direction: column;
-}
-
-.sede, .modalidad-opciones {
-    display: flex;
-    gap: 10px;
-}
-
-.sede-boton, .modalidad-boton {
-    padding: 8px 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.9em;
-    color: #333;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.sede-boton.activo, .modalidad-boton.activo {
-    background-color: #ffcb47; /* Color de botón activo */
-    color: #fff;
-    border: none;
-}
-
-.filtro-opcion label {
-    font-size: 1em;
-    color: #4b2c5e;
-    margin-bottom: 5px;
-    font-family: 'Inria Sans';
-}
-
-.filtro-opcion select {
-    padding: 8px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    font-family: inherit;
-}
-
-#cerrar-filtro img{
-    width: 35px;
-    height: 35px;
-}
-
-.filtro-botones {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-}
-
-#aplicar-filtros, #borrar-filtros {
-    border-radius: 12px;
-    padding: 10px 20px;
-    font-family: inherit;
-    border: none;
-    cursor: pointer;
-}
-
-
-#aplicar-filtros {
-    background-color: #ffcb47;
-    color: #333;
-}
-
-#borrar-filtros {
-    background-color: #2f1747;
-    color: #ffffff;
-}
-
+/* Footer (Heredado) */
 .footerIntro {
-    margin-top: -20px;
-    padding: 30px;
-    background-color: #674C82;
+  margin-top: 20px;
+  padding: 30px;
+  background-color: #674C82;
+  text-align: center;
+}
+/* ... resto de estilos del footer ... */
+
+/* Agregar al final de user-profesores.component.css */
+
+/* --- PAGINADOR --- */
+.paginator-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
 }
 
-.footerIntro .fraseFooter {
-    align-items: center;
-    text-align: center;
-    padding: 5px;
-    color: #FFCB47;
-    font-family: "Inria Sans";
-    font-size: larger;
-    letter-spacing: 0.8px;
+/* Personalizar colores del paginador para que coincida con tu tema */
+::ng-deep .mat-mdc-paginator {
+  background-color: #f8f8f8 !important;
+  border-radius: 10px;
 }
 
-.footerIntro .ChatBot {
-    padding: 10px;
-    display: block;
-    margin-left: auto;
-    margin-top: -50px;
-    width: 80px;
+::ng-deep .mat-mdc-paginator-container {
+  justify-content: center !important;
 }
 
-.footerIntro .faqSection {
-    margin-top: 20px;
-    text-align: center;
-    color: white;
-    font-family: inherit;
+::ng-deep .mat-mdc-button.mat-mdc-paginator-navigation-previous,
+::ng-deep .mat-mdc-button.mat-mdc-paginator-navigation-next,
+::ng-deep .mat-mdc-button.mat-mdc-paginator-navigation-first,
+::ng-deep .mat-mdc-button.mat-mdc-paginator-navigation-last {
+  color: #4b2c5e !important;
 }
 
-.footerIntro .faqSection h3 {
-    color: #FFCB47;
-    font-size: medium;
-    margin-bottom: 10px;
-    border: 2px solid #FFCB47;
-    padding: 5px;
-    display: inline-block;
-    border-radius: 8px;
-}
-
-/* Responsividad: ajustes para pantallas pequeñas */
-/* Responsividad: ajustes para pantallas pequeñas */
-@media (max-width: 768px) {
-    .search-container {
-        width: 90%;
-        padding: 5px 10px;
-    }
-
-    #searchBar {
-        padding: 10px 15px;
-        font-size: 0.9rem;
-    }
-
-    #searchButton {
-        margin-left: 5px; /* Menos espacio entre input y botón */
-    }
+::ng-deep .mat-mdc-select-value,
+::ng-deep .mat-mdc-paginator-page-size-label,
+::ng-deep .mat-mdc-paginator-range-label {
+  color: #333 !important;
 }

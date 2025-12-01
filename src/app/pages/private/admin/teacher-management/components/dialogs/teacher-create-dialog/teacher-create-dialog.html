@@ -1,0 +1,70 @@
+<mat-card class="teacher-create-card">
+  <mat-card-header>
+    <mat-card-title>Crear Nuevo Docente</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="card-content">
+    <form [formGroup]="form" class="dialog-form">
+      <div class="form-container">
+        <app-input
+          [id]="'firstName'"
+          [label]="'Nombre'"
+          [control]="form.controls.firstName"
+        ></app-input>
+
+        <app-input
+          [id]="'lastName'"
+          [label]="'Apellido'"
+          [control]="form.controls.lastName"
+        ></app-input>
+
+        <div class="full-width">
+          <app-select
+            [id]="'courseIds'"
+            [label]="'Asignaturas'"
+            [options]="courseOptions()"
+            [control]="form.controls.courseIds"
+            [multiple]="true"
+          ></app-select>
+        </div>
+
+        <app-select
+          [id]="'careerIds'"
+          [label]="'Carreras'"
+          [options]="careerOptions()"
+          [control]="form.controls.careerIds"
+          [multiple]="true"
+        ></app-select>
+        <app-select
+          [id]="'campusIds'"
+          [label]="'Campus'"
+          [options]="campusOptions()"
+          [control]="form.controls.campusIds"
+          [multiple]="true"
+        ></app-select>
+
+        <mat-form-field appearance="outline" class="full-width full-span">
+          <mat-label>Descripción</mat-label>
+          <textarea
+            class="text-area-input"
+            matInput
+            cdkTextareaAutosize
+            formControlName="generalDescription"
+          ></textarea>
+        </mat-form-field>
+        <div class="full-width">
+          <app-profile-image-uploader
+            [control]="form.controls.profilePictureUrl"
+            label="Inserte la Foto del Docente"
+          ></app-profile-image-uploader>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button mat-button (click)="onCancel()">Cancelar</button>
+        <button matButton="filled" color="primary" (click)="onSubmit()" [disabled]="form.invalid">
+          Crear Docente
+        </button>
+      </div>
+    </form>
+  </mat-card-content></mat-card
+>

@@ -1,0 +1,157 @@
+<div class="review-card">
+  <!-- Header -->
+  <div class="review-header">
+    <div class="student-info">
+      <img
+        [src]="review().student.profilePictureUrl || 'assets/images/default-avatar.png'"
+        [alt]="review().student.username"
+        class="student-avatar"
+      />
+      <div class="student-details">
+        <h4 class="student-name">{{ review().student.username }}</h4>
+        <span class="review-date">{{ formatDate(review().createdAt) }}</span>
+      </div>
+    </div>
+
+    <div class="review-rating">
+      <span class="rating-value">{{ formatRating(review().rating) }}/10</span>
+      <mat-icon class="star-icon">star</mat-icon>
+    </div>
+
+    @if (isOwnReview()) {
+      <div class="review-actions">
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="actions-btn">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="editReview()">
+            <mat-icon>edit</mat-icon>
+            <span>Editar</span>
+          </button>
+          <button mat-menu-item (click)="deleteReview()">
+            <mat-icon>delete</mat-icon>
+            <span>Eliminar</span>
+          </button>
+        </mat-menu>
+      </div>
+    }
+  </div>
+
+  <!-- Description -->
+  <div class="review-body">
+    <p class="review-description">{{ review().description }}</p>
+  </div>
+
+  <!-- Tags -->
+  @if (review().tags.length > 0) {
+    <div class="review-tags">
+      @for (tag of review().tags; track tag.id) {
+        <span class="tag-badge">{{ tag.tagName }}</span>
+      }
+    </div>
+  }
+
+  <!-- Reactions Section -->
+  <div class="reactions-section">
+    <!-- Mostrar reacciones existentes -->
+    @if (reactionCounts().length > 0) {
+      <div class="reactions-display">
+        @for (item of reactionCounts(); track item.reaction.id) {
+          <button
+            class="reaction-badge"
+            [class.user-reacted]="item.userReacted"
+            (click)="!isOwnReview() && selectReaction(item.reaction.id)"
+            [disabled]="isOwnReview()"
+            [matTooltip]="item.reaction.reactionName"
+          >
+            <span class="reaction-display">
+              <img
+                [src]="item.reaction.icon_url"
+                [alt]="item.reaction.reactionName"
+                class="reaction-icon"
+                (error)="$any($event.target).style.display='none'; $any($event.target).nextElementSibling.style.display='inline'"
+              />
+              <span class="reaction-emoji" style="display: none;">
+                {{ getEmoji(item.reaction.reactionName) }}
+              </span>
+            </span>
+            <span class="reaction-count">{{ item.count }}</span>
+          </button>
+        }
+      </div>
+    }
+
+    <!-- Botón para agregar reacción -->
+    @if (!isOwnReview()) {
+      <div class="reaction-actions">
+        @if (userReaction()) {
+          <!-- Si ya reaccionó -->
+          <button
+            mat-button
+            [matMenuTriggerFor]="reactionMenu"
+            class="change-reaction-btn"
+          >
+            <span class="reaction-display">
+              <img
+                [src]="userReaction()!.reaction.icon_url"
+                [alt]="userReaction()!.reaction.reactionName"
+                class="current-reaction-icon"
+                (error)="$any($event.target).style.display='none'; $any($event.target).nextElementSibling.style.display='inline'"
+              />
+              <span class="reaction-emoji-large" style="display: none;">
+                {{ getEmoji(userReaction()!.reaction.reactionName) }}
+              </span>
+            </span>
+            <mat-icon>expand_more</mat-icon>
+          </button>
+        } @else {
+          <!-- Si no ha reaccionado -->
+          <button
+            mat-stroked-button
+            [matMenuTriggerFor]="reactionMenu"
+            class="add-reaction-btn"
+          >
+            <mat-icon>add_reaction</mat-icon>
+            Reaccionar
+          </button>
+        }
+
+        <!-- Menú de reacciones -->
+        <mat-menu #reactionMenu="matMenu" class="reaction-menu">
+          <div class="reaction-picker" (click)="$event.stopPropagation()">
+            @for (reaction of availableReactions(); track reaction.id) {
+              <button
+                mat-menu-item
+                class="reaction-option"
+                [class.selected]="isUserReaction(reaction.id)"
+                (click)="selectReaction(reaction.id)"
+              >
+                <!-- ⭐ ACTUALIZADO: Imagen con fallback a emoji -->
+                <span class="reaction-display">
+                  <img
+                    [src]="reaction.icon_url"
+                    [alt]="reaction.reactionName"
+                    class="reaction-icon-large"
+                    (error)="$any($event.target).style.display='none'; $any($event.target).nextElementSibling.style.display='inline'"
+                  />
+                  <span class="reaction-emoji-large" style="display: none;">
+                    {{ getEmoji(reaction.reactionName) }}
+                  </span>
+                </span>
+                <span class="reaction-name">{{ reaction.reactionName }}</span>
+              </button>
+            }
+
+            @if (userReaction()) {
+              <mat-divider></mat-divider>
+              <button mat-menu-item class="remove-reaction" (click)="removeReaction()">
+                <mat-icon>close</mat-icon>
+                Quitar reacción
+              </button>
+            }
+          </div>
+        </mat-menu>
+      </div>
+    }
+  </div>
+</div>

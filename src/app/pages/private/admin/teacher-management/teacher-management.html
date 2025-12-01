@@ -1,0 +1,19 @@
+<div class="teacher-management-container">
+  <mat-toolbar color="primary" class="dashboard-header">
+    <span class="header-title">
+      <mat-icon class="header-icon">school</mat-icon>
+      Gestión de Profesores
+    </span>
+    <span class="spacer"></span>
+    <button matButton="filled" color="accent" (click)="onAddTeacher()" class="add-button">
+      <mat-icon>add</mat-icon>
+      Agregar Profesor
+    </button>
+  </mat-toolbar>
+
+  <app-teacher-management-table
+    (teacherUpdate)="onTeacherUpdate($event)"
+    (teacherDelete)="onTeacherDelete($event)"
+    (teacherDeleteMultiple)="onTeacherDeleteMultiple($event)"
+  ></app-teacher-management-table>
+</div>

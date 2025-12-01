@@ -1,0 +1,53 @@
+<mat-card class="teacher-update-card">
+  <mat-card-header>
+    <mat-card-title>Editar Trámite</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="card-content">
+    <form [formGroup]="formGroup" class="dialog-form">
+      <input formControlName="idFormality" type="hidden" />
+      <div class="form-container">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Título</mat-label>
+          <input matInput formControlName="title" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width full-span">
+          <mat-label>Descripción</mat-label>
+          <textarea
+            class="text-area-input"
+            matInput
+            cdkTextareaAutosize
+            formControlName="description"
+          ></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width full-span">
+          <mat-label>Ingrese rango de fechas</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input
+              matStartDate
+              placeholder="Fecha inicio"
+              [formControl]="formGroup.controls.startDate"
+            />
+            <input matEndDate placeholder="Fecha fin" [formControl]="formGroup.controls.endDate" />
+          </mat-date-range-input>
+          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+      </div>
+
+      <div class="actions">
+        <button mat-button (click)="cancel()">Cancelar</button>
+        <button
+          matButton="filled"
+          color="primary"
+          (click)="submit()"
+          [disabled]="formGroup.invalid"
+        >
+          Guardar
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

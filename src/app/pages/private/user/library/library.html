@@ -1,164 +1,87 @@
-<div class="contenedor-principal-guardados">
-  <h1 class="titulo-principal-bienvenida">Bienvenido, Gabriel, a tu Biblioteca Personal</h1>
+<div class="library-container">
 
-  <div class="columnas-guardadas">
+  <header class="header-section">
+    <h1>Bienvenido a tu Biblioteca Personal</h1>
 
-    <div class="columna-profesores">
-      <h2 class="titulo-columna">Profesores Guardados</h2>
-
-      <div class="tarjeta-guardada profesor-guardado">
-        <div class="tarjeta-header">
-          <img src="/images/Profesor4.jpg" alt="Foto de Daniel Ramos" class="perfil-img">
-          <p class="nombre-guardado">Daniel Ramos</p>
-          <section>
-            <div class="boton-eliminar">
-              <button matButton>Eliminar</button>
-            </div>
-          </section>
-          <img src="/images/basurero.png" alt="Icono de basura" class="icono-eliminar">
-        </div>
-
-        <div class="secciones-sede">
-          <p class="etiqueta-sede">Sedes Donde Dicta:</p>
-          <div class="botones-sede">
-            <button class="btn-sede">MO</button>
-            <button class="btn-sede">SM</button>
-            <button class="btn-sede">VI</button>
-            <button class="btn-sede activo">SI</button>
-          </div>
-        </div>
-
-        <div class="notas-seccion">
-          <p class="etiqueta-notas">Notas:</p>
-          <p class="texto-notas">"Este Profesor Es Muy Bueno"</p>
-        </div>
-      </div>
-
-      <div class="tarjeta-guardada profesor-guardado">
-        <div class="tarjeta-header">
-          <img src="/images/Profesor5.jpg" alt="Foto de Julio Garrido" class="perfil-img">
-          <p class="nombre-guardado">Julio Garrido</p>
-          <section>
-            <div class="boton-eliminar">
-              <button matButton>Eliminar</button>
-            </div>
-          </section>
-          <img src="/images/basurero.png" alt="Icono de basura" class="icono-eliminar">
-        </div>
-
-        <div class="secciones-sede">
-          <p class="etiqueta-sede">Sedes Donde Dicta:</p>
-          <div class="botones-sede">
-            <button class="btn-sede">MO</button>
-            <button class="btn-sede">SM</button>
-            <button class="btn-sede">VI</button>
-            <button class="btn-sede activo">SI</button>
-          </div>
-        </div>
-
-        <div class="notas-seccion">
-          <p class="etiqueta-notas">Notas:</p>
-          <p class="texto-notas">"No Se Le Entiende Muy Bien, Pero Es Calmado"</p>
-        </div>
-      </div>
-
-      <div class="tarjeta-guardada profesor-guardado">
-        <div class="tarjeta-header">
-          <img src="/images/Profesor6.jpg" alt="Foto de Jesús Álvarez" class="perfil-img">
-          <p class="nombre-guardado">Jesús Álvarez</p>
-          <section>
-            <div class="boton-eliminar">
-              <button matButton>Eliminar</button>
-            </div>
-          </section>
-          <img src="/images/basurero.png" alt="Icono de basura" class="icono-eliminar">
-        </div>
-
-        <div class="secciones-sede">
-          <p class="etiqueta-sede">Sedes Donde Dicta:</p>
-          <div class="botones-sede">
-            <button class="btn-sede">MO</button>
-            <button class="btn-sede activo">SM</button>
-            <button class="btn-sede">VI</button>
-            <button class="btn-sede">SI</button>
-          </div>
-        </div>
-
-        <div class="notas-seccion">
-          <p class="etiqueta-notas">Notas:</p>
-          <p class="texto-notas">...</p>
-        </div>
-      </div>
+    <div class="notepad-indicator" (click)="toggleGeneralNote()">
+      Notepad <mat-icon>edit_note</mat-icon>
     </div>
+  </header>
 
-    <div class="columna-tramites">
-      <h2 class="titulo-columna">Trámites Guardados</h2>
-
-      <div class="tarjeta-guardada tramite-guardado">
-        <div class="tarjeta-header">
-          <img src="/images/TramitesBoton.png" alt="Icono de Trámite" class="icono-tramite">
-          <p class="nombre-guardado">Emisión De Carnet</p>
-          <section>
-            <div class="boton-eliminar">
-              <button matButton>Eliminar</button>
-            </div>
-          </section>
-          <img src="/images/basurero.png" alt="Icono de basura" class="icono-eliminar">
-        </div>
-
-        <div class="notas-seccion">
-          <p class="etiqueta-notas">Notas:</p>
-          <p class="texto-notas">"Tramite Para Noviembre"</p>
-        </div>
+  <div class="general-note-overlay" *ngIf="isGeneralNoteOpen">
+    <div class="sticky-note">
+      <div class="sticky-header">
+        <span>Notas Generales</span>
+        <button mat-icon-button (click)="toggleGeneralNote()">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
-
-      <div class="tarjeta-guardada tramite-guardado">
-        <div class="tarjeta-header">
-          <img src="/images/TramitesBoton.png" alt="Icono de Trámite" class="icono-tramite">
-          <p class="nombre-guardado">Duplicado De Carnet</p>
-          <section>
-            <div class="boton-eliminar">
-              <button matButton>Eliminar</button>
-            </div>
-          </section>
-          <img src="/images/basurero.png" alt="Icono de basura" class="icono-eliminar">
-        </div>
-
-        <div class="notas-seccion">
-          <p class="etiqueta-notas">Notas:</p>
-          <p class="texto-notas">"Debo Hacer Este Cuando Lo Pierda"</p>
-
-        </div>
-      </div>
-
-      <div class="tarjeta-guardada tramite-guardado">
-        <div class="tarjeta-header">
-          <img src="/images/TramitesBoton.png" alt="Icono de Trámite" class="icono-tramite">
-          <p class="nombre-guardado">Retiro De Curso</p>
-          <section>
-            <div class="boton-eliminar">
-              <button matButton>Eliminar</button>
-            </div>
-          </section>
-            <img src="/images/basurero.png" alt="Icono de basura" class="icono-eliminar">
-
-      </div>
-
-        <div class="notas-seccion">
-          <p class="etiqueta-notas">Notas:</p>
-          <p class="texto-notas">"Hacer Este Si Me Va Mal En Física"</p>
-        </div>
-      </div>
-
+      <textarea
+        class="sticky-textarea"
+        [(ngModel)]="generalNote"
+        (blur)="saveGeneralNote()"
+        placeholder="Escribe tus recordatorios generales aquí..."
+      ></textarea>
     </div>
-
   </div>
 
-  <button
-    class="notepad"
-    mat-icon-button
-    aria-label="Example icon button with a vertical three dot icon"
-  >
-    <img src="/images/Notepad.png" alt="Icono de cuaderno" />
-  </button>
+  <div class="content-grid">
+
+    <section class="saved-teachers-section">
+      <h2 class="section-title">Profesores Guardados</h2>
+
+      <div class="teacher-list">
+        <mat-card class="teacher-card" *ngFor="let prof of profesoresGuardados">
+
+          <div class="card-header">
+            <img [src]="prof.details?.profilePictureUrl || 'assets/images/default-avatar.png'"
+                 alt="Foto" class="profile-pic">
+
+            <span class="teacher-name">
+              {{ prof.details?.firstName }} {{ prof.details?.lastName }}
+            </span>
+
+            <div class="actions-group">
+              <button mat-icon-button class="delete-icon" (click)="deleteItem(prof.id)" matTooltip="Eliminar de favoritos">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card>
+
+        <div *ngIf="profesoresGuardados.length === 0" class="empty-state">
+          No tienes profesores guardados.
+        </div>
+      </div>
+    </section>
+
+    <section class="saved-tramites-section">
+      <h2 class="section-title">Trámites Guardados</h2>
+
+      <div class="tramite-list">
+        <mat-card class="tramite-card" *ngFor="let tramite of tramitesGuardados">
+
+          <div class="tramite-header">
+            <div class="icon-title">
+              <img src="assets/icons/document.png" alt="doc" class="doc-icon" width="24" height="24"> <span class="tramite-title">{{ tramite.details?.title }}</span>
+            </div>
+
+            <button mat-icon-button class="delete-icon" (click)="deleteItem(tramite.id)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+
+          <div class="tramite-dates">
+            <small>Inicio: {{ tramite.details?.startDate | date:'dd/MM/yyyy' }}</small>
+          </div>
+
+        </mat-card>
+
+        <div *ngIf="tramitesGuardados.length === 0" class="empty-state">
+          No tienes trámites guardados.
+        </div>
+      </div>
+    </section>
+
+  </div>
 </div>

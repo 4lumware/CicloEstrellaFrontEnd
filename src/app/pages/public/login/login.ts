@@ -2,46 +2,52 @@ import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { HeaderAuth } from '../../../layout/header-auth/header-auth';
 import { Router, RouterLink } from '@angular/router';
 import {
-  FormBuilder,
   FormControl,
   FormGroup,
   NonNullableFormBuilder,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatIcon } from '@angular/material/icon';
-import { MatLabel } from '@angular/material/form-field';
-import { MatError, MatFormField } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import { merge } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ApiResponse } from '../../../services/careers/career-service';
-import { AuthUserService, JsonResponseDTO } from '../../../services/users/auth/auth-user-service';
-import { Input } from '../../../components/forms/input/input';
+
+import { MatButton } from '@angular/material/button';
+
+import { ApiResponse } from '../../../core/models/responses/response';
+import {
+  AuthUserService,
+  JsonResponseDTO,
+} from '../../../core/services/users/auth/auth-user-service';
+import { Input } from '../../../shared/components/forms/input/input';
+import { StaffModel } from '../../../core/models/staffs/staff';
+import { StudentModel } from '../../../core/models/students/student';
+import { SnackbarNotificationService } from '../../../core/services/notifications/snackbar-notification-service';
+import { AuthCurrentUserService } from '../../../core/services/users/auth/auth-current-user-service';
 
 export interface LoginFormValue {
   email: FormControl<string>;
   password: FormControl<string>;
 }
 
+const STAFF_ROLES = ['ADMIN', 'MODERATOR', 'WRITER'];
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [HeaderAuth, RouterLink, ReactiveFormsModule, MatButton, Input],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
   protected loginForm: FormGroup<LoginFormValue>;
-
+  private snackbar = inject(SnackbarNotificationService);
   protected loading: WritableSignal<boolean> = signal<boolean>(false);
   protected loginError: WritableSignal<string> = signal<string>('');
 
   private fb: NonNullableFormBuilder = inject(NonNullableFormBuilder);
   private router: Router = inject(Router);
   private authService = inject(AuthUserService);
+  private authCurrentUserService = inject(AuthCurrentUserService);
 
   constructor() {
+    this.authService.logout();
     this.loginForm = this.fb.group<LoginFormValue>({
       email: this.fb.control('', {
         validators: [Validators.required, Validators.email],
@@ -64,29 +70,28 @@ export class Login {
       return;
     }
 
-    this.authService.login(email, password).subscribe({
-      next: (response: ApiResponse<JsonResponseDTO>) => {
-        console.log('✅ Login exitoso:', response);
-        const tokens = response.data.tokens;
-        localStorage.setItem('access_token', tokens.access_token);
-        localStorage.setItem('refresh_token', tokens.refresh_token);
+    this.authService.login<StaffModel | StudentModel>(email, password).subscribe({
+      next: (response: ApiResponse<JsonResponseDTO<StaffModel | StudentModel>>) => {
+        const user = response.data.user;
 
-        if (response.data.user.roles === undefined) {
+        if (!('roles' in user)) {
           this.router.navigate(['/private/home']);
+          localStorage.setItem('user_role', 'STUDENT');
+          this.authCurrentUserService.setCurrentUser(user);
           return;
         }
 
-        if (
-          response.data.user.roles.some(
-            (role) => role.roleName === 'ADMIN' || role.roleName === 'STAFF'
-          )
-        ) {
+        if (user.roles.some((role) => STAFF_ROLES.includes(role.roleName))) {
           this.router.navigate(['/dashboard/home']);
+          localStorage.setItem('user_role', 'STAFF');
+          this.authCurrentUserService.setCurrentUser(user);
+          console.log('✅ Usuario con rol ADMIN o STAFF, redirigiendo a /dashboard/home');
         }
       },
       error: (err) => {
         console.error('❌ Error en login:', err);
         this.loginError.set('Correo o contraseña incorrectos');
+        this.snackbar.error('Error al iniciar sesión. Por favor, verifique sus credenciales.');
         this.loading.set(false);
       },
       complete: () => this.loading.set(false),

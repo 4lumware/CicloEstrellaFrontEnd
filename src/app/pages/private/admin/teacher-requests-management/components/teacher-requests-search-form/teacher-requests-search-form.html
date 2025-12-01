@@ -1,0 +1,72 @@
+<mat-expansion-panel class="search-panel">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <mat-icon>search</mat-icon>
+      <span>Buscar Solicitudes</span>
+    </mat-panel-title>
+    <mat-panel-description
+      >Filtra por estado, tipo, estudiante, docente o fechas</mat-panel-description
+    >
+  </mat-expansion-panel-header>
+
+  <form [formGroup]="formGroup" class="search-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Estudiante</mat-label>
+        <input matInput formControlName="studentName" placeholder="Nombre del estudiante" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Docente</mat-label>
+        <input matInput formControlName="teacherName" placeholder="Nombre del docente" />
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <app-select
+          [id]="'courseId'"
+          [control]="formGroup.controls.courseId"
+          [label]="'Curso'"
+          [options]="courseOptions()"
+          variant="outline"
+        />
+      </div>
+
+      <div class="form-field">
+        <app-select
+          [id]="'campusId'"
+          [control]="formGroup.controls.campusId"
+          [label]="'Campus'"
+          [options]="campusOptions()"
+          variant="outline"
+        />
+      </div>
+    </div>
+
+    <mat-form-field class="datetime-picker-search" appearance="outline">
+      <mat-label>Ingresar rango de fechas</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input [formControl]="formGroup.controls.from" matStartDate placeholder="Fecha de Inicio" />
+        <input [formControl]="formGroup.controls.to" matEndDate placeholder="Fecha de Fin" />
+      </mat-date-range-input>
+
+      <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+    <div class="form-field form-actions">
+      <div class="search-actions">
+        <button mat-raised-button color="primary" type="button" (click)="onApplyFilters()">
+          <mat-icon>search</mat-icon>
+          Aplicar Filtros
+        </button>
+        <button mat-raised-button color="warn" type="button" (click)="onClearFilters()">
+          <mat-icon>clear_all</mat-icon>
+          Limpiar Filtros
+        </button>
+      </div>
+    </div>
+  </form>
+</mat-expansion-panel>

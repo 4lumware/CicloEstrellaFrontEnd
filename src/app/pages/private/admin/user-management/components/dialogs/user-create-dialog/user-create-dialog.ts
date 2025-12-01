@@ -1,6 +1,12 @@
-import { Component, Inject, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, Inject, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,17 +18,26 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   Select,
   Option as SelectOption,
-} from '../../../../../../../components/forms/select/select';
-import { Input } from '../../../../../../../components/forms/input/input';
-import { RolesService } from '../../../../../../../services/roles/roles';
-import { CareerService } from '../../../../../../../services/careers/career-service';
-import { ImageService } from '../../../../../../../services/images/image-service';
-import { Role } from '../../../../../../../models/users/user';
+} from '../../../../../../../shared/components/forms/select/select';
+import { Input } from '../../../../../../../shared/components/forms/input/input';
+import { RolesService } from '../../../../../../../core/services/roles/role-service';
+import { CareerService } from '../../../../../../../core/services/careers/career-service';
+import { ImageService } from '../../../../../../../core/services/images/image-service';
+import { Role } from '../../../../../../../core/models/users/user';
 
-type CreateDialogData = {};
+export interface UserCreateFormValue {
+  username: FormControl<string>;
+  email: FormControl<string>;
+  role: FormControl<number | null>;
+  password: FormControl<string>;
+  profilePictureUrl: FormControl<string>;
+  currentSemester: FormControl<number | null>;
+  careerIds: FormControl<number[]>;
+}
 
 @Component({
   selector: 'app-user-create-dialog',
+  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -41,27 +56,9 @@ type CreateDialogData = {};
   styleUrl: './user-create-dialog.css',
 })
 export class UserCreateDialog implements OnInit {
+  private fb = inject(NonNullableFormBuilder);
+  protected form!: FormGroup<UserCreateFormValue>;
   title = computed(() => 'Agregar Usuario');
-
-  form = new FormGroup({
-    username: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(2)],
-    }),
-    email: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.email],
-    }),
-    role: new FormControl<number | null>(null, { validators: [Validators.required] }),
-    password: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(6)],
-    }),
-    profilePictureUrl: new FormControl<string>(''),
-    // student fields
-    currentSemester: new FormControl<number | null>(null),
-    careerIds: new FormControl<number[]>([]),
-  });
 
   protected roleOptions = signal<SelectOption[]>([]);
   protected careerOptions = signal<SelectOption[]>([]);
@@ -85,17 +82,29 @@ export class UserCreateDialog implements OnInit {
   protected isStudent = computed(() => this.selectedRoleName() === 'STUDENT');
 
   private dialogRef = inject(MatDialogRef<UserCreateDialog, any>);
-  private data = inject<Readonly<CreateDialogData>>(MAT_DIALOG_DATA);
   private rolesService = inject(RolesService);
   private careerService = inject(CareerService);
   private imageService = inject(ImageService);
 
-  private buildImageUrl(url: string | undefined): string | null {
-    return this.imageService.buildImageUrl(url);
-  }
-
   constructor() {
-    // Load all roles for creation
+    this.form = this.fb.group<UserCreateFormValue>({
+      username: this.fb.control('', {
+        validators: [Validators.required, Validators.minLength(2)],
+      }),
+      email: this.fb.control('', {
+        validators: [Validators.required, Validators.email],
+      }),
+      role: this.fb.control<number | null>(null, {
+        validators: [Validators.required],
+      }),
+      password: this.fb.control('', {
+        validators: [Validators.required, Validators.minLength(6)],
+      }),
+      profilePictureUrl: this.fb.control(''),
+      currentSemester: this.fb.control<number | null>(null),
+      careerIds: this.fb.control<number[]>([]),
+    });
+
     this.rolesService.index().subscribe({
       next: (response) => {
         const options = (response.data as Role[]).map((r) => ({ label: r.roleName, value: r.id }));
@@ -107,10 +116,15 @@ export class UserCreateDialog implements OnInit {
       next: (careers) => this.careerOptions.set(careers),
     });
 
-    // track role selection to toggle student fields
     this.form.controls.role.valueChanges.subscribe((roleId) => {
       const selected = this.roleOptions().find((r) => r.value === roleId);
       this.selectedRoleName.set(selected?.label || '');
+    });
+
+    effect(() => {
+      this.form.valueChanges.subscribe(() => {
+        console.log('Form changes:', this.form.getRawValue());
+      });
     });
   }
 
@@ -144,12 +158,12 @@ export class UserCreateDialog implements OnInit {
     const v = this.form.getRawValue();
 
     const selectedRole = this.roleOptions().find((r) => r.value === v.role);
-    const roleName = selectedRole?.label || '';
+    const type = selectedRole?.label || '';
 
     const payload: any = {
       username: v.username,
       email: v.email,
-      roleName,
+      type: type,
     };
 
     if (v.role) payload.roleId = v.role as number;

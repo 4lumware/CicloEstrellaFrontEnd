@@ -1,0 +1,297 @@
+.centro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background-color: #ffffff;
+  padding: 40px;
+  margin: 20px auto;
+  border-radius: 10px;
+  width: 50%;
+  max-width: 1200px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.infoUsuario .infoadi {
+  margin-top: 20px;
+}
+
+.infoUsuario {
+  width: 40%;
+  margin-right: 10%;
+}
+
+.configuracionSistema {
+  width: 50%;
+  margin-right: 0; /* Ajusta si es necesario */
+  display: flex;
+  flex-direction: column;
+}
+
+.configuracionSistema .ajustes {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-size: 80%;
+  margin-top: 20px;
+}
+
+.configuracionSistema h3 {
+  margin-bottom: 3%;
+  margin-top: -8%;
+  color: #000;
+}
+
+.infoUsuario h2 {
+  color: #000;
+  margin-bottom: 15px;
+}
+
+.configuracionSistema h2 {
+  color: #000;
+  margin-bottom: 1px;
+}
+
+label {
+  font-weight: bold;
+  margin-top: 10px;
+  display: block;
+  color: #333;
+}
+
+.infoUsuario [type='text'] {
+  width: 100%;
+  position: relative;
+  border-radius: 5px;
+  max-width: 100%;
+  overflow: hidden;
+  height: 30px;
+  background-color: #ecf0f1;
+  border: none;
+  font-family: inherit;
+}
+
+.configuracionSistema #idiomadesplegable {
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10%;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f3f3f3;
+  font-family: inherit;
+}
+
+.editarBtn {
+  background-color: #f9ca24;
+  color: #000;
+  padding: 11px;
+  width: 362px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 30%;
+  font-family: inherit;
+}
+
+.editarBtn:hover {
+  background-color: #f6b93b;
+}
+
+.configuracionSistema button {
+  background-color: #7a4ba3;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  width: 362%; /* Ajusta el ancho para que se vea más centrado */
+  max-width: 200px; /* Tamaño máximo para uniformidad */
+  border-radius: 5px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-weight: 4;
+  font-size: 14px;
+  text-align: center;
+  font-family: inherit;
+}
+
+.configuracionSistema button:hover {
+  background-color: #5e3a7f;
+}
+
+.volverBtn {
+  background-color: #d4d4d4;
+  color: #000;
+  padding: 12px;
+  width: 362%;
+  height: 52%;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 39.4%;
+  margin-left: -4%;
+  font-family: inherit;
+}
+
+.volverBtn:hover {
+  background-color: #b0b0b0;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 1rem;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-image-content {
+  width: 20rem;
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  padding: 3rem 2rem;
+  background-color: #ffffff;
+  border: 1px solid #e3f2fd;
+}
+
+.student-name-header {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.student-email {
+  color: #757575;
+  font-size: 1rem;
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.careers-content {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.badge-set {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+}
+.badge-career {
+  background-color: #e0e0e0;
+  color: #424242;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.student-careers {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.student-semester {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+.student-semester-text {
+  margin-top: 1rem;
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+.img-content {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.img-changed-profile {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 4rem;
+}
+
+.camera-btn {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.file-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  opacity: 0;
+  cursor: pointer;
+
+  border: none;
+}
+
+.button-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  flex-flow: column nowrap;
+}
+
+.button-save {
+  background-color: #1976d2 !important;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.button-save:hover {
+  background-color: #1565c0 !important;
+}
+
+.button-update-password {
+  background-color: #9c27b0 !important;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.button-update-password:hover {
+  background-color: #7b1fa2 !important;
+}

@@ -1,0 +1,117 @@
+<div class="review-modal">
+  <!-- Header -->
+  <div class="modal-header">
+    <div class="header-content">
+      <h2 class="modal-title">Escribe Una Reseña Para:</h2>
+      <p class="teacher-name">{{ data.teacherName }}</p>
+    </div>
+    <button mat-icon-button (click)="cancel()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="modal-content">
+    <!-- Rating Section -->
+    <div class="rating-section">
+      <div class="rating-display">
+        <div class="star-icon">
+          <mat-icon>star</mat-icon>
+        </div>
+        <div class="rating-info">
+          <span class="rating-label">Tu Calificación ({{ rating() }}/10.0)</span>
+        </div>
+      </div>
+
+      <!-- ⭐ SLIDER: 0.0 - 10.0 con step 0.1 -->
+      <div class="slider-container">
+        <mat-slider min="0" max="10" step="0.1" discrete class="rating-slider">
+          <input
+            matSliderThumb
+            [value]="rating()"
+            (valueChange)="onRatingChange($event)"
+          />
+        </mat-slider>
+        <div class="slider-labels">
+          <span>0.0</span>
+          <span>5.0</span>
+          <span>10.0</span>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Description -->
+    <div class="description-section">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Escribe tu reseña aquí...</mat-label>
+        <textarea
+          matInput
+          rows="4"
+          name="description"
+          [(ngModel)]="description"
+          placeholder="Explica tu experiencia con este profesor..."
+          maxlength="500"></textarea>
+        <mat-hint align="end">{{ description().length }}/500</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!-- Tags Section -->
+    <div class="tags-section">
+      <div class="tags-search">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar y selecciona los tags...</mat-label>
+          <input
+            matInput
+            name="searchQuery"
+            [(ngModel)]="searchQuery"
+            placeholder="Buscar características..."
+          />
+          @if (searchQuery()) {
+            <button matSuffix mat-icon-button (click)="clearSearch()">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="results-header">
+        <span class="results-label">Resultados</span>
+        @if (selectedCount() > 0) {
+          <span class="selected-count">{{ selectedCount() }} seleccionados</span>
+        }
+      </div>
+
+      <div class="tags-grid">
+        @if (filteredTags().length === 0) {
+          <p class="no-results">No se encontraron tags</p>
+        } @else {
+          @for (tag of filteredTags(); track tag.id) {
+            <button
+              type="button"
+              class="tag-btn"
+              [class.selected]="isTagSelected(tag.id)"
+              (click)="toggleTag(tag.id)">
+              {{ tag.tagName }}
+            </button>
+          }
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="modal-actions">
+    <button mat-stroked-button (click)="cancel()" class="cancel-btn">
+      Cancelar
+    </button>
+    <button
+      mat-flat-button
+      (click)="save()"
+      [disabled]="!isValid()"
+      class="publish-btn">
+      {{ isEditMode() ? 'Guardar Cambios' : 'Publicar Reseña' }}
+    </button>
+  </div>
+</div>

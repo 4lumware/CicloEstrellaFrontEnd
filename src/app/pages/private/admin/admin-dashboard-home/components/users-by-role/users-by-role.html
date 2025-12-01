@@ -1,0 +1,15 @@
+<mat-card class="mat-content">
+  <mat-card-header>
+    <mat-card-title>Usuarios Registrados por <span>Mes</span></mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="registrations-chart-content">
+    @if(loading()){
+    <div class="spinner"><mat-spinner diameter="36"></mat-spinner></div>
+    } @else {
+    <div class="registration-canva">
+      <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="chartType"></canvas>
+    </div>
+
+    }
+  </mat-card-content>
+</mat-card>

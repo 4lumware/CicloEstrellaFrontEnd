@@ -1,0 +1,39 @@
+<div class="comment-card">
+  <!-- Header -->
+  <div class="comment-header">
+    <div class="author-info">
+      <img
+        [src]="comment().author.profilePictureUrl || 'assets/images/default-avatar.png'"
+        [alt]="comment().author.username"
+        class="author-avatar"
+      />
+      <div class="author-details">
+        <h4 class="author-name">{{ comment().author.username }}</h4>
+        <span class="comment-date">{{ formatDate(comment().createdAt) }}</span>
+      </div>
+    </div>
+
+    @if (isOwnComment()) {
+      <div class="comment-actions">
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="actions-btn">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="editComment()">
+            <mat-icon>edit</mat-icon>
+            <span>Editar</span>
+          </button>
+          <button mat-menu-item (click)="deleteComment()">
+            <mat-icon>delete</mat-icon>
+            <span>Eliminar</span>
+          </button>
+        </mat-menu>
+      </div>
+    }
+  </div>
+
+  <!-- Body -->
+  <div class="comment-body">
+    <p class="comment-text">{{ comment().text }}</p>
+  </div>
+</div>

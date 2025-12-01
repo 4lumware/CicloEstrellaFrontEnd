@@ -1,0 +1,42 @@
+<div class="profile-image-group">
+  <label class="profile-image-label">{{ label() }}</label>
+  <div class="profile-image-preview" (click)="fileInput.click()" role="button" tabindex="0">
+    @if(profileImagePreview()) {
+    <div class="image-preview-container">
+      <img
+        [src]="profileImagePreview()"
+        alt="Preview"
+        class="preview-img"
+        (error)="onPreviewError()"
+      />
+      <button
+        mat-icon-button
+        type="button"
+        (click)="removeImage(); $event.stopPropagation()"
+        aria-label="Quitar imagen"
+        class="remove-image-btn"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    } @else {
+    <div class="upload-placeholder">
+      <mat-icon class="upload-icon">add_photo_alternate</mat-icon>
+      <p>Selecciona una imagen</p>
+      <span class="upload-hint">JPG, PNG (Máx. 5MB)</span>
+    </div>
+    }
+
+    <input
+      #fileInput
+      type="file"
+      accept="image/*"
+      (change)="onFileSelected($event)"
+      style="display: none"
+    />
+  </div>
+
+  @if(control().invalid && errorMessage()) {
+  <mat-error>{{ errorMessage() }}</mat-error>
+  }
+</div>

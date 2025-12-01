@@ -1,108 +1,77 @@
-<div class="contenedor-principal-tramites">
+<div class="tramites-modal-container">
 
-  <div class="barra-busqueda-contenedor-tramites">
-    <input type="text" class="barra-busqueda-tramites"
-           placeholder="Ingrese el tramite que desea realizar [barra de búsqueda]">
-    <button class="icono-busqueda">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-    </button>
+  <div class="search-wrapper">
+    <mat-form-field appearance="fill" class="search-form-field-large">
+      <input
+        matInput
+        type="text"
+        placeholder="Ingrese el trámite que desea realizar [barra de búsqueda]"
+        [(ngModel)]="searchTerm"
+        (input)="filterTramites()"
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
   </div>
 
-  <div class="seccion-tramites">
-    <h2 class="titulo-seccion-tramites">Trámites Existentes</h2>
-    <div class="tramites-carrusel">
-      <div class="tarjeta-tramite">
-        <div class="title-container" >
-          <p class="nombre-tramite">Emisión De Carnet</p>
-          <button  class="boton-agregar-tramite" matMiniFab>
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-        <p class="descripcion-tramite">Con este trámite podrás sacar tu carnet universitario</p>
-        <div class="fechas-info">
-          <div class="fecha-item">
-            <p class="etiqueta-fecha">Fecha Inicio</p>
-            <p class="valor-fecha">05/09/2024</p>
-          </div>
-          <div class="fecha-item">
-            <p class="etiqueta-fecha">Fecha Fin</p>
-            <p class="valor-fecha">23/10/2024</p>
-          </div>
-        </div>
+  <h2 class="section-title">Trámites Existentes</h2>
 
-      </div>
+  <div class="tramites-grid-horizontal">
+    <mat-card
+      class="tramite-card"
+      *ngFor="let t of tramitesExistentesFiltrados"
+      (click)="viewFormalityProfile(t)"
+    >
 
-      <div class="tarjeta-tramite">
-        <div class="title-container" >
-          <p class="nombre-tramite">Retiro De Curso</p>
-          <button class="boton-agregar-tramite" matMiniFab>
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-        <p class="descripcion-tramite">Con este trámite podrás retirarte de un curso</p>
-        <div class="fechas-info">
-          <div class="fecha-item">
-            <p class="etiqueta-fecha">Fecha Inicio</p>
-            <p class="valor-fecha">20/11/2025</p>
-          </div>
-          <div class="fecha-item">
-            <p class="etiqueta-fecha">Fecha Fin</p>
-            <p class="valor-fecha">03/12/2025</p>
-          </div>
-        </div>
-      </div>
-      <div class="tarjeta-tramite">
-        <div class="title-container" >
-          <p class="nombre-tramite">Cambio De Sede</p>
-          <button class="boton-agregar-tramite" matMiniFab>
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-        <p class="descripcion-tramite">Con este trámite podrás cambiarte de sede</p>
-        <div class="fechas-info">
-          <div class="fecha-item">
-            <p class="etiqueta-fecha">Fecha Inicio</p>
-            <p class="valor-fecha">05/07/2025</p>
-          </div>
-          <div class="fecha-item">
-            <p class="etiqueta-fecha">Fecha Fin</p>
-            <p class="valor-fecha">10/08/2025</p>
-          </div>
-        </div>
-      </div>
-    </div>
+      <!-- Cambiar los botones de agregar -->
+      <button
+        mat-icon-button
+        class="add-btn-floating"
+        (click)="addTramite($event, t)"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
 
+
+      <mat-card-content class="card-content-wrapper">
+        <h3 class="tramite-title">{{ t.title }}</h3> <p class="tramite-desc">{{ t.description }}</p> <div class="dates-wrapper">
+        <div class="date-item">
+          <span class="date-label">Fecha Inicio</span>
+          <span class="date-value">{{ t.startDate | date : 'dd/MM/yyyy' }}</span> </div>
+        <div class="date-item">
+          <span class="date-label">Fecha Fin</span>
+          <span class="date-value">{{ t.endDate | date : 'dd/MM/yyyy' }}</span> </div>
+      </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 
-  <div class="seccion-tramites">
-    <h2 class="titulo-seccion-tramites">Trámites Disponibles Actualmente</h2>
-    <div class="tramites-carrusel">
-      <div class="tarjeta-tramite">
-        <div class="title-container" >
-          <p class="nombre-tramite">Retiro De Curso</p>
-          <button class="boton-agregar-tramite" matMiniFab>
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-      <p class="descripcion-tramite">Con este trámite podrás retirarte de un curso</p>
-      <div class="fechas-info">
-        <div class="fecha-item">
-          <p class="etiqueta-fecha">Fecha Inicio</p>
-          <p class="valor-fecha">20/11/2025</p>
-        </div>
-        <div class="fecha-item">
-          <p class="etiqueta-fecha">Fecha Fin</p>
-          <p class="valor-fecha">03/12/2025</p>
-        </div>
+  <h2 class="section-title">Trámites Disponibles Actualmente</h2>
+
+  <div class="tramites-grid-horizontal">
+    <mat-card
+      class="tramite-card"
+      *ngFor="let t of tramitesDisponiblesFiltrados"
+      (click)="viewFormalityProfile(t)"
+    >
+      <!-- Cambiar los botones de agregar -->
+      <button
+        mat-icon-button
+        class="add-btn-floating"
+        (click)="addTramite($event, t)"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+
+      <mat-card-content class="card-content-wrapper">
+        <h3 class="tramite-title">{{ t.title }}</h3> <p class="tramite-desc">{{ t.description }}</p> <div class="dates-wrapper">
+        <div class="date-item">
+          <span class="date-label">Fecha Inicio</span>
+          <span class="date-value">{{ t.startDate | date : 'dd/MM/yyyy' }}</span> </div>
+        <div class="date-item">
+          <span class="date-label">Fecha Fin</span>
+          <span class="date-value">{{ t.endDate | date : 'dd/MM/yyyy' }}</span> </div>
       </div>
-    </div>
-
-    </div>
+      </mat-card-content>
+    </mat-card>
   </div>
-  <div class="icono-bot" (click)="toggleChatbot()">
-    <img src="/images/Chatbot.png" alt="Icono de Asistente" />
-  </div>
-
-  <app-chatbot [visible]="chatbotVisible"></app-chatbot>
-
 </div>

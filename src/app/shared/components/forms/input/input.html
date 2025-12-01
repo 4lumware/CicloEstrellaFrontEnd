@@ -1,0 +1,29 @@
+<div class="input-wrapper">
+  <mat-form-field class="input-container" [appearance]="variant()">
+    <mat-label>{{ label() }}</mat-label>
+    <input
+      matInput
+      class="input-content"
+      [id]="id()"
+      [placeholder]="placeholder()"
+      [type]="inputType()"
+      [formControl]="control()"
+      (blur)="updateErrorMessage()"
+    />
+
+    @if (type() === 'password') {
+    <button
+      class="password-toggle-btn"
+      type="button"
+      mat-icon-button
+      matSuffix
+      aria-label="Mostrar contraseña"
+      (click)="showPassword.set(!showPassword())"
+    >
+      <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+    } @if (control().invalid ) {
+    <mat-error>{{ errorMessage() }}</mat-error>
+    }
+  </mat-form-field>
+</div>

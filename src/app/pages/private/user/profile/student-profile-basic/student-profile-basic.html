@@ -1,0 +1,84 @@
+<main class="centro">
+  <section class="profile-image-content">
+    <div class="profile-content">
+      <section class="img-content">
+        <img class="profile-image" [src]="picturePreview()" alt="Foto de Perfil" />
+        <div class="img-changed-profile">
+          <input
+            #fileInput
+            type="file"
+            accept="image/*"
+            style="display: none"
+            (change)="onProfilePictureSelected($event)"
+          />
+
+          <button mat-fab (click)="openFileSelector(fileInput)">
+            <mat-icon>camera_alt</mat-icon>
+          </button>
+        </div>
+      </section>
+      <h2 class="student-name-header">{{ student()?.username }}</h2>
+      <p class="student-email">{{ student()?.email }}</p>
+    </div>
+    <div class="careers-content">
+      <h2 class="student-careers">Carreras</h2>
+
+      <ul class="badge-set">
+        @for (career of student()?.careers; track career.id) {
+        <li class="badge-career">{{ career.careerName }}</li>
+        }
+      </ul>
+
+      <h2 class="student-semester">Semestre Actual</h2>
+      <p class="student-semester-text">{{ student()?.currentSemester }}</p>
+    </div>
+  </section>
+  <section class="infoUsuario">
+    <h2>Información Básica</h2>
+    <app-input
+      id="fullName"
+      [label]="'Nombre Completo'"
+      [placeholder]="'Nombre Del Usuario'"
+      [control]="formGroup.controls.username"
+      variant="outline"
+      enabled
+    ></app-input>
+    <app-input
+      id="email"
+      [label]="'Correo Electrónico'"
+      [placeholder]="'Correo Del Usuario'"
+      [control]="formGroup.controls.email"
+      variant="outline"
+      enabled
+    ></app-input>
+
+    <h2 class="infoadi">Información Adicional</h2>
+    <app-select
+      id="careerIds"
+      [label]="'Programa De Grado'"
+      [options]="careerOptions()"
+      [control]="formGroup.controls.careerIds"
+      variant="outline"
+      [multiple]="true"
+      enabled
+    ></app-select>
+
+    <app-input
+      id="currentSemester"
+      [label]="'Ciclo Actual'"
+      [control]="formGroup.controls.currentSemester"
+      variant="outline"
+      enabled
+    ></app-input>
+    <div class="button-actions">
+      <button (click)="onSubmit()" class="button-save" matButton="filled">
+        <mat-icon>save</mat-icon>
+        Actualizar Perfil
+      </button>
+      <button (click)="onUpdatePassword()" class="button-update-password" matButton="filled">
+        <mat-icon>lock</mat-icon>
+        Cambiar Contraseña
+      </button>
+    </div>
+  </section>
+</main>

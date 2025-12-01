@@ -7,6 +7,8 @@
   signal,
   effect,
   computed,
+  viewChild,
+  AfterViewInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -18,12 +20,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ConfirmDialog } from '../../../../../../components/ui/confirm-dialog/confirm-dialog';
-import { UserFormDialog } from '../dialogs/user-form-dialog/user-form-dialog';
+import { ConfirmDialog } from '../../../../../../shared/components/ui/confirm-dialog/confirm-dialog';
 import { UserManagementSearchForm } from '../user-management-search-form/user-management-search-form';
-import { ApplicationUserService } from '../../../../../../services/users/rest/application-user-service';
-import { ImageService } from '../../../../../../services/images/image-service';
-import { User } from '../../../../../../models/users/user';
+import { ApplicationUserService } from '../../../../../../core/services/users/rest/application-user-service';
+import { ImageService } from '../../../../../../core/services/images/image-service';
+import { UserModel as User } from '../../../../../../core/models/users/user';
+import { SharedPaginator } from '../../../../../../shared/components/ui/shared-paginator/shared-paginator';
 
 export interface SearchFilters {
   username: string;
@@ -47,11 +49,12 @@ export interface SearchFilters {
     MatPaginatorModule,
     MatDialogModule,
     UserManagementSearchForm,
+    SharedPaginator,
   ],
   templateUrl: './user-management-table.html',
   styleUrl: './user-management-table.css',
 })
-export class UserManagementTable implements OnInit {
+export class UserManagementTable implements OnInit, AfterViewInit {
   private userService = inject(ApplicationUserService);
   private imageService = inject(ImageService);
   protected displayedColumns: string[] = [
@@ -66,37 +69,60 @@ export class UserManagementTable implements OnInit {
   protected dataSource: WritableSignal<User[]> = signal<User[]>([]);
   protected filteredData: WritableSignal<User[]> = signal<User[]>([]);
   protected paginatedData: WritableSignal<User[]> = signal<User[]>([]);
+  protected isRefreshing: WritableSignal<boolean> = signal<boolean>(false);
+  private refreshStartedAt: number | null = null;
   public userUpdate = output<User>();
   public userDelete = output<User>();
+  public userDeleteMultiple = output<User[]>();
   protected selectedUsers: WritableSignal<User[]> = signal<User[]>([]);
   protected countUser = computed(() => this.selectedUsers().length);
   protected snackBar: MatSnackBar = inject(MatSnackBar);
   protected dialog: MatDialog = inject(MatDialog);
 
-  // Paginación del servidor
-  protected pageSize = 10;
+  protected pageSize = 5;
   protected pageIndex = 0;
   protected totalItems = signal<number>(0);
   protected totalPages = signal<number>(0);
   protected pageSizeOptions = [5, 10, 25, 50];
-
-  searchForm = new FormGroup({
-    username: new FormControl(''),
-    roleName: new FormControl(''),
-    state: new FormControl<boolean | 'all'>('all'),
-    startDate: new FormControl<Date | null>(null),
-    endDate: new FormControl<Date | null>(null),
-  });
+  searchFormComponent = viewChild(UserManagementSearchForm);
 
   ngOnInit(): void {
     this.loadUsers();
-    this.searchForm.valueChanges.subscribe(() => {
-      this.pageIndex = 0; // Resetear a la primera página al filtrar
+  }
+
+  ngAfterViewInit(): void {
+    const formGroup = this.searchFormComponent()?.formGroup;
+    if (formGroup) {
+      formGroup.valueChanges.subscribe(() => {
+        console.log('Filtros cambiados:', formGroup.value);
+        this.pageIndex = 0;
+        this.applyFilters();
+      });
+    }
+  }
+
+  onSearchApply(filters: any): void {
+    const comp = this.searchFormComponent();
+    if (comp && comp.formGroup) {
+      comp.formGroup.patchValue(filters);
+      this.pageIndex = 0;
       this.applyFilters();
-    });
+    }
+  }
+
+  onSearchClear(): void {
+    const comp = this.searchFormComponent();
+    if (comp && comp.onClearFilters) {
+      comp.onClearFilters();
+    }
+    // reload original data
+    this.pageIndex = 0;
+    this.loadUsers();
   }
 
   loadUsers(): void {
+    this.isRefreshing.set(true);
+    this.refreshStartedAt = Date.now();
     this.userService.index(this.pageIndex, this.pageSize).subscribe({
       next: (response: any) => {
         console.log('Response completa:', response);
@@ -108,8 +134,7 @@ export class UserManagementTable implements OnInit {
         this.totalItems.set(pageData.totalElements ?? 0);
         this.totalPages.set(pageData.totalPages ?? 0);
 
-        console.log('Total elementos:', this.totalItems());
-        console.log('Total páginas:', this.totalPages());
+        this.completeRefreshing();
       },
       error: () => {
         this.snackBar.open('Error al cargar usuarios', 'Cerrar', {
@@ -117,12 +142,28 @@ export class UserManagementTable implements OnInit {
           horizontalPosition: 'end',
           verticalPosition: 'top',
         });
+        this.completeRefreshing();
       },
     });
   }
 
+  private completeRefreshing(): void {
+    const minMs = 1000;
+    const started = this.refreshStartedAt ?? 0;
+    const elapsed = Date.now() - started;
+    const remaining = minMs - elapsed;
+    this.refreshStartedAt = null;
+    if (remaining > 0) {
+      setTimeout(() => this.isRefreshing.set(false), remaining);
+    } else {
+      this.isRefreshing.set(false);
+    }
+  }
+
   applyFilters(): void {
-    const filters = this.searchForm.value as Partial<SearchFilters & { state: boolean | 'all' }>;
+    const filters = this.searchFormComponent()?.formGroup.value as Partial<
+      SearchFilters & { state: boolean | 'all' }
+    >;
 
     // Filtrado del lado del cliente sobre los datos actuales
     this.filteredData.set(
@@ -154,6 +195,7 @@ export class UserManagementTable implements OnInit {
     );
 
     this.paginatedData.set(this.filteredData());
+    this.totalItems.set(this.filteredData().length);
   }
 
   onPageChange(event: PageEvent): void {
@@ -162,16 +204,6 @@ export class UserManagementTable implements OnInit {
 
     // Cargar nueva página desde el servidor
     this.loadUsers();
-  }
-
-  clearFilters(): void {
-    this.searchForm.reset({
-      username: '',
-      roleName: '',
-      state: 'all',
-      startDate: null,
-      endDate: null,
-    });
   }
 
   onRowClick(user: User): void {
@@ -214,36 +246,14 @@ export class UserManagementTable implements OnInit {
   deleteSelected(): void {
     const selected = this.selectedUsers();
     if (selected.length === 0) return;
-
-    const ref = this.dialog.open(ConfirmDialog, {
-      data: {
-        title: 'Eliminar seleccionados',
-        message: `¿Estás seguro de que deseas eliminar ${selected.length} usuario(s) seleccionado(s)?`,
-        confirmLabel: 'Eliminar todos',
-        cancelLabel: 'Cancelar',
-        icon: 'delete_sweep',
-        color: 'warn',
-      },
-    });
-
-    ref.afterClosed().subscribe((ok) => {
-      if (!ok) return;
-      const selectedIds = selected.map((u) => u.id);
-      this.dataSource.set(this.dataSource().filter((u) => !selectedIds.includes(u.id)));
-      selected.forEach((user) => this.userDelete.emit(user));
-      this.selectedUsers.set([]);
-      this.applyFilters();
-      this.snackBar.open(`${selected.length} usuario(s) han sido eliminados`, 'Cerrar', {
-        duration: 3000,
-        horizontalPosition: 'end',
-        verticalPosition: 'top',
-      });
-    });
+    // Emitir un solo evento con los usuarios seleccionados para que el padre
+    // maneje la confirmación y eliminación en lote.
+    this.userDeleteMultiple.emit(selected);
+    // Limpiar selección local mientras el padre procesa la eliminación.
+    this.selectedUsers.set([]);
   }
 
-  constructor() {
-    effect(() => {
-      console.log('Usuarios seleccionados cambiaron:', this.selectedUsers());
-    });
+  public setRefreshing(value: boolean): void {
+    this.isRefreshing.set(value);
   }
 }

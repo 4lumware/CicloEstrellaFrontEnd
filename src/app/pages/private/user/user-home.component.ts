@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ChatbotComponent } from '../../../components/chatbot/chatbot.component';
 import { RouterLink } from '@angular/router';
+import { ChatbotComponent } from '../../../shared/components/chatbot/chatbot.component';
 
 @Component({
   selector: 'app-user-home',

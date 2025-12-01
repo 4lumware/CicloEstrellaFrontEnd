@@ -1,0 +1,36 @@
+.management-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.formality-management-container {
+  padding: 2rem;
+  max-width: 100%;
+  background-color: white;
+  margin: 0 auto;
+  border-radius: 0.5rem;
+}
+
+.dashboard-header {
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  background-color: white;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 48rem) {
+  .teacher-management-container {
+    padding: 1rem;
+  }
+}
