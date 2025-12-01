@@ -10,6 +10,7 @@ import {FormalityModel, FormalityParamsFilter} from '../../../../core/models/for
 import {PageResponse} from '../../../../core/models/responses/response';
 import {MatInputModule} from '@angular/material/input';
 import { catchError, of } from 'rxjs';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-formality-modal-component',
@@ -37,6 +38,7 @@ export class Formality implements OnInit {
 
   constructor(
     private tramitesService: FormalityService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -147,5 +149,9 @@ export class Formality implements OnInit {
 
   addTramite(tramite: FormalityModel): void {
     console.log('Trámite seleccionado para añadir:', tramite);
+  }
+
+  viewFormalityProfile(tramite: FormalityModel): void {
+    this.router.navigate(['/private/tramites', tramite.idFormality]);
   }
 }

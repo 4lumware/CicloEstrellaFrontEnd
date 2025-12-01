@@ -5,7 +5,7 @@ import {
   CommentModel,
   CommentParamsFilter,
 } from '../../models/comments/comment';
-import { Observable } from 'rxjs';
+import {map, Observable } from 'rxjs';
 import { ApiResponse, PageResponse } from '../../models/responses/response';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
@@ -59,9 +59,9 @@ export class CommentService {
     );
   }
 
-  public formalityComments(formalityId: number): Observable<ApiResponse<CommentModel[]>> {
-    return this.http.get<ApiResponse<CommentModel[]>>(
-      `${this.formalityUrl}/${formalityId}/comments`
-    );
+  public getCommentsByFormality(formalityId: number): Observable<CommentModel[]> {
+    return this.http
+      .get<ApiResponse<CommentModel[]>>(`${this.formalityUrl}/${formalityId}/comments`)
+      .pipe(map((response) => response.data || []));
   }
 }

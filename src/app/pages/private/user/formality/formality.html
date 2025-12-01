@@ -16,7 +16,11 @@
   <h2 class="section-title">Trámites Existentes</h2>
 
   <div class="tramites-grid-horizontal">
-    <mat-card class="tramite-card" *ngFor="let t of tramitesExistentesFiltrados">
+    <mat-card
+      class="tramite-card"
+      *ngFor="let t of tramitesExistentesFiltrados"
+      (click)="viewFormalityProfile(t)"
+    >
 
       <button
         mat-icon-button
@@ -45,6 +49,7 @@
     <mat-card
       class="tramite-card"
       *ngFor="let t of tramitesDisponiblesFiltrados"
+      (click)="viewFormalityProfile(t)"
     >
       <button
         mat-icon-button
