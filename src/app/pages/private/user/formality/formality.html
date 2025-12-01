@@ -22,13 +22,15 @@
       (click)="viewFormalityProfile(t)"
     >
 
+      <!-- Cambiar los botones de agregar -->
       <button
         mat-icon-button
         class="add-btn-floating"
-        (click)="addTramite(t)"
+        (click)="addTramite($event, t)"
       >
         <mat-icon>add</mat-icon>
       </button>
+
 
       <mat-card-content class="card-content-wrapper">
         <h3 class="tramite-title">{{ t.title }}</h3> <p class="tramite-desc">{{ t.description }}</p> <div class="dates-wrapper">
@@ -51,10 +53,11 @@
       *ngFor="let t of tramitesDisponiblesFiltrados"
       (click)="viewFormalityProfile(t)"
     >
+      <!-- Cambiar los botones de agregar -->
       <button
         mat-icon-button
         class="add-btn-floating"
-        (click)="addTramite(t)"
+        (click)="addTramite($event, t)"
       >
         <mat-icon>add</mat-icon>
       </button>

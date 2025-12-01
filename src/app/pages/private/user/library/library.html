@@ -47,18 +47,6 @@
               </button>
             </div>
           </div>
-
-          <div class="details-content">
-            <span class="location-label">Sedes:</span>
-            <div class="sedes-list" *ngIf="prof.details?.campuses">
-              <span class="sede-text" *ngFor="let campus of prof.details.campuses">
-                {{ campus.name }}
-              </span>
-            </div>
-
-            <span class="notes-label">Tu Nota:</span>
-            <p class="notes-text">"{{ prof.note }}"</p>
-          </div>
         </mat-card>
 
         <div *ngIf="profesoresGuardados.length === 0" class="empty-state">
@@ -81,11 +69,6 @@
             <button mat-icon-button class="delete-icon" (click)="deleteItem(tramite.id)">
               <mat-icon>delete_outline</mat-icon>
             </button>
-          </div>
-
-          <div class="notes-content">
-            <span class="notes-label">Tu Nota:</span>
-            <p class="notes-text">"{{ tramite.note }}"</p>
           </div>
 
           <div class="tramite-dates">

@@ -18,6 +18,10 @@ import {
 import {
   SharedPaginatorTeachers
 } from '../../../../shared/components/ui/shared-paginator-teachers/shared-paginator-teachers';
+import {LibraryService} from '../../../../core/services/library/library-service';
+import {AuthCurrentUserService} from '../../../../core/services/users/auth/auth-current-user-service';
+import {MatDialog} from '@angular/material/dialog';
+import {AddFavoriteDialog} from '../../../../shared/components/add-favorite-dialog/add-favorite-dialog';
 
 @Component({
   selector: 'app-user-profesores',
@@ -27,7 +31,10 @@ import {
 })
 export class UserProfesoresComponent implements OnInit {
   private teacherService = inject(TeacherService);
+  private libraryService = inject(LibraryService); // ⭐ AGREGAR
+  private authService = inject(AuthCurrentUserService); // ⭐ AGREGAR
   private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog); // ⭐ AGREGAR
 
   // ViewChild del paginador
   protected paginator = viewChild<SharedPaginatorTeachers>('paginator');
@@ -45,6 +52,9 @@ export class UserProfesoresComponent implements OnInit {
   protected pageIndex = signal<number>(0);
   protected pageSize = signal<number>(10);
 
+  // ⭐ AGREGAR: Usuario actual
+  protected currentUserId = signal<number | null>(null);
+
   // Filtros
   protected filters = signal<TeacherParamsFilter>({
     fullName: '',
@@ -56,6 +66,9 @@ export class UserProfesoresComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    // ⭐ Obtener ID del usuario actual
+    this.currentUserId.set(this.authService.getCurrentUserId());
+
     // Cargar datos iniciales
     this.search();
   }
@@ -141,12 +154,58 @@ export class UserProfesoresComponent implements OnInit {
     this.search();
   }
 
-  addToProfile(profesor: TeacherModel) {
-    this.snackBar.open(
-      `Agregaste a ${profesor.firstName} a tu biblioteca`,
-      'OK',
-      { duration: 2000 }
-    );
+  // ⭐ ACTUALIZAR: Agregar a biblioteca
+  addToProfile(event: Event, profesor: TeacherModel) {
+    event.stopPropagation(); // Evitar navegación al perfil
+
+    const userId = this.currentUserId();
+    if (!userId) {
+      this.snackBar.open('Debes iniciar sesión para agregar favoritos', 'Cerrar', {
+        duration: 3000,
+      });
+      return;
+    }
+
+    // Abrir dialog para agregar nota
+    const dialogRef = this.dialog.open(AddFavoriteDialog, {
+      width: '500px',
+      data: {
+        title: `Agregar ${profesor.firstName} ${profesor.lastName} a Favoritos`,
+        type: 'TEACHER',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((note: string | undefined) => {
+      if (note !== undefined && userId) {
+        this.libraryService
+          .addToLibrary(userId, {
+            type: 'TEACHER',
+            referenceId: profesor.id,
+          })
+          .subscribe({
+            next: () => {
+              this.snackBar.open(
+                `${profesor.firstName} ${profesor.lastName} agregado a tu biblioteca`,
+                'OK',
+                { duration: 2000 }
+              );
+            },
+            error: (err) => {
+              console.error('Error adding to library:', err);
+
+              if (err.status === 400 && err.error?.message?.includes('ya existe')) {
+                this.snackBar.open('Este profesor ya está en tus favoritos', 'Cerrar', {
+                  duration: 3000,
+                });
+              } else {
+                this.snackBar.open('Error al agregar a favoritos', 'Cerrar', {
+                  duration: 3000,
+                });
+              }
+            },
+          });
+      }
+    });
   }
 
   toggleChatbot() {

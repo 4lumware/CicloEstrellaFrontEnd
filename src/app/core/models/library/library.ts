@@ -1,22 +1,32 @@
-// Define los tipos de ítems que guardas
-export type LibraryItemType = 'TEACHER' | 'FORMALITY';
-
-// LO QUE ENVÍAS AL BACKEND (Para guardar)
-export interface LibraryRequest {
-  referenceId: number;   // El ID del Profe o Trámite
-  favoriteType: LibraryItemType;
+export interface LibraryResponse {
+  id: number;
+  type: 'TEACHER' | 'FORMALITY';
   note: string;
+  favorite: TeacherDetails | FormalityDetails;
 }
 
-// LO QUE RECIBES DEL BACKEND (Para mostrar en la lista)
-export interface LibraryResponse {
-  id: number;            // El ID del favorito (necesario para el delete)
-  referenceId: number;   // El ID original
-  favoriteType: LibraryItemType;
-  note: string;
-  studentId: number;
+export interface TeacherDetails {
+  id: number;
+  firstName: string;
+  lastName: string;
+  profilePictureUrl?: string;
+  campuses?: Campus[];
+}
 
-  // ⚠️ OJO: Asumimos que tu backend llena este campo con los datos reales.
-  // Si tu backend solo devuelve IDs, avísame para ajustar la estrategia.
-  details?: any; // Aquí vendría el objeto TeacherModel o FormalityModel
+export interface Campus {
+  id: number;
+  name: string;
+}
+
+export interface FormalityDetails {
+  idFormality: number; // ⭐ Nombre diferente
+  title: string;
+  description: string;
+  startDate: Date;
+  endDate: Date;
+}
+
+export interface FavoriteCreateRequest {
+  type: 'TEACHER' | 'FORMALITY';
+  referenceId: number;
 }
