@@ -46,11 +46,11 @@
     <div class="reactions-block">
       <h4>Reacciones</h4>
       <div class="reactions-list">
-        @for(r of data.reactions; track r.reactionName) {
+        @for(r of data.reactions; track r.reaction) {
         <div class="reaction">
-          <img [src]="reactionImg(r)" alt="{{ r.reactionName }}" />
+          <img [src]="reactionImg(r.reaction)" alt="{{ r.reaction }}" />
           <div class="reaction-meta">
-            <div class="reaction-name">{{ r.reactionName }}</div>
+            <div class="reaction-name">{{ r.reaction }}</div>
             <div class="reaction-count">{{ r.count }}</div>
           </div>
         </div>

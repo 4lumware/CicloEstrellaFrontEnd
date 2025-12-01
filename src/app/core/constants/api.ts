@@ -1,1 +1,1 @@
-export const API_URL = 'http://localhost:8080/api';
+export const API_URL = 'http://alumware.cicloestrella.lat:6868/api';

@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { API_URL } from '../../constants/api';
-import { Observable } from 'rxjs';
+import {map, Observable} from 'rxjs';
 import { TagModel } from '../../models/tags/tags';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import {
@@ -46,5 +46,11 @@ export class FormalityService {
       `${this.apiUrl}/${formalityId}`,
       formality
     );
+  }
+
+  getById(formalityId: number): Observable<FormalityModel> {
+    return this.http
+      .get<ApiResponse<FormalityModel>>(`${this.apiUrl}/${formalityId}`)
+      .pipe(map((response) => response.data));
   }
 }

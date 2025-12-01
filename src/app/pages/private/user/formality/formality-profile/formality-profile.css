@@ -1,0 +1,340 @@
+@import url('https://fonts.googleapis.com/css2?family=Inria+Sans:wght@300;400;600;700&display=swap');
+
+.formality-profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  font-family: 'Inria Sans', sans-serif;
+  position: relative;
+}
+
+/* ==================== LOADING ==================== */
+.loading-container,
+.loading-comments {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 20px;
+}
+
+.loading-container p,
+.loading-comments p {
+  color: #666;
+  font-size: 1.1em;
+  margin: 0;
+}
+
+/* ==================== BACK BUTTON ==================== */
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: #4b2c5e !important;
+  z-index: 10;
+}
+
+.back-button:hover {
+  background: #f5f5f5 !important;
+  transform: scale(1.05);
+}
+
+/* ==================== HEADER ==================== */
+.formality-header {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.formality-title-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.formality-title {
+  font-size: 2.2em;
+  font-weight: 700;
+  color: #4b2c5e;
+  margin: 0;
+  flex: 1;
+  min-width: 250px;
+}
+
+.status-badge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.active {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-badge.expiring {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.status-badge.expired {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* ==================== DATES CARD ==================== */
+.dates-card {
+  background: #f8f8f8;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  max-width: 400px;
+}
+
+.date-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.date-label {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #4b2c5e;
+}
+
+.date-value {
+  font-size: 1.1em;
+  color: #333;
+  font-weight: 500;
+}
+
+.date-divider {
+  width: 2px;
+  height: 40px;
+  background: #ddd;
+}
+
+/* ==================== DESCRIPTION BOX ==================== */
+.description-box {
+  background: #e8e8e8;
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.description-text {
+  font-size: 1em;
+  line-height: 1.7;
+  color: #333;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* ==================== COMMENTS SECTION ==================== */
+.comments-section {
+  margin-top: 40px;
+}
+
+.comments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.section-title {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #4b2c5e;
+  margin: 0;
+}
+
+.add-comment-btn {
+  background: #ffcb47 !important;
+  color: #4b2c5e !important;
+  font-weight: 600 !important;
+  padding: 0 24px !important;
+  height: 42px !important;
+  border-radius: 21px !important;
+  box-shadow: 0 2px 8px rgba(255, 203, 71, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.add-comment-btn:hover {
+  background: #ffc107 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 203, 71, 0.4) !important;
+}
+
+.add-comment-btn mat-icon {
+  margin-right: 8px;
+}
+
+/* ==================== COMMENT FORM ==================== */
+.comment-form {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid #ffcb47;
+}
+
+.comment-input {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.comment-input textarea {
+  font-family: 'Inria Sans', sans-serif;
+  font-size: 0.95em;
+  line-height: 1.6;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cancel-btn {
+  color: #666 !important;
+  font-weight: 500 !important;
+}
+
+.cancel-btn:hover {
+  background: #f5f5f5 !important;
+}
+
+.publish-btn {
+  background: #ffcb47 !important;
+  color: #4b2c5e !important;
+  font-weight: 600 !important;
+  padding: 0 28px !important;
+}
+
+.publish-btn:hover:not([disabled]) {
+  background: #ffc107 !important;
+  transform: translateY(-1px);
+}
+
+.publish-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==================== SEARCH BAR ==================== */
+.search-wrapper {
+  margin-bottom: 30px;
+}
+
+.search-field {
+  width: 100%;
+}
+
+.search-field input {
+  font-family: 'Inria Sans', sans-serif;
+}
+
+/* ==================== COMMENTS LIST ==================== */
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.no-comments {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.no-comments mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #ddd;
+  margin-bottom: 15px;
+}
+
+.no-comments p {
+  font-size: 1.1em;
+  margin: 0;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .formality-profile-container {
+    padding: 20px 15px;
+  }
+
+  .back-button {
+    top: 10px;
+    left: 10px;
+  }
+
+  .formality-title {
+    font-size: 1.6em;
+  }
+
+  .dates-card {
+    flex-direction: column;
+    gap: 15px;
+    max-width: 100%;
+  }
+
+  .date-divider {
+    width: 100%;
+    height: 2px;
+  }
+
+  .comments-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .add-comment-btn {
+    width: 100%;
+  }
+
+  .comment-form {
+    padding: 20px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .cancel-btn,
+  .publish-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .formality-title {
+    font-size: 1.4em;
+  }
+
+  .section-title {
+    font-size: 1.4em;
+  }
+
+  .description-box {
+    padding: 20px;
+  }
+}

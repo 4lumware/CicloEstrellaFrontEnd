@@ -21,6 +21,7 @@ import { FormalityManagement } from './pages/private/admin/formality-management/
 import {ProfesorProfile} from './pages/private/user/user-profesores/profesor-profile/profesor-profile';
 import { UserTeacherRequestsSearchForm } from './pages/private/user/teacher-requests/components/teacher-requests-search-form/teacher-requests-search-form';
 import { TeacherRequestsComponent } from './pages/private/user/teacher-requests/teacher-requests.component';
+import {FormalityProfile} from './pages/private/user/formality/formality-profile/formality-profile';
 
 export const routes: Routes = [
   { path: '', component: Layout, children: [{ path: '', component: LandingComponent }] },
@@ -33,6 +34,7 @@ export const routes: Routes = [
       { path: 'profesores', component: UserProfesoresComponent },
       { path: 'profesor-profile/:id', component: ProfesorProfile },
       { path: 'tramites', component: Formality },
+      { path: 'tramites/:id', component: FormalityProfile},
       { path: 'biblioteca', component: Library },
       { path: 'student', component: StudentProfile },
       { path: 'teacher-requests', component: TeacherRequestsComponent },
